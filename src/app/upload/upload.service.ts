@@ -7,7 +7,8 @@ import {
   HttpHeaders,
   HttpEvent,
 } from '@angular/common/http'
-import { Subject, Observable, forkJoin } from 'rxjs'
+import { Subject, Observable, forkJoin, of } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment.prod';
 
 const url = `${environment.api}/upload`
@@ -103,25 +104,29 @@ export class UploadService {
               });
 
               // send the http-request
-              const chunkReqObservable = this.http.request(partReq);
-              chunksRequests.push(chunkReqObservable);
-              chunkReqObservable.subscribe(undefined, undefined, () => {
-                uploadedBytes += chunkSize;
-                // calculate the progress percentage
+              const chunkReqObservable = this.http.request(partReq).pipe(concatMap(event => {
+                  if (event.type === HttpEventType.UploadProgress && event.loaded === event.total) {
+                    uploadedBytes += event.loaded;
+                    // calculate the progress percentage
+    
+                    const percentDone = Math.round((100 * uploadedBytes) / file.size);
+                    // pass the percentage into the progress-stream
+                    progress.next(percentDone);
+                  }
 
-                const percentDone = Math.round((100 * uploadedBytes) / file.size);
-                // pass the percentage into the progress-stream
-                progress.next(percentDone);
-                return event;
-              });
+                  return of(event);
+              }));
+
+              chunksRequests.push(chunkReqObservable);
             }
 
             forkJoin(chunksRequests).subscribe(events => {
-              const completeReqHeaders = new HttpHeaders().set('Content-Disposition', `filename=${file.name}`)
-              const completeReq = new HttpRequest("PUT", `${url}?uploadId=${uploadId}`, undefined, {
-                responseType: 'text',
-                headers: completeReqHeaders
+                const completeReqHeaders = new HttpHeaders().set('Content-Disposition', `filename=${file.name}`)
+                const completeReq = new HttpRequest("PUT", `${url}?uploadId=${uploadId}`, undefined, {
+                  responseType: 'text',
+                  headers: completeReqHeaders
               });
+
               this.http.request(completeReq).subscribe(event => {
                 if (event instanceof HttpResponse) {
                   // Close the progress-stream if we get an answer form the API
