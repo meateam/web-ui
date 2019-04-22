@@ -45,4 +45,4 @@ testem.log
 .DS_Store
 Thumbs.db
 data
-package-log.json
+package-lock.json
