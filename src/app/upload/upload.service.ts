@@ -7,8 +7,7 @@ import {
   HttpHeaders,
   HttpEvent,
 } from '@angular/common/http'
-import { Subject, Observable, forkJoin, of } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 
 const url = `${environment.api}/upload`
@@ -71,10 +70,12 @@ export class UploadService {
 
             const formData: FormData = new FormData();
             formData.append("file", file, file.name);
+            const headers = new HttpHeaders().set('Content-Range', `bytes 0-${file.size - 1}/${file.size}`);
 
             const req = new HttpRequest("POST", `${url}?uploadType=resumable&uploadId=${uploadId}`, formData, {
               reportProgress: true,
-              responseType: 'text'
+              responseType: 'text',
+              headers
             });
 
             // send the http-request
@@ -87,9 +88,19 @@ export class UploadService {
                 // pass the percentage into the progress-stream
                 progress.next(percentDone);
               } else if (event instanceof HttpResponse) {
-                // Close the progress-stream if we get an answer form the API
-                // The upload is complete
-                progress.complete();
+                const completeReqHeaders = new HttpHeaders().set('Content-Disposition', `filename=${file.name}`)
+                const completeReq = new HttpRequest("PUT", `${url}?uploadId=${uploadId}`, undefined, {
+                  responseType: 'text',
+                  headers: completeReqHeaders
+                });
+
+                this.http.request(completeReq).subscribe(event => {
+                  if (event instanceof HttpResponse) {
+                    // Close the progress-stream if we get an answer form the API
+                    // The upload is complete
+                    progress.complete();
+                  }
+                });
               }
             });
           }
