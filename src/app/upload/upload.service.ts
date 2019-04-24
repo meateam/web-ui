@@ -59,14 +59,13 @@ export class UploadService {
           progress: progress.asObservable()
         };
       } else {
-        const initReqHeaders = new HttpHeaders().set('Content-Type', file.type);
-        const initReq = new HttpRequest("POST", `${url}`, undefined, {
-          responseType: 'text',
-          headers: initReqHeaders
+        const fileMetadata = { title: file.name, mimeType: file.type };
+        const initReq = new HttpRequest("POST", `${url}`, fileMetadata, {
+          responseType: 'text'
         });
         this.http.request<string>(initReq).subscribe(initEvent => {
           if (initEvent instanceof HttpResponse) {
-            const uploadId = initEvent.body;
+            const uploadId = initEvent.headers.get('x-uploadid');
 
             const formData: FormData = new FormData();
             formData.append("file", file, file.name);
@@ -88,19 +87,11 @@ export class UploadService {
                 // pass the percentage into the progress-stream
                 progress.next(percentDone);
               } else if (event instanceof HttpResponse) {
-                const completeReqHeaders = new HttpHeaders().set('Content-Disposition', `filename=${file.name}`)
-                const completeReq = new HttpRequest("PUT", `${url}?uploadId=${uploadId}`, undefined, {
-                  responseType: 'text',
-                  headers: completeReqHeaders
-                });
-
-                this.http.request(completeReq).subscribe(event => {
-                  if (event instanceof HttpResponse) {
-                    // Close the progress-stream if we get an answer form the API
-                    // The upload is complete
-                    progress.complete();
-                  }
-                });
+                if (event.ok) {
+                  progress.complete();
+                } else {
+                  progress.error('failed uploading');
+                }
               }
             });
           }
