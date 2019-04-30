@@ -1,0 +1,6 @@
+repoName: "meateam/web-ui"
+runTests: true
+testCommand: ""
+deployUponTestSuccess: true
+deployCommand:
+deployEnvironment:
