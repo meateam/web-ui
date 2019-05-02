@@ -5,7 +5,6 @@ import {
   HttpEventType,
   HttpResponse,
   HttpHeaders,
-  HttpEvent,
 } from '@angular/common/http'
 import { Subject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
