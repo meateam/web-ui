@@ -9,7 +9,7 @@ import {
 import { Subject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 
-const url = `${environment.api}/upload`
+const url = `${environment.api}/upload`;
 
 @Injectable({
   providedIn: 'root'
