@@ -3,7 +3,9 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { UploadModule } from './upload/upload.module';
+import { UploadModule } from './file-explorer/upload/upload.module';
+import { FileExplorerModule } from './file-explorer/file-explorer.module';
+import { MatCardModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -12,6 +14,8 @@ import { UploadModule } from './upload/upload.module';
   imports: [
     BrowserModule,
     UploadModule,
+    FileExplorerModule,
+    MatCardModule,
     AppRoutingModule
   ],
   providers: [],
