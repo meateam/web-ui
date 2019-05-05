@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./rename-dialog.component.scss']
 })
 export class RenameDialogComponent implements OnInit {
-
+  folderName = '';
   constructor() { }
 
   ngOnInit() {
