@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FileElement } from './file-explorer/model/file-element';
 import { Observable, of } from 'rxjs';
-import { FileService } from './service/file.service';
+import { FileService, FolderContentType } from './service/file.service';
 
 @Component({
   selector: 'app-root',
@@ -30,13 +30,13 @@ export class AppComponent {
       for (let i = 0; i < files.length; i++) {
         const file: FileElement = {
           id: files[i].id,
-          fullName: files[i].fullName,
-          FileOrId: { Parent: 'root' },
-          isFolder: false,
+          name: files[i].name,
+          parent: 'root',
+          isFolder: files[i].type === FolderContentType,
           size: files[i].size,
           type: files[i].type,
-          createdAt: files[i].createdAt,
-          updatedAt: files[i].updatedAt
+          createdAt: new Date(files[i].createdAt),
+          updatedAt: new Date(files[i].updatedAt)
         };
 
         this.fileService.add(file);
