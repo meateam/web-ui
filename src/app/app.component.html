@@ -1,1 +1,6 @@
-<app-upload></app-upload>
+<div style="height: 100%; box-sizing: border-box;">
+  <mat-card style="height: 100%; box-sizing: border-box; padding: 0">
+    <file-explorer [fileElements]="fileElements | async" [path]="currentPath" [canNavigateUp]="canNavigateUp"
+    (fileAdded)="fetchFiles()" (downloadFile)="downloadFile($event)"></file-explorer>
+  </mat-card>
+</div>

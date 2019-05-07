@@ -5,16 +5,17 @@ import {
   MatButtonModule,
   MatDialogModule,
   MatListModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatIconModule
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
-import { DialogComponent } from './dialog/dialog.component';
-import { UploadService } from './upload.service';
+import { UploadDialogComponent } from '../dialog/upload-dialog/upload-dialog.component';
+import { UploadService } from '../../service/upload.service';
 
 @NgModule({
-  declarations: [UploadComponent, DialogComponent],
+  declarations: [UploadComponent, UploadDialogComponent],
   imports: [
     CommonModule,
     MatButtonModule,
@@ -24,9 +25,10 @@ import { UploadService } from './upload.service';
     HttpClientModule,
     BrowserAnimationsModule,
     MatProgressBarModule,
+    MatIconModule
   ],
   exports: [UploadComponent],
-  entryComponents: [DialogComponent],
+  entryComponents: [UploadDialogComponent],
   providers: [UploadService],
 })
 export class UploadModule { }

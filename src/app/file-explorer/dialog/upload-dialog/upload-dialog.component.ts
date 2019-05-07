@@ -1,14 +1,14 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import { UploadService } from '../upload.service';
+import { UploadService } from '../../../service/upload.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
-  selector: 'app-dialog',
-  templateUrl: './dialog.component.html',
-  styleUrls: ['./dialog.component.scss']
+  selector: 'app-upload-dialog',
+  templateUrl: './upload-dialog.component.html',
+  styleUrls: ['./upload-dialog.component.scss']
 })
-export class DialogComponent {
+export class UploadDialogComponent {
   progress;
   canBeClosed = true;
   primaryButtonText = 'Upload';
@@ -17,7 +17,7 @@ export class DialogComponent {
   uploadSuccessful = false;
   @ViewChild('file') file: ElementRef<HTMLInputElement>;
   public files: Set<File> = new Set();
-  constructor(public dialogRef: MatDialogRef<DialogComponent>, public uploadService: UploadService) {}
+  constructor(public dialogRef: MatDialogRef<UploadDialogComponent>, public uploadService: UploadService) {}
   public addFiles() {
     this.file.nativeElement.click();
   }
@@ -34,7 +34,7 @@ export class DialogComponent {
   closeDialog() {
     // if everything was uploaded already, just close the dialog
     if (this.uploadSuccessful) {
-      return this.dialogRef.close();
+      return this.dialogRef.close(true);
     }
   
     // set the component state to "uploading"
