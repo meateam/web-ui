@@ -14,7 +14,7 @@
         <div fxLayout="column" fxLayoutAlign="space-between center" (contextmenu)="openMenu($event,element, menuTrigger)">
           <mat-icon color="primary" class="file-or-folder-icon pointer" *ngIf="element.isFolder">folder</mat-icon>
           <mat-icon color="primary" class="file-or-folder-icon pointer" *ngIf="!element.isFolder">insert_drive_file</mat-icon>
-          <span style="color: rgba(0,0,0, 0.7);">{{element.fullName}}</span>
+          <span style="color: rgba(0,0,0, 0.7);">{{element.name}}</span>
         </div>
       </mat-grid-tile>
     </mat-grid-list>
@@ -46,7 +46,7 @@
 <mat-menu #moveToMenu="matMenu">
   <ng-template matMenuContent let-self="self">
     <ng-container *ngFor="let element of fileElements">
-      <button *ngIf="element.isFolder && element.id !== self.id" mat-menu-item (click)="moveElement(self, element)">{{element.fullName}}</button>
+      <button *ngIf="element.isFolder && element.id !== self.id" mat-menu-item (click)="moveElement(self, element)">{{element.name}}</button>
     </ng-container>
   </ng-template>
 </mat-menu>

@@ -13,6 +13,7 @@ export interface IFileService {
   getAll(): Observable<FileElement[]>;
 }
 
+export const FolderContentType = 'application/vnd.drive.folder';
 @Injectable({
   providedIn: 'root'
 })
@@ -40,7 +41,7 @@ export class FileService implements IFileService {
   queryInFolder(folderId: string) {
     const result: FileElement[] = [];
     this.map.forEach(element => {
-      if (element.FileOrId.Parent === folderId) {
+      if (element.parent === folderId) {
         result.push(this.clone(element))
       }
     });
