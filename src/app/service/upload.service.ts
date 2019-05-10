@@ -1,3 +1,18 @@
+import { init as initApm } from '@elastic/apm-rum';
+const apm = initApm({
+
+  // Set required service name (allowed characters: a-z, A-Z, 0-9, -, _, and space)
+  serviceName: 'web-ui',
+
+  // Set custom APM Server URL (default: http://localhost:8200)
+  serverUrl: 'http://localhost:8200',
+
+  // Set service version (required for sourcemap feature)
+  serviceVersion: 'v0.1',
+  agentVersion: '4.0.1',
+  distributedTracingOrigins: ["http://localhost:8080"],
+  environment: 'development'
+})
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
@@ -32,12 +47,12 @@ export class UploadService {
         // create a new multipart-form for every file
         const formData: FormData = new FormData();
         formData.append("file", file, file.name);
-
         const req = new HttpRequest("POST", `${url}?uploadType=multipart`, formData, {
           reportProgress: true,
           responseType: 'text'
         });
-
+        
+        const transaction = apm.startTransaction(`POST ${url}?uploadType=multipart`, 'http');
         // send the http-request and subscribe for progress-updates
         this.http.request(req).subscribe(event => {
           if (event.type === HttpEventType.UploadProgress) {
@@ -50,6 +65,7 @@ export class UploadService {
             // Close the progress-stream if we get an answer form the API
             // The upload is complete
             progress.complete();
+            transaction.end();
           }
         });
 
