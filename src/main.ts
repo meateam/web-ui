@@ -5,15 +5,15 @@ const apm = initApm({
   serviceName: 'web-ui',
 
   // Set custom APM Server URL (default: http://localhost:8200)
-  serverUrl: 'http://localhost:8200',
+  serverUrl: 'http://13.69.137.179:8200',
 
   // Set service version (required for sourcemap feature)
-  serviceVersion: 'v0.1',
-  pageLoadTransactionName: 'index',
+  serviceVersion: '0.1',
   agentVersion: '4.0.1',
   distributedTracingOrigins: ["http://localhost:8080"],
   environment: 'development'
-})
+});
+apm.setInitialPageLoadName('index');
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
