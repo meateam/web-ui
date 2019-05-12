@@ -5,7 +5,7 @@ const apm = initApm({
   serviceName: 'web-ui',
 
   // Set custom APM Server URL (default: http://localhost:8200)
-  serverUrl: 'http://13.69.137.179:8200',
+  serverUrl: '',
 
   // Set service version (required for sourcemap feature)
   serviceVersion: '0.1',
