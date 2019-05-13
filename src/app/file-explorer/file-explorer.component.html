@@ -32,6 +32,10 @@
       <mat-icon>delete</mat-icon>
       <span>Delete</span>
     </button>
+    <button mat-menu-item (click)="elementMeta(element)">
+        <mat-icon>info</mat-icon>
+        <span>Information</span>
+      </button>
     <!-- <button mat-menu-item [matMenuTriggerFor]="moveToMenu" [matMenuTriggerData]="{self: element}">
       <mat-icon>open_with</mat-icon>
       <span>Move To</span>

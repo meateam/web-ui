@@ -6,10 +6,12 @@ import { AppComponent } from './app.component';
 import { UploadModule } from './file-explorer/upload/upload.module';
 import { FileExplorerModule } from './file-explorer/file-explorer.module';
 import { MatCardModule } from '@angular/material';
+import { FileMetadataDialogComponent } from './file-explorer/dialog/file-metadata-dialog/file-metadata-dialog.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    FileMetadataDialogComponent
   ],
   imports: [
     BrowserModule,
