@@ -1,6 +1,6 @@
 <div style="height: 100%; box-sizing: border-box;">
   <mat-card style="height: 100%; box-sizing: border-box; padding: 0">
     <file-explorer [fileElements]="fileElements | async" [path]="currentPath" [canNavigateUp]="canNavigateUp"
-    (fileAdded)="fetchFiles()" (downloadFile)="downloadFile($event)"></file-explorer>
+    (fileAdded)="fetchFiles()" (downloadFile)="downloadFile($event)" (deleteFile)="deleteFile($event)"></file-explorer>
   </mat-card>
 </div>

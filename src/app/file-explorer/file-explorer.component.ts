@@ -26,6 +26,7 @@ export class FileExplorerComponent {
   @Output() navigatedUp = new EventEmitter();
   @Output() fileAdded = new EventEmitter();
   @Output() downloadFile = new EventEmitter<FileElement>();
+  @Output() deleteFile = new EventEmitter<FileElement>();
 
   openMenu(event: MouseEvent, element: FileElement, viewChild: MatMenuTrigger) {
     event.preventDefault();
@@ -38,6 +39,10 @@ export class FileExplorerComponent {
 
   elementDownload(element: FileElement) {
     this.downloadFile.emit(element);
+  }
+
+  elementDelete(element: FileElement) {
+    this.deleteFile.emit(element);
   }
   
   // deleteElement(element: FileElement) {
