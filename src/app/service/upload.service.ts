@@ -5,6 +5,7 @@ import {
   HttpEventType,
   HttpResponse,
   HttpHeaders,
+  HttpParams,
 } from '@angular/common/http'
 import { Subject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
@@ -55,11 +56,11 @@ export class UploadService {
 
         // Save every progress-observable in a map of all observables
         status[file.name] = {
-          progress: progress.asObservable()
+          progress: progress.asObservable(),
         };
       } else {
         const fileMetadata = { title: file.name, mimeType: file.type };
-        const initReq = new HttpRequest("POST", `${url}`, fileMetadata, {
+        const initReq = new HttpRequest("POST", url, fileMetadata, {
           responseType: 'text'
         });
         this.http.request<string>(initReq).subscribe(initEvent => {
@@ -68,15 +69,16 @@ export class UploadService {
 
             const formData: FormData = new FormData();
             formData.append("file", file, file.name);
+            
             const headers = new HttpHeaders().set('Content-Range', `bytes 0-${file.size - 1}/${file.size}`);
-
-            const req = new HttpRequest("POST", `${url}?uploadType=resumable&uploadId=${uploadId}`, formData, {
+            const httpParams = new HttpParams().set('uploadId', `${uploadId}`);
+            const req = new HttpRequest("POST", `${url}?uploadType=resumable`, formData, {
               reportProgress: true,
               responseType: 'text',
-              headers
+              headers,
+              params: httpParams
             });
 
-            // send the http-request
             // send the http-request and subscribe for progress-updates
             this.http.request(req).subscribe(event => {
               if (event.type === HttpEventType.UploadProgress) {
@@ -98,7 +100,7 @@ export class UploadService {
 
         // Save every progress-observable in a map of all observables
         status[file.name] = {
-          progress: progress.asObservable()
+          progress: progress.asObservable(),
         };
       }
     });

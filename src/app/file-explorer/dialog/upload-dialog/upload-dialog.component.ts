@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { UploadService } from '../../../service/upload.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable, Subscription, of } from 'rxjs';
 
 @Component({
   selector: 'app-upload-dialog',
@@ -9,7 +9,8 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./upload-dialog.component.scss']
 })
 export class UploadDialogComponent {
-  progress;
+  upload: { [key: string]: { progress: Observable<number> } };
+  uploadsDone: { [key: string]: boolean } = {};
   canBeClosed = true;
   primaryButtonText = 'Upload';
   showCancelButton = true;
@@ -27,6 +28,7 @@ export class UploadDialogComponent {
     for (let key in files) {
       if (!isNaN(parseInt(key))) {
         this.files.add(files[key]);
+        this.uploadsDone[key] = false;
       }
     }
   }
@@ -41,12 +43,17 @@ export class UploadDialogComponent {
     this.uploading = true;
   
     // start the upload and save the progress map
-    this.progress = this.uploadService.upload(this.files);
+    this.upload = this.uploadService.upload(this.files);
   
     // convert the progress map into an array
     let allProgressObservables = [];
-    for (let key in this.progress) {
-      allProgressObservables.push(this.progress[key].progress);
+    for (let key in this.upload) {
+      allProgressObservables.push(this.upload[key].progress);
+      this.upload[key].progress.subscribe(progress => {
+        if (progress === 100) {
+          this.uploadsDone[key] = true;
+        }
+      });
     }
   
     // Adjust the state variables

@@ -24,10 +24,11 @@
     <mat-list>
       <mat-list-item *ngFor="let file of files">
         <h4 mat-line>{{file.name}}</h4>
+        <mat-icon *ngIf="uploadsDone[file.name]">done</mat-icon>
         <mat-progress-bar
-          *ngIf="progress"
+          *ngIf="upload"
           mode="determinate"
-          [value]="progress[file.name].progress | async"
+          [value]="upload[file.name].progress | async"
         ></mat-progress-bar>
       </mat-list-item>
     </mat-list>
