@@ -1,8 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FileElement } from './model/file-element';
 import { MatDialog, MatMenuTrigger } from '@angular/material';
-import { NewFolderDialogComponent } from './dialog/new-folder-dialog/new-folder-dialog.component';
-import { RenameDialogComponent } from './dialog/rename-dialog/rename-dialog.component';
+import { FileMetadataDialogComponent } from './dialog/file-metadata-dialog/file-metadata-dialog.component';
 
 @Component({
   selector: 'file-explorer',
@@ -26,6 +25,8 @@ export class FileExplorerComponent {
   @Output() navigatedUp = new EventEmitter();
   @Output() fileAdded = new EventEmitter();
   @Output() downloadFile = new EventEmitter<FileElement>();
+  @Output() deleteFile = new EventEmitter<FileElement>();
+  @Output() showFileMeta = new EventEmitter<FileElement>();
 
   openMenu(event: MouseEvent, element: FileElement, viewChild: MatMenuTrigger) {
     event.preventDefault();
@@ -38,6 +39,18 @@ export class FileExplorerComponent {
 
   elementDownload(element: FileElement) {
     this.downloadFile.emit(element);
+  }
+
+  elementDelete(element: FileElement) {
+    this.deleteFile.emit(element);
+  }
+
+  elementMeta(element: FileElement) {
+    const fileMetadataDialogRef = this.dialog.open(FileMetadataDialogComponent, {
+      height: '50vh',
+      width: '50vw',
+      data: { file: element }
+    });
   }
   
   // deleteElement(element: FileElement) {

@@ -53,6 +53,14 @@ export class AppComponent {
   downloadFile(element: FileElement) {
     window.open(this.fileService.download(element.id));
   }
+
+  deleteFile(element: FileElement) {
+    this.fileService.delete(element.id).subscribe((deleted: boolean) => {
+      if (deleted) {
+        this.fetchFiles();
+      }
+    });
+  }
   
   // addFolder(folder: { name: string }) {
   //   this.fileService.add({
