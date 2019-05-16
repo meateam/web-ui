@@ -9,7 +9,7 @@
   <h1 mat-dialog-title>
     Choose Files To Upload
   </h1>
-  <p style="font-family: Roboto,'Helvetica Neue',sans-serif;">Uploads: {{ getUploadsDoneCount() }} / {{ files.size }}</p>
+  <p style="font-family: Roboto,'Helvetica Neue',sans-serif;">Uploads: {{ getUploadsSuccessCount() }} / {{ files.size }}</p>
   <div>
     <button
       [disabled]="uploading || uploadSuccessful"
@@ -31,9 +31,9 @@
         </h4>
         <span style="padding: 0px" mat-list-icon>
           <mat-icon *ngIf="!upload">cloud</mat-icon>
-          <mat-icon *ngIf="upload && uploadsDone[file.name] && !uploadsError[file.name]">cloud_done</mat-icon>
-          <mat-icon *ngIf="upload && !uploadsDone[file.name] && !uploadsError[file.name]">cloud_upload</mat-icon>
-          <mat-icon *ngIf="upload && !uploadsDone[file.name] && uploadsError[file.name]">error</mat-icon>
+          <mat-icon *ngIf="upload && uploadsSuccess[file.name] && !uploadsError[file.name]">cloud_done</mat-icon>
+          <mat-icon *ngIf="upload && !uploadsSuccess[file.name] && !uploadsError[file.name]">cloud_upload</mat-icon>
+          <mat-icon *ngIf="upload && !uploadsSuccess[file.name] && uploadsError[file.name]">error</mat-icon>
         </span>
         <mat-progress-bar
           *ngIf="upload"

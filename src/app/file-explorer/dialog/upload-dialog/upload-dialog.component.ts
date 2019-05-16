@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { UploadService } from '../../../service/upload.service';
-import { forkJoin, Observable, Subscription } from 'rxjs';
+import { forkJoin, Observable, Subscription, zip } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 
 @Component({
@@ -11,7 +11,7 @@ import { HttpResponse } from '@angular/common/http';
 })
 export class UploadDialogComponent {
   upload: { [key: string]: { progress: Observable<number>, response: Observable<HttpResponse<{}>> } };
-  uploadsDone: { [key: string]: boolean } = {};
+  uploadsSuccess: { [key: string]: boolean } = {};
   uploadsError: { [key: string]: any } = {};
   canBeClosed = true;
   primaryButtonText = 'Upload';
@@ -46,22 +46,24 @@ export class UploadDialogComponent {
     // start the upload and save the progress map
     this.upload = this.uploadService.upload(this.files);
   
-    // convert the progress map into an array
-    let allProgressObservables = [];
+    // Handle the upload responses.
     for (let key in this.upload) {
-      allProgressObservables.push(this.upload[key].progress);
+      // When each response-observables is done
       this.upload[key].response.subscribe(event => {
         if (event.ok) {
-          this.uploadsDone[key] = true;
+          this.uploadsSuccess[key] = true;
+          this.toggleDialogEnable();
         }
       }, err => {
         this.uploadsError[key] = err;
-        this.uploadsDone[key] = false;
+        this.uploadsSuccess[key] = false;
+        this.toggleDialogEnable();
+      }, () => {
+        this.toggleDialogEnable();
       });
     }
   
     // Adjust the state variables
-  
     // The OK-button should have the text "Finish" now
     this.primaryButtonText = 'Finish';
   
@@ -71,9 +73,11 @@ export class UploadDialogComponent {
   
     // Hide the cancel-button
     this.showCancelButton = false;
-  
-    // When all progress-observables are completed...
-    forkJoin(allProgressObservables).subscribe(end => {
+  }
+
+  // Toggles the dialog close button enabled if all uploads are done.
+  public toggleDialogEnable() {
+    if (this.getUploadsDoneCount() === this.files.size) {
       // ... the dialog can be closed again...
       this.canBeClosed = true;
       this.dialogRef.disableClose = false;
@@ -83,17 +87,32 @@ export class UploadDialogComponent {
   
       // ... and the component is no longer uploading
       this.uploading = false;
-    });
+    } 
   }
 
-  public getUploadsDoneCount() {
-    let doneCount = 0;
-    for (let key in this.uploadsDone) {
-      if (!this.uploadsError[key] && this.uploadsDone[key]) {
-        doneCount++;
+  public getUploadsSuccessCount() {
+    let count = 0;
+    for (let key in this.uploadsSuccess) {
+      if (!this.uploadsError[key] && this.uploadsSuccess[key]) {
+        count++;
       }
     }
 
-    return doneCount;
+    return count;
+  }
+
+  public getUploadsErrorCount() {
+    let count = 0;
+    for (let key in this.uploadsError) {
+      if (!this.uploadsSuccess[key] && this.uploadsError[key]) {
+        count++;
+      }
+    }
+
+    return count;
+  }
+
+  public getUploadsDoneCount() {
+    return this.getUploadsSuccessCount() + this.getUploadsErrorCount();
   }
 }
