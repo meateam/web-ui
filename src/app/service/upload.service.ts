@@ -5,6 +5,7 @@ import {
   HttpEventType,
   HttpResponse,
   HttpHeaders,
+  HttpParams,
 } from '@angular/common/http'
 import { Subject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
@@ -18,13 +19,14 @@ export class UploadService {
 
   constructor(private http: HttpClient) { }
 
-  public upload(files: Set<File>): { [key: string]: { progress: Observable<number> } } {
+  public upload(files: Set<File>): { [key: string]: { progress: Observable<number>, response: Observable<HttpResponse<{}>> } } {
     // this will be the our resulting map
-    const status: { [key: string]: { progress: Observable<number> } } = {};
+    const status: { [key: string]: { progress: Observable<number>, response: Observable<HttpResponse<{}>> } } = {};
 
     files.forEach(file => {
       // create a new progress-subject for every file
       const progress = new Subject<number>();
+      const response = new Subject<HttpResponse<{}>>();
 
       // create a http-post request and pass the form
       // tell it to report the upload progress
@@ -49,17 +51,22 @@ export class UploadService {
           } else if (event instanceof HttpResponse) {
             // Close the progress-stream if we get an answer form the API
             // The upload is complete
+            response.next(event);
             progress.complete();
           }
+        }, err => {
+          response.error(err);
+          progress.error(err);
         });
 
         // Save every progress-observable in a map of all observables
         status[file.name] = {
-          progress: progress.asObservable()
+          progress: progress.asObservable(),
+          response: response.asObservable(),
         };
       } else {
         const fileMetadata = { title: file.name, mimeType: file.type };
-        const initReq = new HttpRequest("POST", `${url}`, fileMetadata, {
+        const initReq = new HttpRequest("POST", url, fileMetadata, {
           responseType: 'text'
         });
         this.http.request<string>(initReq).subscribe(initEvent => {
@@ -68,15 +75,16 @@ export class UploadService {
 
             const formData: FormData = new FormData();
             formData.append("file", file, file.name);
+            
             const headers = new HttpHeaders().set('Content-Range', `bytes 0-${file.size - 1}/${file.size}`);
-
-            const req = new HttpRequest("POST", `${url}?uploadType=resumable&uploadId=${uploadId}`, formData, {
+            const httpParams = new HttpParams().set('uploadId', `${uploadId}`);
+            const req = new HttpRequest("POST", `${url}?uploadType=resumable`, formData, {
               reportProgress: true,
               responseType: 'text',
-              headers
+              headers,
+              params: httpParams
             });
 
-            // send the http-request
             // send the http-request and subscribe for progress-updates
             this.http.request(req).subscribe(event => {
               if (event.type === HttpEventType.UploadProgress) {
@@ -86,19 +94,20 @@ export class UploadService {
                 // pass the percentage into the progress-stream
                 progress.next(percentDone);
               } else if (event instanceof HttpResponse) {
-                if (event.ok) {
-                  progress.complete();
-                } else {
-                  progress.error('failed uploading');
-                }
+                response.next(event);
+                progress.complete();
               }
+            }, err => {
+              response.error(err);
+              progress.error(err);
             });
           }
         });
 
         // Save every progress-observable in a map of all observables
         status[file.name] = {
-          progress: progress.asObservable()
+          progress: progress.asObservable(),
+          response: response.asObservable(),
         };
       }
     });
