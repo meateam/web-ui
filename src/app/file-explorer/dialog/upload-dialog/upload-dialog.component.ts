@@ -1,7 +1,8 @@
 import { Component, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { UploadService } from '../../../service/upload.service';
-import { forkJoin, Observable, Subscription, of } from 'rxjs';
+import { forkJoin, Observable, Subscription } from 'rxjs';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-upload-dialog',
@@ -9,8 +10,9 @@ import { forkJoin, Observable, Subscription, of } from 'rxjs';
   styleUrls: ['./upload-dialog.component.scss']
 })
 export class UploadDialogComponent {
-  upload: { [key: string]: { progress: Observable<number> } };
+  upload: { [key: string]: { progress: Observable<number>, response: Observable<HttpResponse<{}>> } };
   uploadsDone: { [key: string]: boolean } = {};
+  uploadsError: { [key: string]: any } = {};
   canBeClosed = true;
   primaryButtonText = 'Upload';
   showCancelButton = true;
@@ -28,7 +30,6 @@ export class UploadDialogComponent {
     for (let key in files) {
       if (!isNaN(parseInt(key))) {
         this.files.add(files[key]);
-        this.uploadsDone[key] = false;
       }
     }
   }
@@ -49,10 +50,13 @@ export class UploadDialogComponent {
     let allProgressObservables = [];
     for (let key in this.upload) {
       allProgressObservables.push(this.upload[key].progress);
-      this.upload[key].progress.subscribe(progress => {
-        if (progress === 100) {
+      this.upload[key].response.subscribe(event => {
+        if (event.ok) {
           this.uploadsDone[key] = true;
         }
+      }, err => {
+        this.uploadsError[key] = err;
+        this.uploadsDone[key] = false;
       });
     }
   
@@ -80,5 +84,16 @@ export class UploadDialogComponent {
       // ... and the component is no longer uploading
       this.uploading = false;
     });
+  }
+
+  public getUploadsDoneCount() {
+    let doneCount = 0;
+    for (let key in this.uploadsDone) {
+      if (!this.uploadsError[key] && this.uploadsDone[key]) {
+        doneCount++;
+      }
+    }
+
+    return doneCount;
   }
 }
