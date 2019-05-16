@@ -7,7 +7,7 @@ import {
   HttpHeaders,
   HttpParams,
 } from '@angular/common/http'
-import { Subject, Observable, Subscription } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 
 const url = `${environment.api}/upload`;
