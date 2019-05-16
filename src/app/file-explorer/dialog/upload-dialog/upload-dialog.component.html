@@ -23,8 +23,14 @@
   <mat-dialog-content fxFlex>
     <mat-list>
       <mat-list-item *ngFor="let file of files">
-        <h4 mat-line>{{file.name}}</h4>
-        <mat-icon *ngIf="uploadsDone[file.name]">done</mat-icon>
+        <h4 mat-line>
+          {{file.name}}
+        </h4>
+        <span style="padding: 0px" mat-list-icon>
+          <mat-icon *ngIf="!upload">cloud</mat-icon>
+          <mat-icon *ngIf="uploadsDone[file.name]">cloud_done</mat-icon>
+          <mat-icon *ngIf="upload && !uploadsDone[file.name]">cloud_upload</mat-icon>
+        </span>
         <mat-progress-bar
           *ngIf="upload"
           mode="determinate"
