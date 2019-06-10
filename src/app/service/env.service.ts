@@ -34,7 +34,7 @@ export const EnvServiceFactory = () => {
   return env;
 };
 
-export const EnvServiceProvider = {  
+export const EnvServiceProvider = {
   provide: EnvService,
   useFactory: EnvServiceFactory,
   deps: [],
