@@ -34,12 +34,11 @@ export class UploadService {
         // create a new multipart-form for every file
         const formData: FormData = new FormData();
         formData.append("file", file, file.name);
-
         const req = new HttpRequest("POST", `${url}?uploadType=multipart`, formData, {
           reportProgress: true,
           responseType: 'text'
         });
-
+        
         // send the http-request and subscribe for progress-updates
         this.http.request(req).subscribe(event => {
           if (event.type === HttpEventType.UploadProgress) {
