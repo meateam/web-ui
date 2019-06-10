@@ -5,13 +5,13 @@ const apm = initApm({
   serviceName: 'web-ui',
 
   // Set custom APM Server URL (default: http://localhost:8200)
-  serverUrl: 'http://localhost:8200',
+  serverUrl: EnvServiceFactory().apmServerUrl,
 
   // Set service version (required for sourcemap feature)
   serviceVersion: '0.1',
   agentVersion: '4.0.1',
-  distributedTracingOrigins: ["http://localhost:8080"],
-  environment: 'development'
+  distributedTracingOrigins: [environment.api],
+  environment: EnvServiceFactory().environment,
 })
 import { Injectable } from '@angular/core';
 import {
@@ -23,6 +23,8 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { EnvServiceFactory } from './env.service';
+import { environment } from 'src/environments/environment';
 @Injectable()
 export class HttpApmInterceptor implements HttpInterceptor {
   constructor() {}
