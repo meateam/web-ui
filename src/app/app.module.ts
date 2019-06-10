@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { UploadModule } from './file-explorer/upload/upload.module';
 import { FileExplorerModule } from './file-explorer/file-explorer.module';
 import { MatCardModule } from '@angular/material';
+import { HttpApmInterceptor } from './service/apm.interceptor';
 import { FileMetadataDialogComponent } from './file-explorer/dialog/file-metadata-dialog/file-metadata-dialog.component';
 import { UserService } from './service/user.service';
 import { environment } from 'src/environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './service/auth.interceptor';
+import { EnvServiceProvider } from './service/env.service';
 
 
 export function authenticateUser(userService: UserService) {
@@ -38,7 +40,9 @@ export function authenticateUser(userService: UserService) {
     AppRoutingModule
   ],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: HttpApmInterceptor, multi: true },
     CookieService,
+    EnvServiceProvider,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: APP_INITIALIZER, useFactory: authenticateUser, multi: true, deps: [UserService] },
   ],
