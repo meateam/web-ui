@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FileElement } from './model/file-element';
 import { MatDialog, MatMenuTrigger } from '@angular/material';
 import { FileMetadataDialogComponent } from './dialog/file-metadata-dialog/file-metadata-dialog.component';
+import { UserService } from '../service/user.service';
 
 @Component({
   selector: 'file-explorer',
@@ -9,7 +10,7 @@ import { FileMetadataDialogComponent } from './dialog/file-metadata-dialog/file-
   styleUrls: ['./file-explorer.component.scss'],
 })
 export class FileExplorerComponent {
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, public userService: UserService) {}
   @Input() fileElements: FileElement[];
   @Input() canNavigateUp: string;
   @Input() path: string;
@@ -51,6 +52,15 @@ export class FileExplorerComponent {
       width: '50vw',
       data: { file: element }
     });
+  }
+
+  getUserName(): string {
+    const user = this.userService.currentUser
+    if (user) {
+      return `${user.firstName} ${user.lastName}`;
+    }
+
+    return '';
   }
   
   // deleteElement(element: FileElement) {
