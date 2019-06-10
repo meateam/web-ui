@@ -5,13 +5,13 @@ const apm = initApm({
   serviceName: 'web-ui',
 
   // Set custom APM Server URL (default: http://localhost:8200)
-  serverUrl: 'http://localhost:8200',
+  serverUrl: EnvServiceFactory().apmServerUrl,
 
   // Set service version (required for sourcemap feature)
   serviceVersion: '0.1',
   agentVersion: '4.0.1',
-  distributedTracingOrigins: ["http://localhost:8080"],
-  environment: 'development'
+  distributedTracingOrigins: [environment.api],
+  environment: EnvServiceFactory().environment,
 });
 apm.setInitialPageLoadName('index');
 import { enableProdMode } from '@angular/core';
@@ -19,6 +19,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
+import { EnvServiceFactory } from './app/service/env.service';
 
 if (environment.production) {
   enableProdMode();
