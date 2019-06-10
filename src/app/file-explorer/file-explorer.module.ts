@@ -14,6 +14,7 @@ import { FileExplorerComponent } from './file-explorer.component';
 import { NewFolderDialogComponent } from './dialog/new-folder-dialog/new-folder-dialog.component';
 import { RenameDialogComponent } from './dialog/rename-dialog/rename-dialog.component';
 import { UploadModule } from './upload/upload.module';
+import { FileMetadataDialogComponent } from './dialog/file-metadata-dialog/file-metadata-dialog.component';
 
 @NgModule({
   imports: [
@@ -32,6 +33,6 @@ import { UploadModule } from './upload/upload.module';
   ],
   declarations: [FileExplorerComponent, NewFolderDialogComponent, RenameDialogComponent],
   exports: [FileExplorerComponent],
-  entryComponents: [NewFolderDialogComponent, RenameDialogComponent],
+  entryComponents: [NewFolderDialogComponent, RenameDialogComponent, FileMetadataDialogComponent],
 })
 export class FileExplorerModule {}

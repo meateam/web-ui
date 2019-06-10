@@ -28,7 +28,7 @@ export class FileService implements IFileService {
   }
 
   delete(id: string) {
-    this.map.delete(id);
+    return this.http.delete(`${environment.api}/files/${id}`);
   }
 
   update(id: string, update: Partial<FileElement>) {

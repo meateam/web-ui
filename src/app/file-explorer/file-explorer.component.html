@@ -1,6 +1,6 @@
 <mat-toolbar>
   <mat-icon *ngIf="canNavigateUp" class="pointer" (click)="navigateUp()">arrow_back</mat-icon>
-  <span style="margin-left: 8px">{{path || 'Files'}}</span>
+  <span style="margin-left: 8px">{{path || getUserName()}}</span>
   <span class="spacer"></span>
   <app-upload (fileUploaded)="refreshFiles()" style="margin: 0px 10px 0px 10px; display: inline-flex;"></app-upload>
   <!-- <mat-icon class="pointer" (click)="openNewFolderDialog()">create_new_folder</mat-icon> -->
@@ -28,6 +28,14 @@
       <mat-icon>cloud_download</mat-icon>
       <span>Download</span>
     </button>
+    <button mat-menu-item (click)="elementDelete(element)">
+      <mat-icon>delete</mat-icon>
+      <span>Delete</span>
+    </button>
+    <button mat-menu-item (click)="elementMeta(element)">
+        <mat-icon>info</mat-icon>
+        <span>Information</span>
+      </button>
     <!-- <button mat-menu-item [matMenuTriggerFor]="moveToMenu" [matMenuTriggerData]="{self: element}">
       <mat-icon>open_with</mat-icon>
       <span>Move To</span>

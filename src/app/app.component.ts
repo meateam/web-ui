@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FileElement } from './file-explorer/model/file-element';
 import { Observable, of } from 'rxjs';
 import { FileService, FolderContentType } from './service/file.service';
+import { UserService } from './service/user.service';
+import { User } from './service/models/user.model';
 
 @Component({
   selector: 'app-root',
@@ -53,7 +55,15 @@ export class AppComponent {
   downloadFile(element: FileElement) {
     window.open(this.fileService.download(element.id));
   }
-  
+
+  deleteFile(element: FileElement) {
+    this.fileService.delete(element.id).subscribe((deleted: boolean) => {
+      if (deleted) {
+        this.fetchFiles();
+      }
+    });
+  }
+
   // addFolder(folder: { name: string }) {
   //   this.fileService.add({
   //     isFolder: true,

@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  api: "/api"
+  api: "/api",
+  authenticationServiceUrl: '/api/files',
+  authenticationToken: 'kd-token',
 };
 
 /*

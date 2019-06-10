@@ -6,7 +6,10 @@
   multiple
 />
 <div class="container" fxLayout="column" fxLayoutAlign="space-evenly stretch">
-  <h1 mat-dialog-title>Upload Files</h1>
+  <h1 mat-dialog-title>
+    Choose Files To Upload
+  </h1>
+  <p style="font-family: Roboto,'Helvetica Neue',sans-serif;">Uploads: {{ getUploadsSuccessCount() }} / {{ files.size }}</p>
   <div>
     <button
       [disabled]="uploading || uploadSuccessful"
@@ -23,11 +26,19 @@
   <mat-dialog-content fxFlex>
     <mat-list>
       <mat-list-item *ngFor="let file of files">
-        <h4 mat-line>{{file.name}}</h4>
+        <h4 mat-line>
+          {{file.name}}
+        </h4>
+        <span style="padding: 0px" mat-list-icon>
+          <mat-icon *ngIf="!upload">cloud</mat-icon>
+          <mat-icon *ngIf="upload && uploadsSuccess[file.name] && !uploadsError[file.name]">cloud_done</mat-icon>
+          <mat-icon *ngIf="upload && !uploadsSuccess[file.name] && !uploadsError[file.name]">cloud_upload</mat-icon>
+          <mat-icon *ngIf="upload && !uploadsSuccess[file.name] && uploadsError[file.name]">error</mat-icon>
+        </span>
         <mat-progress-bar
-          *ngIf="progress"
+          *ngIf="upload"
           mode="determinate"
-          [value]="progress[file.name].progress | async"
+          [value]="upload[file.name].progress | async"
         ></mat-progress-bar>
       </mat-list-item>
     </mat-list>
