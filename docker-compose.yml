@@ -92,9 +92,9 @@ services:
     depends_on:
       - mongo
   mongo:
-    image: 'mongo:latest'
+    image: 'mongo:4.0.9'
     ports:
-      - '27018:27017'
+      - '27017:27017'
     volumes:
       - './data/db:/data/db'
   authentication-service:
