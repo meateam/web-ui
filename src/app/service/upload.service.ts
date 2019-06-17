@@ -8,7 +8,7 @@ import {
   HttpParams,
 } from '@angular/common/http'
 import { Subject, Observable } from 'rxjs';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 
 const url = `${environment.api}/upload`;
 
@@ -65,8 +65,10 @@ export class UploadService {
         };
       } else {
         const fileMetadata = { title: file.name, mimeType: file.type };
+        const initReqHeaders = new HttpHeaders().set('X-Content-Length', `${file.size}`);
         const initReq = new HttpRequest("POST", url, fileMetadata, {
-          responseType: 'text'
+          responseType: 'text',
+          headers: initReqHeaders,
         });
         this.http.request<string>(initReq).subscribe(initEvent => {
           if (initEvent instanceof HttpResponse) {
