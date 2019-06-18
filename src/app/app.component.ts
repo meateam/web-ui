@@ -53,7 +53,13 @@ export class AppComponent {
   }
 
   downloadFile(element: FileElement) {
-    window.open(this.fileService.download(element.id));
+    const downloadUrl = this.fileService.download(element.id);
+    const anchor = document.createElement('a');
+    anchor.target = '_blank';
+    anchor.href = downloadUrl;
+    anchor.download = element.name;
+    anchor.click();
+    anchor.remove();
   }
 
   deleteFile(element: FileElement) {
