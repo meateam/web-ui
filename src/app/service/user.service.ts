@@ -16,12 +16,19 @@ export class UserService {
 	public get currentUser(): User {
 		const token = this.cookieService.get(environment.authenticationToken);
 		if (token) {
-			const tokenData = token.split('.')[1];
-			const decodedData = window.atob(tokenData);
-
-			return JSON.parse(decodedData) as User;
+			return parseJwt(token);
 		}
 
 		return null;
-	}
+  }
 }
+
+function parseJwt (token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload) as User;
+};
