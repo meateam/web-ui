@@ -19,6 +19,7 @@ services:
       ELASTIC_APM_IGNORE_URLS: /api/healthcheck
       ELASTIC_APM_CAPTURE_BODY: all
       ELASTIC_APM_METRICS_INTERVAL: 10s
+      GW_EXTERNAL_APM_URL: http://localhost:8200
       GW_SECRET: pandora@drive
     ports:
       - '8080:8080'
@@ -86,7 +87,7 @@ services:
   file-service:
     image: file-service
     environment:
-      MONGO_HOST: mongo
+      MONGO_HOST: mongodb://mongo:27017/devDB
     ports:
       - '8083:8080'
     depends_on:

@@ -55,9 +55,9 @@ export class FileExplorerComponent {
   }
 
   getUserName(): string {
-    const user = this.userService.currentUser
+    const user = this.userService.currentUser;
     if (user) {
-      return `${user.firstName} ${user.lastName}`;
+      return user.lastName + ' ' + user.firstName;
     }
 
     return '';

@@ -10,12 +10,15 @@ export class AuthInterceptor implements HttpInterceptor {
 	constructor(private cookieService: CookieService) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-		req = req.clone({
-			setHeaders: {
-				'Authorization':
-					`Bearer ${this.cookieService.get(environment.authenticationToken)}`,
-			},
-		});
+		const authToken = this.cookieService.get(environment.authenticationToken);
+		if (authToken) {
+			req = req.clone({
+				setHeaders: {
+					'Authorization':
+						`Bearer ${authToken}`,
+				},
+			});
+		}
 
 		return next.handle(req);
 	}

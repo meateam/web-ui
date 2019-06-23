@@ -103,7 +103,10 @@ export class UploadService {
               progress.error(err);
             });
           }
-        });
+        }, err => {
+					response.error(err);
+          progress.error(err);
+				});
 
         // Save every progress-observable in a map of all observables
         status[file.name] = {
