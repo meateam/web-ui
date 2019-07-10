@@ -8,6 +8,7 @@ services:
       GW_UPLOAD_SERVICE: 'upload-service:8080'
       GW_DOWNLOAD_SERVICE: 'download-service:8080'
       GW_FILE_SERVICE: 'file-service:8080'
+      GW_ALLOW_ORIGINS: http://localhost*
       ELASTICSEARCH_URL: http://localhost:9200
       LOG_INDEX: kdrive
       LOG_LEVEL: info
@@ -98,6 +99,8 @@ services:
       - '27017:27017'
     volumes:
       - './data/db:/data/db'
+    depends_on:
+      - minio
   authentication-service:
     image: bluehub.azurecr.io/meateam/authentication-service:latest
     ports:
