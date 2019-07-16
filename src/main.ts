@@ -1,6 +1,5 @@
 import { init as initApm } from '@elastic/apm-rum';
 const apm = initApm({
-
   // Set required service name (allowed characters: a-z, A-Z, 0-9, -, _, and space)
   serviceName: 'web-ui',
 

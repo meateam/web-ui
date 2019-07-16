@@ -13,6 +13,7 @@ export class AuthInterceptor implements HttpInterceptor {
 		const authToken = this.cookieService.get(environment.authenticationToken);
 		if (authToken) {
 			req = req.clone({
+				withCredentials: true,
 				setHeaders: {
 					'Authorization':
 						`Bearer ${authToken}`,
