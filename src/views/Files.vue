@@ -175,7 +175,6 @@ export default {
         if (this.isEditor ||
           !this.isFiles ||
           this.loading ||
-          !this.user.perm.delete ||
           (this.isListing && this.selectedCount === 0)) return
 
         this.$store.commit('showHover', 'delete')
@@ -192,7 +191,6 @@ export default {
         if (this.isEditor ||
           !this.isFiles ||
           this.loading ||
-          !this.user.perm.rename ||
           (this.isListing && this.selectedCount === 0) ||
           (this.isListing && this.selectedCount > 1)) return
 

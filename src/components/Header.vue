@@ -41,7 +41,7 @@
             <delete-button v-show="showDeleteButton"></delete-button>
           </div>
 
-          <shell-button v-show="user.perm.execute" />
+          <shell-button/>
           <switch-button v-show="isListing"></switch-button>
           <download-button v-show="showDownloadButton"></download-button>
           <upload-button v-show="showUpload"></upload-button>
@@ -127,38 +127,38 @@ export default {
       return this.width <= 736
     },
     showUpload () {
-      return this.isListing && this.user.perm.create
+      return this.isListing
     },
     showSaveButton () {
-      return this.isEditor && this.user.perm.modify
+      return this.isEditor
     },
     showDownloadButton () {
-      return this.isFiles && this.user.perm.download
+      return this.isFiles
     },
     showDeleteButton () {
       return this.isFiles && (this.isListing
-        ? (this.selectedCount !== 0 && this.user.perm.delete)
-        : this.user.perm.delete)
+        ? (this.selectedCount !== 0)
+        : true)
     },
     showRenameButton () {
       return this.isFiles && (this.isListing
-        ? (this.selectedCount === 1 && this.user.perm.rename)
-        : this.user.perm.rename)
+        ? (this.selectedCount === 1)
+        : true)
     },
     showShareButton () {
       return this.isFiles && (this.isListing
-        ? (this.selectedCount === 1 && this.user.perm.share)
-        : this.user.perm.share)
+        ? (this.selectedCount === 1)
+        : true)
     },
     showMoveButton () {
       return this.isFiles && (this.isListing
-        ? (this.selectedCount > 0 && this.user.perm.rename)
-        : this.user.perm.rename)
+        ? (this.selectedCount > 0)
+        : true)
     },
     showCopyButton () {
       return this.isFiles && (this.isListing
-        ? (this.selectedCount > 0 && this.user.perm.create)
-        : this.user.perm.create)
+        ? (this.selectedCount > 0)
+        : true)
     },
     showMore () {
       return this.isFiles && this.$store.state.show === 'more'

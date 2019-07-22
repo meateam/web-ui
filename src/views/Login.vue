@@ -64,7 +64,7 @@ export default {
           await auth.signup(this.username, this.password)
         }
 
-        await auth.login(this.username, this.password)
+        await auth.validateLogin()
         this.$router.push({ path: redirect })
       } catch (e) {
         if (e.message == 409) {

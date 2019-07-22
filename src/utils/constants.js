@@ -5,7 +5,7 @@ const signup = false
 const version = '(untracked)'
 const logoURL = `/img/logo.svg`
 const noAuth = false
-const loginPage = true
+const loginPage = false
 
 export {
   name,

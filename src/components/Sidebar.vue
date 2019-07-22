@@ -6,7 +6,7 @@
         <span>{{ $t('sidebar.myFiles') }}</span>
       </router-link>
 
-      <div v-if="user.perm.create">
+      <div>
         <button @click="$store.commit('showHover', 'newDir')" class="action" :aria-label="$t('sidebar.newFolder')" :title="$t('sidebar.newFolder')">
           <i class="material-icons">create_new_folder</i>
           <span>{{ $t('sidebar.newFolder') }}</span>
