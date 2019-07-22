@@ -5,7 +5,7 @@ import store from '@/store'
 export async function fetch (url) {
   url = removePrefix(url)
 
-  const res = await fetchURL(`/api/resources${url}`, {})
+  const res = await fetchURL(`/api/files`, {})
 
   if (res.status === 200) {
     let data = await res.json()
@@ -88,7 +88,7 @@ export async function post (url, content = '', overwrite = false, onupload) {
   return new Promise((resolve, reject) => {
     let request = new XMLHttpRequest()
     request.open('POST', `${baseURL}/api/resources${url}?override=${overwrite}`, true)
-    request.setRequestHeader('X-Auth', store.state.jwt)
+    request.setRequestHeader('Authorization', 'Bearer '+ store.state.jwt)
 
     if (typeof onupload === 'function') {
       request.upload.onprogress = onupload

@@ -10,7 +10,7 @@ export async function fetchURL (url, opts) {
 
   const res = await fetch(`${baseURL}${url}`, {
     headers: {
-      'X-Auth': store.state.jwt,
+      'Authorization': 'Bearer '+ store.state.jwt,
       ...headers
     },
     ...rest
