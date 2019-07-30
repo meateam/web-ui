@@ -67,7 +67,7 @@ export default {
       // If the path isn't the root path,
       // show a button to navigate to the previous
       // directory.
-      if (req.url !== '/files/') {
+      if (req.url !== '/files') {
         this.items.push({
           name: '..',
           url: url.removeLastDir(req.url) + '/'

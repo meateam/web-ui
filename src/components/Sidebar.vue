@@ -1,7 +1,7 @@
 <template>
   <nav :class="{active}">
     <template v-if="isLogged">
-      <router-link class="action" to="/files/" :aria-label="$t('sidebar.myFiles')" :title="$t('sidebar.myFiles')">
+      <router-link class="action" to="/files" :aria-label="$t('sidebar.myFiles')" :title="$t('sidebar.myFiles')">
         <i class="material-icons">folder</i>
         <span>{{ $t('sidebar.myFiles') }}</span>
       </router-link>

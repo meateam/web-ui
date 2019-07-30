@@ -43,7 +43,7 @@ const router = new Router({
           component: Share
         },
         {
-          path: '/files/*',
+          path: '/files*',
           name: 'Files',
           component: Files,
           meta: {
@@ -110,7 +110,7 @@ const router = new Router({
         {
           path: '/files',
           redirect: {
-            path: '/files/'
+            path: '/files'
           }
         },
         {

@@ -6,6 +6,7 @@ const version = '(untracked)'
 const logoURL = `/img/logo.svg`
 const noAuth = false
 const loginPage = false
+const folderContentType = "application/vnd.drive.folder"
 
 export {
   name,
@@ -15,5 +16,6 @@ export {
   signup,
   version,
   noAuth,
-  loginPage
+	loginPage,
+	folderContentType
 }

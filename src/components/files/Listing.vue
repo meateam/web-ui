@@ -1,5 +1,5 @@
 <template>
-  <div v-if="(req.numDirs + req.numFiles) == 0">
+  <div v-if="req.items.length == 0">
     <h2 class="message">
       <i class="material-icons">sentiment_dissatisfied</i>
       <span>{{ $t('files.lonely') }}</span>
@@ -104,16 +104,16 @@ export default {
   computed: {
     ...mapState(['req', 'selected', 'user']),
     nameSorted () {
-      return (this.req.sorting.by === 'name')
+      return true;
     },
     sizeSorted () {
-      return (this.req.sorting.by === 'size')
+      return false;
     },
     modifiedSorted () {
-      return (this.req.sorting.by === 'modified')
+      return false;
     },
     ascOrdered () {
-      return this.req.sorting.asc
+      return true;
     },
     items () {
       const dirs = []

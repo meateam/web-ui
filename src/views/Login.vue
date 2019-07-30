@@ -49,7 +49,7 @@ export default {
 
       let redirect = this.$route.query.redirect
       if (redirect === '' || redirect === undefined || redirect === null) {
-        redirect = '/files/'
+        redirect = '/files'
       }
 
       if (this.createMode) {

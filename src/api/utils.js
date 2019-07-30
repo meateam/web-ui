@@ -38,8 +38,6 @@ export function removePrefix (url) {
     url = url.slice(6)
   }
 
-  if (url === '') url = '/'
-  if (url[0] !== '/') url = '/' + url
   return url
 }
 
