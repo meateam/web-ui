@@ -91,20 +91,21 @@ export function download(files) {
 	}
 }
 
-export async function post(url, content = '', overwrite = false, onupload) {
-	url = removePrefix(url)
-
+export async function upload(url, file, headers, onupload) {
 	return new Promise((resolve, reject) => {
-		let request = new XMLHttpRequest()
-		request.open('POST', `${baseURL}/api/resources${url}?override=${overwrite}`, true)
-		request.setRequestHeader('Authorization', 'Bearer ' + store.state.jwt)
+		let request = new XMLHttpRequest();
+		request.open('POST', url, true);
+		request.withCredentials = true;
+		for (let prop in headers) {
+			request.setRequestHeader(prop, headers[prop]);
+		}
 
 		if (typeof onupload === 'function') {
-			request.upload.onprogress = onupload
+			request.upload.onprogress = onupload;
 		}
 
 		// Send a message to user before closing the tab during file upload
-		window.onbeforeunload = () => "Files are being uploaded."
+		window.onbeforeunload = () => "Files are being uploaded.";
 
 		request.onload = () => {
 			if (request.status === 200) {
@@ -120,9 +121,64 @@ export async function post(url, content = '', overwrite = false, onupload) {
 			reject(error)
 		}
 
-		request.send(content)
+		const formData = new FormData();
+		formData.append("file", file, file.name);
+		request.send(formData);
 		// Upload is done no more message before closing the tab 
 	}).finally(() => { window.onbeforeunload = null })
+}
+
+export async function uploadInit(file) {
+	return new Promise((resolve, reject) => {
+		const fileMetadata = { title: file.name, mimeType: file.type };
+		const url = `${baseURL}/api/upload`;
+		const request = new XMLHttpRequest();
+		const responseUploadIdHeader = 'x-uploadid';
+		request.open('POST', url, true);
+		request.setRequestHeader('content-type', 'application/json');
+		request.setRequestHeader('X-Content-Length', `${file.size}`);
+		request.setRequestHeader('Authorization', 'Bearer ' + store.state.jwt);
+
+		request.onload = () => {
+			if (request.status === 200) {
+				resolve(request.getResponseHeader(responseUploadIdHeader));
+			} else if (request.status === 409) {
+				reject(request.status);
+			} else {
+				reject(request.responseText);
+			}
+		};
+
+		request.onerror = (error) => {
+			reject(error)
+		};
+
+		request.send(JSON.stringify(fileMetadata));
+	}).finally(() => { window.onbeforeunload = null });
+}
+
+export async function post(base, file, onupload) {
+	return new Promise(async (resolve, reject) => {
+		const requestUploadIdHeader = 'uploadId';
+		let url = `${baseURL}/api/upload`;
+		let headers = {
+			Authorization: 'Bearer ' + store.state.jwt
+		}
+
+		if (file.size <= 5 << 20) {
+			url += '?uploadType=multipart';
+		} else {
+			const uploadId = await this.uploadInit(file);
+			headers['Content-Range'] = `bytes 0-${file.size - 1}/${file.size}`;
+			url += `?uploadType=resumable&${requestUploadIdHeader}=${uploadId}`;
+		}
+
+		if (base) {
+			url += `&parent=${base}`;
+		}
+
+		this.upload(url, file, headers, onupload).then(resolve).catch(reject);
+	}).finally(() => { window.onbeforeunload = null });
 }
 
 function moveCopy(items, copy = false) {
