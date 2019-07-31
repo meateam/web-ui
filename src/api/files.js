@@ -37,6 +37,7 @@ export async function fetch(url) {
 		let numDirs = 0;
 		let numFiles = 0;
 		for (let i = 0; i < data.items.length; i++) {
+			data.items[i].index = i;
 			data.items[i].modified = new Date(data.items[i].updatedAt);
 			delete data.items[i].updatedAt;
 			if (data.items[i].type === folderContentType) {
@@ -79,29 +80,10 @@ export async function put(url, content = '') {
 	return resourceAction(url, 'PUT', content)
 }
 
-export function download(format, ...files) {
-	let url = `${baseURL}/api/raw`
-
-	if (files.length === 1) {
-		url += removePrefix(files[0]) + '?'
-	} else {
-		let arg = ''
-
-		for (let file of files) {
-			arg += removePrefix(file) + ','
-		}
-
-		arg = arg.substring(0, arg.length - 1)
-		arg = encodeURIComponent(arg)
-		url += `/?files=${arg}&`
+export function download(files) {
+	if (files.length > 0) {
+		window.open(`${baseURL}/api/files/${files[0]}?alt=media`);
 	}
-
-	if (format !== null) {
-		url += `algo=${format}&`
-	}
-
-	url += `auth=${store.state.jwt}`
-	window.open(url)
 }
 
 export async function post(url, content = '', overwrite = false, onupload) {

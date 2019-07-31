@@ -29,20 +29,18 @@ export default {
     ...mapGetters(['selectedCount'])
   },
   methods: {
-    download: function (format) {
-      if (this.selectedCount === 0) {
-        api.download(format, this.$route.path)
-      } else {
-        let files = []
+    download: function () {
+      if (this.selectedCount !== 0) {
+        let files = [];
 
         for (let i of this.selected) {
-          files.push(this.req.items[i].url)
+          files.push(this.req.items[i].id);
         }
 
-        api.download(format, ...files)
+        api.download(files);
       }
 
-      this.$store.commit('closeHovers')
+      this.$store.commit('closeHovers');
     }
   }
 }

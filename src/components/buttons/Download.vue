@@ -19,16 +19,16 @@ export default {
   methods: {
     download: function () {
       if (!this.isListing) {
-        api.download(null, this.$route.path)
-        return
+        api.download([this.$route.path]);
+        return;
       }
 
       if (this.selectedCount === 1 && !this.req.items[this.selected[0]].isDir) {
-        api.download(null, this.req.items[this.selected[0]].url)
-        return
+        api.download([this.req.items[this.selected[0]].id]);
+        return;
       }
 
-      this.$store.commit('showHover', 'download')
+      this.$store.commit('showHover', 'download');
     }
   }
 }
