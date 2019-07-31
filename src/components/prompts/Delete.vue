@@ -49,7 +49,7 @@ export default {
 
         let promises = []
         for (let index of this.selected) {
-          promises.push(api.remove(this.req.items[index].url))
+          promises.push(api.remove(this.req.items[index].id))
         }
 
         await Promise.all(promises)

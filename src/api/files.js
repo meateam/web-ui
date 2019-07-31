@@ -55,25 +55,30 @@ export async function fetch(url) {
 }
 
 async function resourceAction(url, method, content) {
-	url = removePrefix(url)
+	url = removePrefix(url);
 
-	let opts = { method }
+	let opts = { method };
 
 	if (content) {
-		opts.body = content
+		opts.body = content;
 	}
 
-	const res = await fetchURL(`/api/resources${url}`, opts)
+	const res = await fetchURL(`/api/resources${url}`, opts);
 
 	if (res.status !== 200) {
-		throw new Error(res.responseText)
+		throw new Error(res.responseText);
 	} else {
-		return res
+		return res;
 	}
 }
 
-export async function remove(url) {
-	return resourceAction(url, 'DELETE')
+export async function remove(file) {
+	const res = await fetchURL(`/api/files/${file}`, { method: 'DELETE' });
+	if (res.status !== 200) {
+		throw new Error(res.responseText);
+	} else {
+		return res;
+	}
 }
 
 export async function put(url, content = '') {
