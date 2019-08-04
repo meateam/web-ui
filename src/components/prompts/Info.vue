@@ -9,6 +9,7 @@
 
       <p v-if="selected.length < 2"><strong>{{ $t('prompts.displayName') }}</strong> {{ name }}</p>
       <p v-if="!dir || selected.length > 1"><strong>{{ $t('prompts.size') }}:</strong> <span id="content_length"></span> {{ humanSize }}</p>
+			<p v-if="!dir || selected.length == 1"><strong>{{ $t('prompts.type') }}:</strong> {{ type }}</p>
       <p v-if="selected.length < 2"><strong>{{ $t('prompts.lastModified') }}:</strong> {{ humanTime }}</p>
 
       <template v-if="dir && selected.length === 0">
@@ -16,12 +17,12 @@
         <p><strong>{{ $t('prompts.numberDirs') }}:</strong> {{ req.numDirs }}</p>
       </template>
 
-      <template v-if="!dir">
+      <!-- <template v-if="!dir">
         <p><strong>MD5: </strong><code><a @click="checksum($event, 'md5')">{{ $t('prompts.show') }}</a></code></p>
         <p><strong>SHA1: </strong><code><a @click="checksum($event, 'sha1')">{{ $t('prompts.show') }}</a></code></p>
         <p><strong>SHA256: </strong><code><a @click="checksum($event, 'sha256')">{{ $t('prompts.show') }}</a></code></p>
         <p><strong>SHA512: </strong><code><a @click="checksum($event, 'sha512')">{{ $t('prompts.show') }}</a></code></p>
-      </template>
+      </template> -->
     </div>
 
     <div class="card-action">
@@ -63,11 +64,14 @@ export default {
         return moment(this.req.modified).fromNow()
       }
 
-      return moment(this.req.items[this.selected[0]]).fromNow()
+      return moment(this.req.items[this.selected[0]].modified).fromNow()
     },
     name: function () {
       return this.selectedCount === 0 ? this.req.name : this.req.items[this.selected[0]].name
-    },
+		},
+		type: function() {
+			return this.selectedCount === 0 ? this.req.type : this.req.items[this.selected[0]].type;
+		},
     dir: function () {
       return this.selectedCount > 1 || (this.selectedCount === 0
         ? this.req.isDir

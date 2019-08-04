@@ -113,7 +113,8 @@
     "rename": "Rename",
     "renameMessage": "Insert a new name for",
     "show": "Show",
-    "size": "Size",
+		"size": "Size",
+		"type": "Type",
     "schedule": "Schedule",
     "scheduleMessage": "Pick a date and time to schedule the publication of this post.",
     "newArchetype": "Create a new post based on an archetype. Your file will be created on content folder."
