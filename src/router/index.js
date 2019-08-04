@@ -115,7 +115,7 @@ const router = new Router({
         },
         {
           path: '/*',
-          redirect: to => `/files${to.path}`
+          redirect: () => `/files`
         }
       ]
     }
