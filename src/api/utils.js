@@ -1,6 +1,7 @@
 import store from '@/store'
 import { renew } from '@/utils/auth'
 import { baseURL } from '@/utils/constants'
+import { apm } from '@/utils/apm';
 
 export async function fetchURL (url, opts) {
   opts = opts || {}
@@ -8,13 +9,17 @@ export async function fetchURL (url, opts) {
 
   let { headers, ...rest } = opts
 
-  const res = await fetch(`${baseURL}${url}`, {
+	const reqUrl = `${baseURL}${url}`;
+	const transaction = apm.startTransaction(`GET ${reqUrl}`, 'http');
+  const res = await fetch(reqUrl, {
     headers: {
       'Authorization': 'Bearer '+ store.state.jwt,
       ...headers
     },
     ...rest
-  })
+	});
+	
+	transaction.end();
 
   if (res.headers.get('X-Renew-Token') === 'true') {
     await renew(store.state.jwt)

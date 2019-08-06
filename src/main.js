@@ -5,12 +5,15 @@ import i18n from '@/i18n';
 import Vue from '@/utils/vue';
 import { validateLogin } from '@/utils/auth';
 import App from '@/App';
-import { fetchConfig } from './utils/constants';
+import { fetchConfig } from '@/utils/constants';
+import { initApm } from '@/utils/apm';
+import { config } from '@/utils/constants';
 
 sync(store, router);
 
 async function start () {
 	await fetchConfig();
+	await initApm(config);
 
 	await validateLogin();
 	new Vue({
