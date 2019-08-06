@@ -66,7 +66,7 @@ export async function validateLogin () {
     if (localStorage.getItem('jwt') || getCookie("kd-token")) {
       parseToken();
     } else {
-      window.open(`http://localhost:8084/auth/login`, '_self');
+      window.open(`/auth/login`, '_self');
     }
 
   } catch (_) {
