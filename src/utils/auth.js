@@ -22,7 +22,7 @@ function getCookie(cname) {
 }
 
 export function parseToken () {
-  const token = getCookie("kd-token");
+	const token = getCookie("kd-token");
 
   const parts = token.split('.')
 
@@ -63,7 +63,7 @@ export function parseToken () {
 
 export async function validateLogin () {
   try {
-    if (localStorage.getItem('jwt') || getCookie("kd-token")) {
+    if (getCookie("kd-token")) {
       parseToken();
     } else {
       window.open(`/auth/login`, '_self');

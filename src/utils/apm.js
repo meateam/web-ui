@@ -6,6 +6,7 @@ export let apm = undefined;
 export function initApm(config) {
 	apm = init();
 	apm.config({
+		serviceName: 'web-ui',
 		// Set custom APM Server URL (default: http://localhost:8200)
 		serverUrl: config.apmServerUrl,
 		// Set service version (required for sourcemap feature)
@@ -14,4 +15,5 @@ export function initApm(config) {
 		distributedTracingOrigins: [`${baseURL}/api`],
 		environment: config.environment,
 	});
+	apm.setInitialPageLoadName('index');
 }
