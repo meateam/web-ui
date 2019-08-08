@@ -102,7 +102,7 @@ services:
     depends_on:
       - minio
   authentication-service:
-    image: bluehub.azurecr.io/meateam/authentication-service:latest
+    image: authentication-service:latest
     ports:
       - '8084:8080'
     environment:
@@ -112,6 +112,7 @@ services:
       USERS_RPC_ENDPOINT: 'user-service:8080'
       SECRET_KEY: pandora@drive
       CLIENT_ENDPOINT: 'http://localhost'
+      STRATEGY: 'saml'
     depends_on:
       - saml-idp
       - user-service
