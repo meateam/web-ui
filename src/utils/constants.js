@@ -13,7 +13,11 @@ const config = {
 };
 
 export async function fetchConfig() {
+<<<<<<< HEAD
 	const res = await fetch(`${baseURL}api/config`);
+=======
+	const res = await fetch(`${baseURL}/api/config`);
+>>>>>>> develop
 	const conf = await res.json();
 	config.apmServerUrl = conf.apmServerUrl;
 	config.environment = conf.environment;
