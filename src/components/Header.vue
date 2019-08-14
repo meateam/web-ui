@@ -46,16 +46,13 @@
           <download-button v-show="showDownloadButton"></download-button>
           <upload-button v-show="showUpload"></upload-button>
           <info-button v-show="isFiles"></info-button>
-          <span @click="toggleUser">
           <user-button :user="user"></user-button>
-          </span>
 
           <button v-show="isListing && multiple" @click="openSelect" :aria-label="$t('buttons.selectMultiple')" :title="$t('buttons.selectMultiple')" class="action">
             <i class="material-icons">check_circle</i>
             <span>{{ $t('buttons.select') }}</span>
           </button>
         </div>
-        <div :class="{'fade-on':userToggled}" class="speech-bubble fade">{{$t('header.signedAs')}}&nbsp;<span class="bold-name">{{user.firstName + " " + user.lastName}}</span></div>
       </template>
 
       <div v-show="showOverlay" @click="resetPrompts" class="overlay"></div>
@@ -98,9 +95,7 @@ export default {
     UserButton
   },
   data: function () {
-    return {
-      userToggled: false,
-      userToggledTimeout: null,
+    return {      
       width: window.innerWidth,
       pluginData: {
         api,

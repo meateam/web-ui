@@ -264,11 +264,13 @@ header .search-button {
 
 .speech-bubble {
   position: absolute;
+  top: 3.5em;
+  right: 0;
   color: #fafafa;
   font-weight: 400;
   align-items: center;
   padding: 0.5em;
-  top: 3.5em;
+  width: max-content;
   height: 2em;
 	background: #546e7a;
 	border-radius: .3em;
