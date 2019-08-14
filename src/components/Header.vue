@@ -46,12 +46,16 @@
           <download-button v-show="showDownloadButton"></download-button>
           <upload-button v-show="showUpload"></upload-button>
           <info-button v-show="isFiles"></info-button>
+          <span @click="toggleUser">
+          <user-button :user="user"></user-button>
+          </span>
 
           <button v-show="isListing && multiple" @click="openSelect" :aria-label="$t('buttons.selectMultiple')" :title="$t('buttons.selectMultiple')" class="action">
             <i class="material-icons">check_circle</i>
             <span>{{ $t('buttons.select') }}</span>
           </button>
         </div>
+        <div :class="{'fade-on':userToggled}" class="speech-bubble fade">{{$t('header.signedAs')}}&nbsp;<span class="bold-name">{{user.firstName + " " + user.lastName}}</span></div>
       </template>
 
       <div v-show="showOverlay" @click="resetPrompts" class="overlay"></div>
@@ -71,6 +75,7 @@ import MoveButton from './buttons/Move'
 import CopyButton from './buttons/Copy'
 import ShareButton from './buttons/Share'
 import ShellButton from './buttons/Shell'
+import UserButton from './buttons/User';
 import {mapGetters, mapState} from 'vuex'
 import { logoURL } from '@/utils/constants'
 import * as api from '@/api'
@@ -89,10 +94,13 @@ export default {
     UploadButton,
     SwitchButton,
     MoveButton,
-    ShellButton
+    ShellButton,
+    UserButton
   },
   data: function () {
     return {
+      userToggled: false,
+      userToggledTimeout: null,
       width: window.innerWidth,
       pluginData: {
         api,
@@ -183,6 +191,11 @@ export default {
     },
     resetPrompts () {
       this.$store.commit('closeHovers')
+    },
+    toggleUser: function() {
+      this.userToggled = !this.userToggled;
+      clearTimeout(this.userToggledTimeout);
+      this.userToggledTimeout = setTimeout(() => this.userToggled = false, 2000);
     }
   }
 }
