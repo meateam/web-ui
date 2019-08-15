@@ -257,3 +257,45 @@ header .search-button {
   color: #fff !important;
   font-size: 3.5em;
 }
+
+.bold-name {
+  font-weight: 500;
+}
+
+.speech-bubble {
+  position: absolute;
+  top: 3.5em;
+  right: 0;
+  color: #fafafa;
+  font-weight: 400;
+  align-items: center;
+  padding: 0.5em;
+  width: max-content;
+  height: 2em;
+	background: #546e7a;
+	border-radius: .3em;
+}
+
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 1.5em;
+	width: 0;
+	height: 0;
+  border: 10px solid transparent;
+  border-bottom-color: #546e7a;
+  border-right: 0;
+	border-top: 0;
+	margin-right: 0px;
+	margin-top: -10px;
+}
+
+.fade {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  }
+
+.fade-on {
+  opacity: 1;
+}

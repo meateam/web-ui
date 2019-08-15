@@ -37,7 +37,7 @@ export function parseToken () {
   }
 
   const user = {
-    id: data.id,
+    ...data,
     locale:"en",
     lockPassword:"false",
     viewMode:"mosaic",
@@ -53,7 +53,6 @@ export function parseToken () {
     },
     commands:[],
     iss: "File Browser",
-    iat: data.iat
   };
 
   localStorage.setItem('jwt', token)

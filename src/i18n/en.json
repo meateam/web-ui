@@ -184,12 +184,18 @@
       "share": "Share files"
     }
   },
+  "header": {
+    "signedAs": "Signed in as"
+  },
   "sidebar": {
     "help": "Help",
     "login": "Login",
     "signup": "Signup",
     "logout": "Logout",
-    "myFiles": "My files",
+    "myFiles": {
+      "title": "My files",
+      "personalized": "{person}'s files"
+    },
     "newFile": "New file",
     "newFolder": "New folder",
     "settings": "Settings",
