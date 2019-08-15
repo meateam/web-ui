@@ -1,6 +1,6 @@
 const name = 'KDrive';
 const disableExternal = false;
-const baseURL = '/';
+const baseURL = '';
 const signup = false;
 const version = '(untracked)';
 const logoURL = `/img/logo.svg`;
@@ -13,7 +13,7 @@ const config = {
 };
 
 export async function fetchConfig() {
-	const res = await fetch(`${baseURL}api/config`);
+	const res = await fetch(`${baseURL}/api/config`);
 	const conf = await res.json();
 	config.apmServerUrl = conf.apmServerUrl;
 	config.environment = conf.environment;
