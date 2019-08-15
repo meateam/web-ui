@@ -7,7 +7,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import { users as api } from '@/api'
+// import { users as api } from '@/api'
 
 export default {
   name: 'switch-button',
@@ -29,7 +29,7 @@ export default {
       }
 
       try {
-        await api.update(data, ['viewMode'])
+        //await api.update(data, ['viewMode'])
         this.updateUser(data)
       } catch (e) {
         this.$showError(e)
