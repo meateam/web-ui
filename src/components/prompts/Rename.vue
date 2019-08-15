@@ -25,7 +25,6 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import url from '@/utils/url'
 import { files as api } from '@/api'
 
 export default {
@@ -59,23 +58,10 @@ export default {
       return this.req.items[this.selected[0]].name
     },
     submit: async function () {
-      let oldLink = ''
-      let newLink = ''
-
-      if (!this.isListing) {
-        oldLink = this.req.url
-      } else {
-        oldLink = this.req.items[this.selected[0]].url
-      }
-
-      newLink = url.removeLastDir(oldLink) + '/' + encodeURIComponent(this.name)
+      const id = this.req.items[this.selected[0]].id;      
 
       try {
-        await api.move([{ from: oldLink, to: newLink }])
-        if (!this.isListing) {
-          this.$router.push({ path: newLink })
-          return
-        }
+        await api.rename(id, this.name)
 
         this.$store.commit('setReload', true)
       } catch (e) {

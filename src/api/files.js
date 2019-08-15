@@ -198,6 +198,37 @@ export function move(items) {
 	return moveCopy(items)
 }
 
+export function rename(id, name){
+	return new Promise((resolve, reject) => {
+		let request = new XMLHttpRequest();
+		request.open('PUT', `${baseURL}/api/files/${id}`, true);
+		request.withCredentials = true;
+		request.setRequestHeader('Authorization','Bearer ' + store.state.jwt);
+
+		// Send a message to user before closing the tab during file upload
+		window.onbeforeunload = () => "Renaming file.";
+
+		request.onload = () => {
+      if (request.status === 200) {
+        resolve(request.responseText);
+      } else if (request.status === 409) {
+        reject(request.status);
+      } else {
+        reject(request.responseText);
+      }
+		}
+		
+		request.onerror = (error) => {
+      reject(error);
+    }
+
+		const formData = new FormData();
+		formData.append("partialFile", {name});
+		request.send(JSON.stringify({name}));
+		// Upload is done no more message before closing the tab 
+	}).finally(() => { window.onbeforeunload = null })
+}
+
 export function copy(items) {
 	return moveCopy(items, true)
 }
