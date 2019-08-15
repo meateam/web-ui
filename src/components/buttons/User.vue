@@ -1,9 +1,10 @@
 <template>
-  <div @click="toggleUser" class="action">
-    <div>
-      {{user.firstName[0] + user.lastName[0]}}
+  <div v-show="nameExists" @click="toggleUser" class="action">
+    <div>{{nameLetters}}</div>
+    <div :class="{'fade-on':userToggled}" class="speech-bubble fade">
+      {{$t('header.signedAs')}}&nbsp;
+      <span class="bold-name">{{fullName}}</span>
     </div>
-    <div :class="{'fade-on':userToggled}" class="speech-bubble fade">{{$t('header.signedAs')}}&nbsp;<span class="bold-name">{{user.firstName + " " + user.lastName}}</span></div>
   </div>
 </template>
 
@@ -15,6 +16,17 @@ export default {
     return {
       userToggled: false,
       userToggledTimeout: null
+    }
+  },
+  computed: {
+    nameExists: function () {
+      return this.user.firstName && this.user.lastName;
+    },
+    fullName: function () {
+      return this.user.firstName + " " + this.user.lastName;
+    },
+    nameLetters: function () {
+      return this.user.firstName[0] + this.user.lastName[0];
     }
   },
   methods: {

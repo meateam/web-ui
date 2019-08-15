@@ -3,7 +3,8 @@
     <template v-if="isLogged">
       <router-link class="action" to="/files" :aria-label="$t('sidebar.myFiles')" :title="$t('sidebar.myFiles.title')">
         <i class="material-icons">folder</i>
-        <span>{{ $t('sidebar.myFiles.personalized', {person: user.firstName}) }}</span>
+        <span v-if="nameExists">{{ $t('sidebar.myFiles.personalized', {person: user.firstName}) }}</span>
+        <span v-else>{{ $t('sidebar.myFiles.title') }}</span>
       </router-link>
 
       <div>
@@ -69,7 +70,10 @@ export default {
     signup: () => signup,
     version: () => version,
     disableExternal: () => disableExternal,
-    noAuth: () => noAuth
+    noAuth: () => noAuth,
+    nameExists: function () {
+       return this.user.firstName && this.user.lastName 
+    }
   },
   methods: {
     help () {

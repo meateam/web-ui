@@ -186,11 +186,6 @@ export default {
     },
     resetPrompts () {
       this.$store.commit('closeHovers')
-    },
-    toggleUser: function() {
-      this.userToggled = !this.userToggled;
-      clearTimeout(this.userToggledTimeout);
-      this.userToggledTimeout = setTimeout(() => this.userToggled = false, 2000);
     }
   }
 }
