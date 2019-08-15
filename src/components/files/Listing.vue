@@ -14,7 +14,8 @@
       <div class="item header">
         <div></div>
         <div>
-          <p :class="{ active: nameSorted }" class="name"
+<!-- Previous Item Header -->
+          <!-- <p :class="{ active: nameSorted }" class="name"
             role="button"
             tabindex="0"
             @click="sort('name')"
@@ -23,7 +24,6 @@
             <span>{{ $t('files.name') }}</span>
             <i class="material-icons">{{ nameIcon }}</i>
           </p>
-
           <p :class="{ active: sizeSorted }" class="size"
             role="button"
             tabindex="0"
@@ -41,7 +41,20 @@
             :aria-label="$t('files.sortByLastModified')">
             <span>{{ $t('files.lastModified') }}</span>
             <i class="material-icons">{{ modifiedIcon }}</i>
+          </p> -->
+
+<!-- New Item Header -->
+          <p class="name">
+            <span>{{ $t('files.name') }}</span>
           </p>
+          <p class="size">
+            <span>{{ $t('files.size') }}</span>
+          </p>
+          <p class="modified">
+            <span>{{ $t('files.lastModified') }}</span>
+          </p>
+
+
         </div>
       </div>
     </div>
