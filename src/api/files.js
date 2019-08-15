@@ -198,6 +198,20 @@ export function move(items) {
 	return moveCopy(items)
 }
 
+export function rename(id, name){
+	return new Promise(() => {
+		let request = new XMLHttpRequest();
+		request.open('PUT', `${baseURL}/api/files/${id}`, true);
+		request.withCredentials = true;
+		request.setRequestHeader('Authorization','Bearer ' + store.state.jwt);
+
+		const formData = new FormData();
+		formData.append("partialFile", {name});
+		request.send(JSON.stringify({name}));
+		// Upload is done no more message before closing the tab 
+	}).finally(() => { window.onbeforeunload = null })
+}
+
 export function copy(items) {
 	return moveCopy(items, true)
 }

@@ -66,7 +66,7 @@ export async function validateLogin () {
     if (getCookie("kd-token")) {
       parseToken();
     } else {
-      window.open(`/auth/login`, '_self');
+      window.open(`http://localhost:8084/auth/login`, '_self');
     }
 
   } catch (_) {
