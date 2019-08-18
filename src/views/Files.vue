@@ -138,17 +138,20 @@ export default {
 			if (url[0] !== "/") url = "/" + url;
 			if (url.startsWith('/files')) {
 				url = url.slice(6);
-			}
+      }
+      
+      url = this.$store.getters.currentDir.id;
 
       try {
         const res = await api.fetch(url);
-        if (clean(url) !== clean(`/${this.$route.params.pathMatch}`)) {
-          return;
-        }
+        // if (clean(url) !== clean(`/${this.$route.params.pathMatch}`)) {
+        //   return;
+        // }
 
         this.$store.commit("updateRequest", res);
         document.title = res.name || "Files";
       } catch (e) {
+        console.error(e);
         this.error = e;
       } finally {
         this.setLoading(false);

@@ -65,6 +65,7 @@
         :key="base64(item.name)"
         v-bind:index="item.index"
         v-bind:name="item.name"
+        v-bind:id="item.id"
         v-bind:isDir="item.isDir"
         v-bind:url="item.url"
         v-bind:modified="item.modified"

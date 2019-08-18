@@ -42,7 +42,7 @@ export default {
       touches: 0
     }
   },
-  props: ['name', 'isDir', 'url', 'type', 'size', 'modified', 'index'],
+  props: ['name', 'id', 'isDir', 'url', 'type', 'size', 'modified', 'index'],
   computed: {
     ...mapState(['selected', 'req']),
     ...mapGetters(['selectedCount']),
@@ -69,7 +69,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['addSelected', 'removeSelected', 'resetSelected']),
+    ...mapMutations(['addSelected', 'removeSelected', 'resetSelected', 'pushDir']),
     humanSize: function () {
       return filesize(this.size)
     },
@@ -162,7 +162,8 @@ export default {
       }
     },
     open: function () {
-      this.$router.push({path: this.url})
+      this.$store.commit("pushDir", {id: this.id, name: this.name});
+      this.$store.commit("setReload", true);
     }
   }
 }
