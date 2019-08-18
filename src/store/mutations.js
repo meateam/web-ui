@@ -92,6 +92,8 @@ const mutations = {
     state.path.push(value);
   },
   changeFolder: (state, value) => {
+      let index =  value ? state.path.findIndex(folder => folder.id === value) : 0;
+      state.path = state.path.slice(0, index + 1);
   }
 }
 

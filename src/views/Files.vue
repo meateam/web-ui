@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="breadcrumbs">
-      <div @click="onBreadcrumbsClick" :aria-label="$t('files.home')" :title="$t('files.home')">
+      <div @click="onBreadcrumbsClick('')" :aria-label="$t('files.home')" :title="$t('files.home')">
         <i class="material-icons">home</i>
       </div>
 
@@ -221,7 +221,8 @@ export default {
       this.$store.commit("showHover", "search");
     },
     onBreadcrumbsClick(id) {
-      this.$store.commit("set")
+      this.$store.commit("changeFolder", id);
+      this.$store.commit("setReload", true);
     }
   }
 };

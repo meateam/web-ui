@@ -95,17 +95,17 @@ main {
   color: #6f6f6f;
 }
 
-#breadcrumbs a {
+#breadcrumbs div {
   color: inherit;
   transition: .1s ease-in;
   border-radius: .125em;
 }
 
-#breadcrumbs a:hover {
+#breadcrumbs div:hover {
   background-color: rgba(0,0,0, 0.05);
 }
 
-#breadcrumbs span a {
+#breadcrumbs span div {
   padding: .2em;
 }
 
