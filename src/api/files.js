@@ -183,13 +183,13 @@ export async function post(base, file, onupload) {
 	}).finally(() => { window.onbeforeunload = null });
 }
 
-export async function uploadFolder(parent, file, onUpload) {
+export async function uploadFolder(parent, name, onUpload) {
 	return new Promise(async (resolve, reject) => {
 		let url = `${baseURL}/api/upload?parent=${parent}&uploadType=multipart`;
 		let headers = {
 			"Authorization": 'Bearer ' + store.state.jwt,
 			"Content-Type": "application/vnd.drive.folder",
-			"Content-Disposition": `filename=${file.name}`
+			"Content-Disposition": `filename=${name}`
 		}
 
 		let request = new XMLHttpRequest();

@@ -86,7 +86,7 @@ const mutations = {
   setProgress: (state, value) => {
     state.progress = value
   },
-  pushDir: (state, value) => {
+  pushFolder: (state, value) => {
     if (typeof value !== 'object') return;
     if(!value.id || !value.name) return;
     state.path.push(value);

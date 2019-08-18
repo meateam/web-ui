@@ -69,7 +69,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['addSelected', 'removeSelected', 'resetSelected', 'pushDir']),
+    ...mapMutations(['addSelected', 'removeSelected', 'resetSelected', 'pushFolder']),
     humanSize: function () {
       return filesize(this.size)
     },
@@ -162,7 +162,7 @@ export default {
       }
     },
     open: function () {
-      this.$store.commit("pushDir", {id: this.id, name: this.name});
+      this.$store.commit("pushFolder", {id: this.id, name: this.name});
       this.$store.commit("setReload", true);
     }
   }

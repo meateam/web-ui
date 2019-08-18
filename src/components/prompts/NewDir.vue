@@ -29,7 +29,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import { files as api } from '@/api'
-// import url from '@/utils/url'
 
 export default {
   name: 'new-dir',
@@ -39,39 +38,17 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([ 'isFiles', 'isListing', 'currentDir' ])
+    ...mapGetters([ 'isFiles', 'isListing', 'currentFolder' ])
   },
   methods: {
     submit: async function(event) {
       event.preventDefault()
-      // if (this.new === '') return
 
-      // // Build the path of the new directory.
-      // let uri = this.isFiles ? this.$route.path + '/' : '/'
+      let folderName = this.name;
+      let currentFolderId = this.$store.getters.currentFolder.id;
 
-      // if (!this.isListing) {
-      //   uri = url.removeLastDir(uri) + '/'
-      // }
-
-      // uri += encodeURIComponent(this.name) + '/'
-      // uri = uri.replace('//', '/')
-
-      // try {
-      //   await api.post(uri)
-      //   this.$router.push({ path: uri })
-      // } catch (e) {
-      //   this.$showError(e)
-      // }
-
-      //////////////////////
-
-      let file = {
-        name: this.name,
-        size: 0
-      }
-      console.log(this.$store.getters.currentDir)
       try {
-        await api.uploadFolder(this.$store.getters.currentDir.id, file, () => console.log("Uploading folder"));
+        await api.uploadFolder(currentFolderId, folderName, () => console.log("Uploading folder"));
         this.$store.commit('setReload', true)
       } catch (e) {
         this.$showError(e);
