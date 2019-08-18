@@ -1,15 +1,15 @@
 <template>
   <div>
     <div id="breadcrumbs">
-      <router-link to="/files" :aria-label="$t('files.home')" :title="$t('files.home')">
+      <div @click="onBreadcrumbsClick" :aria-label="$t('files.home')" :title="$t('files.home')">
         <i class="material-icons">home</i>
-      </router-link>
+      </div>
 
-      <span v-for="(link, index) in breadcrumbs" :key="index">
+      <span v-for="(folder, index) in breadcrumbs" :key="index">
         <span class="chevron">
           <i class="material-icons">keyboard_arrow_right</i>
         </span>
-        <router-link :to="link.url">{{ link.name }}</router-link>
+        <div @click="onBreadcrumbsClick(folder.id)">{{ folder.name }}</div>
       </span>
     </div>
     <div v-if="error">
@@ -52,12 +52,12 @@ export default {
   },
   computed: {
     ...mapGetters(["selectedCount", "isListing", "isEditor", "isFiles"]),
-    ...mapState(["req", "user", "reload", "multiple", "loading"]),
+    ...mapState(["req", "user", "reload", "multiple", "loading", "path"]),
     isPreview() {
       return !this.loading && !this.isListing && !this.isEditor;
     },
     breadcrumbs() {
-      let parts = this.$route.path.split("/");
+      let parts = this.path;
 
       if (parts[0] === "") {
         parts.shift();
@@ -70,17 +70,10 @@ export default {
       let breadcrumbs = [];
 
       for (let i = 0; i < parts.length; i++) {
-        if (i === 0) {
-          breadcrumbs.push({
-            name: decodeURIComponent(parts[i]),
-            url: "/" + parts[i] + "/"
-          });
-        } else {
-          breadcrumbs.push({
-            name: decodeURIComponent(parts[i]),
-            url: breadcrumbs[i - 1].url + parts[i] + "/"
-          });
-        }
+        breadcrumbs.push({
+          name: decodeURIComponent(parts[i].name),
+          id: parts[i].id
+        });
       }
 
       breadcrumbs.shift();
@@ -226,6 +219,9 @@ export default {
     },
     openSearch() {
       this.$store.commit("showHover", "search");
+    },
+    onBreadcrumbsClick(id) {
+      this.$store.commit("set")
     }
   }
 };

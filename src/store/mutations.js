@@ -90,6 +90,8 @@ const mutations = {
     if (typeof value !== 'object') return;
     if(!value.id || !value.name) return;
     state.path.push(value);
+  },
+  changeFolder: (state, value) => {
   }
 }
 
