@@ -13,6 +13,10 @@
           <span>{{ $t('sidebar.newFolder') }}</span>
         </button>
       </div>
+      <div class="action" :aria-label="$t('sidebar.contactUs')" :title="$t('sidebar.contactUs')">
+        <i class="material-icons">headset_mic</i>
+        <a v-bind:href = supportLink >Contact Us</a>
+      </div>
 
     </template>
 
@@ -21,7 +25,6 @@
         <span>Beta version</span>
         <span> {{ version }}</span>
       </span>
-      <span>Enter link to support</span>
     </p>
   </nav>
 </template>
@@ -29,7 +32,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import * as auth from '@/utils/auth'
-import { version, signup, disableExternal, noAuth } from '@/utils/constants'
+import { version, signup, disableExternal, noAuth, config } from '@/utils/constants'
 
 export default {
   name: 'sidebar',
@@ -40,6 +43,7 @@ export default {
       return this.$store.state.show === 'sidebar'
     },
     signup: () => signup,
+    supportLink: () => config.supportLink,
     version: () => version,
     disableExternal: () => disableExternal,
     noAuth: () => noAuth,

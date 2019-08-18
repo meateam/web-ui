@@ -2,7 +2,7 @@ const name = 'KDrive';
 const disableExternal = false;
 const baseURL = '';
 const signup = false;
-const version = '(untracked)';
+const version = '2';
 const logoURL = `/img/logo.svg`;
 const noAuth = false;
 const loginPage = false;
@@ -10,6 +10,7 @@ const folderContentType = "application/vnd.drive.folder";
 const config = {
 	apmServerUrl: '',
 	environment: '',
+	supportLink: ''
 };
 
 export async function fetchConfig() {
@@ -17,6 +18,7 @@ export async function fetchConfig() {
 	const conf = await res.json();
 	config.apmServerUrl = conf.apmServerUrl;
 	config.environment = conf.environment;
+	config.supportLink = conf.supportLink;
 }
 
 export {
