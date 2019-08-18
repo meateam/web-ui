@@ -13,13 +13,13 @@
           <span>{{ $t('sidebar.newFolder') }}</span>
         </button>
 
-        <button @click="$store.commit('showHover', 'newFile')" class="action" :aria-label="$t('sidebar.newFile')" :title="$t('sidebar.newFile')">
+        <!-- <button @click="$store.commit('showHover', 'newFile')" class="action" :aria-label="$t('sidebar.newFile')" :title="$t('sidebar.newFile')">
           <i class="material-icons">note_add</i>
           <span>{{ $t('sidebar.newFile') }}</span>
-        </button>
+        </button> -->
       </div>
 
-      <div>
+      <!-- <div>
         <router-link class="action" to="/settings" :aria-label="$t('sidebar.settings')" :title="$t('sidebar.settings')">
           <i class="material-icons">settings_applications</i>
           <span>{{ $t('sidebar.settings') }}</span>
@@ -29,7 +29,7 @@
           <i class="material-icons">exit_to_app</i>
           <span>{{ $t('sidebar.logout') }}</span>
         </button>
-      </div>
+      </div> -->
     </template>
     <template v-else>
       <router-link class="action" to="/login" :aria-label="$t('sidebar.login')" :title="$t('sidebar.login')">
