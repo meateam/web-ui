@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import Search from './Search'
+// import Search from './Search'
 import InfoButton from './buttons/Info'
 import DeleteButton from './buttons/Delete'
 import RenameButton from './buttons/Rename'
@@ -70,8 +70,8 @@ import UploadButton from './buttons/Upload'
 import DownloadButton from './buttons/Download'
 import SwitchButton from './buttons/SwitchView'
 import MoveButton from './buttons/Move'
-import CopyButton from './buttons/Copy'
-import ShareButton from './buttons/Share'
+// import CopyButton from './buttons/Copy'
+// import ShareButton from './buttons/Share'
 import UserButton from './buttons/User';
 import {mapGetters, mapState} from 'vuex'
 import { logoURL } from '@/utils/constants'
@@ -81,13 +81,13 @@ import buttons from '@/utils/buttons'
 export default {
   name: 'header-layout',
   components: {
-    Search,
+    // Search,
     InfoButton,
     DeleteButton,
-    ShareButton,
+    // ShareButton,
     RenameButton,
     DownloadButton,
-    CopyButton,
+    // CopyButton,
     UploadButton,
     SwitchButton,
     MoveButton,
