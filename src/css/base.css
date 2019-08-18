@@ -99,6 +99,7 @@ main {
   color: inherit;
   transition: .1s ease-in;
   border-radius: .125em;
+  cursor: pointer;
 }
 
 #breadcrumbs div:hover {
