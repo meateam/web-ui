@@ -27,7 +27,7 @@
           <!-- <share-button v-show="showShareButton"></share-button> -->
           <rename-button v-show="showRenameButton"></rename-button>
           <!-- <copy-button v-show="showCopyButton"></copy-button> -->
-          <!-- <move-button v-show="showMoveButton"></move-button> -->
+          <move-button v-show="showMoveButton"></move-button>
           <delete-button v-show="showDeleteButton"></delete-button>
         </div>
 
@@ -37,7 +37,7 @@
             <!-- <share-button v-show="showShareButton"></share-button> -->
             <rename-button v-show="showRenameButton"></rename-button>
             <!-- <copy-button v-show="showCopyButton"></copy-button> -->
-            <!-- <move-button v-show="showMoveButton"></move-button> -->
+            <move-button v-show="showMoveButton"></move-button>
             <delete-button v-show="showDeleteButton"></delete-button>
           </div>
 
