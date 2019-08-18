@@ -46,12 +46,14 @@
           <download-button v-show="showDownloadButton"></download-button>
           <upload-button v-show="showUpload"></upload-button>
           <info-button v-show="isFiles"></info-button>
-          <user-button :user="user"></user-button>
+          
 
-          <button v-show="isListing && multiple" @click="openSelect" :aria-label="$t('buttons.selectMultiple')" :title="$t('buttons.selectMultiple')" class="action">
+          <button v-show="isListing" @click="openSelect" :aria-label="$t('buttons.selectMultiple')" :title="$t('buttons.selectMultiple')" class="action">
             <i class="material-icons">check_circle</i>
             <span>{{ $t('buttons.select') }}</span>
           </button>
+
+          <user-button :user="user"></user-button>
         </div>
       </template>
 
@@ -181,7 +183,7 @@ export default {
       this.$store.commit('showHover', 'search')
     },
     openSelect () {
-      this.$store.commit('multiple', false)
+      this.$store.commit('multiple', true)
       this.resetPrompts()
     },
     resetPrompts () {
