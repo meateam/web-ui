@@ -1,11 +1,11 @@
 <template>
   <nav :class="{active}">
     <template v-if="isLogged">
-      <router-link class="action" to="/files" :aria-label="$t('sidebar.myFiles')" :title="$t('sidebar.myFiles.title')">
+      <div @click="onMyFilesClick" class="action" to="/files" :aria-label="$t('sidebar.myFiles')" :title="$t('sidebar.myFiles.title')">
         <i class="material-icons">folder</i>
         <span v-if="nameExists">{{ $t('sidebar.myFiles.personalized', {person: user.firstName}) }}</span>
         <span v-else>{{ $t('sidebar.myFiles.title') }}</span>
-      </router-link>
+      </div>
 
       <div>
         <button @click="$store.commit('showHover', 'newDir')" class="action" :aria-label="$t('sidebar.newFolder')" :title="$t('sidebar.newFolder')">
@@ -78,6 +78,10 @@ export default {
   methods: {
     help () {
       this.$store.commit('showHover', 'help')
+    },
+    onMyFilesClick() {
+      this.$store.commit("changeFolder", '');
+      this.$store.commit("setReload", true);
     },
     logout: auth.logout
   }
