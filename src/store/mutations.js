@@ -6,9 +6,6 @@ const mutations = {
     state.show = null
     state.showMessage = null
   },
-  toggleShell: (state) => {
-    state.showShell = !state.showShell
-  },
   showHover: (state, value) => {
     if (typeof value !== 'object') {
       state.show = value

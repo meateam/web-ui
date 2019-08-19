@@ -12,44 +12,16 @@
           <i class="material-icons">create_new_folder</i>
           <span>{{ $t('sidebar.newFolder') }}</span>
         </button>
-
-        <button @click="$store.commit('showHover', 'newFile')" class="action" :aria-label="$t('sidebar.newFile')" :title="$t('sidebar.newFile')">
-          <i class="material-icons">note_add</i>
-          <span>{{ $t('sidebar.newFile') }}</span>
-        </button>
       </div>
 
-      <div>
-        <router-link class="action" to="/settings" :aria-label="$t('sidebar.settings')" :title="$t('sidebar.settings')">
-          <i class="material-icons">settings_applications</i>
-          <span>{{ $t('sidebar.settings') }}</span>
-        </router-link>
-
-        <button v-if="!noAuth" @click="logout" class="action" id="logout" :aria-label="$t('sidebar.logout')" :title="$t('sidebar.logout')">
-          <i class="material-icons">exit_to_app</i>
-          <span>{{ $t('sidebar.logout') }}</span>
-        </button>
-      </div>
-    </template>
-    <template v-else>
-      <router-link class="action" to="/login" :aria-label="$t('sidebar.login')" :title="$t('sidebar.login')">
-        <i class="material-icons">exit_to_app</i>
-        <span>{{ $t('sidebar.login') }}</span>
-      </router-link>
-
-      <router-link v-if="signup" class="action" to="/login" :aria-label="$t('sidebar.signup')" :title="$t('sidebar.signup')">
-        <i class="material-icons">person_add</i>
-        <span>{{ $t('sidebar.signup') }}</span>
-      </router-link>
     </template>
 
     <p class="credits">
       <span>
-        <span v-if="disableExternal">File Browser</span>
-        <a v-else rel="noopener noreferrer" target="_blank" href="https://github.com/filebrowser/filebrowser">File Browser</a>
+        <span>Beta version</span>
         <span> {{ version }}</span>
       </span>
-      <span><a @click="help">{{ $t('sidebar.help') }}</a></span>
+      <span>Enter link to support</span>
     </p>
   </nav>
 </template>
