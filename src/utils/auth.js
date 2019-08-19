@@ -1,7 +1,7 @@
 import store from '@/store'
 import router from '@/router'
 import { Base64 } from 'js-base64'
-import { baseURL } from '@/utils/constants'
+import { baseURL, config } from '@/utils/constants'
 
 function getCookie(cname) {
   var name = cname + '=';
@@ -65,7 +65,7 @@ export async function validateLogin () {
     if (getCookie("kd-token")) {
       parseToken();
     } else {
-      window.open(`/auth/login`, '_self');
+      window.open(config.authUrl, '_self');
     }
 
   } catch (_) {
