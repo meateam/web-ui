@@ -363,7 +363,7 @@ export default {
       })
     },
     uploadInput (event) {
-      this.checkConflict(event.currentTarget.files, this.req.items, '')
+      this.checkConflict(event.currentTarget.files, this.req.items, this.$store.getters.currentFolder.id)
     },
     resetOpacity () {
       let items = document.getElementsByClassName('item')

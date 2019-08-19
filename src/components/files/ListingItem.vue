@@ -13,7 +13,7 @@
   :aria-label="name"
   :aria-selected="isSelected">
     <div>
-      <i class="material-icons">{{ icon }}</i>
+      <i class="material-icons" v-bind:class="icon">{{ icon }}</i>
     </div>
 
     <div>
@@ -168,3 +168,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .folder {
+    color:#2979ff
+  }
+</style>
