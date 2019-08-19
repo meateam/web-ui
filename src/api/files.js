@@ -1,6 +1,5 @@
 import { fetchURL, removePrefix } from './utils'
-import { baseURL } from '@/utils/constants'
-import { folderContentType } from '../utils/constants';
+import { baseURL, folderContentType } from '@/utils/constants'
 import store from '@/store'
 
 export async function fetch(url) {
@@ -188,7 +187,7 @@ export async function uploadFolder(parent, name, onUpload) {
 		let url = `${baseURL}/api/upload?parent=${parent}&uploadType=multipart`;
 		let headers = {
 			"Authorization": 'Bearer ' + store.state.jwt,
-			"Content-Type": "application/vnd.drive.folder",
+			"Content-Type": folderContentType,
 			"Content-Disposition": `filename=${name}`
 		}
 
