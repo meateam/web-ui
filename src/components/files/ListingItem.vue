@@ -13,7 +13,7 @@
   :aria-label="name"
   :aria-selected="isSelected">
     <div>
-      <i class="material-icons" v-bind:class="icon">{{ icon }}</i>
+      <i class="material-icons" v-bind:class="activeClass">{{ icon }}</i>
     </div>
 
     <div>
@@ -66,6 +66,9 @@ export default {
       }
 
       return true
+    },
+    activeClass () {
+      return !this.isSelected ? this.icon : '';
     }
   },
   methods: {
@@ -170,7 +173,6 @@ export default {
 </script>
 
 <style scoped>
-  .folder {
-    color:#2979ff
-  }
+  .folder { color:#2979ff }
+  .folder[aria-checked="true"] { color:aliceblue }
 </style>
