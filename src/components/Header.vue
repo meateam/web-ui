@@ -4,7 +4,7 @@
       <button @click="openSidebar" :aria-label="$t('buttons.toggleSidebar')" :title="$t('buttons.toggleSidebar')" class="action">
         <i class="material-icons">menu</i>
       </button>
-      <img :src="logoURL" alt="File Browser">
+      <img @click="redirectToMain" :src="logoURL" alt="File Browser">
       <!-- <search v-if="isLogged"></search> -->
     </div>
     <div>
@@ -187,6 +187,11 @@ export default {
     },
     resetPrompts () {
       this.$store.commit('closeHovers')
+    },
+    redirectToMain() {
+      this.$router.push({path: '/files'});
+      this.$store.commit('changeFolder', '');
+      this.$store.commit('setReload', true);
     }
   }
 }
