@@ -12,44 +12,21 @@
           <i class="material-icons">create_new_folder</i>
           <span>{{ $t('sidebar.newFolder') }}</span>
         </button>
-
-        <button @click="$store.commit('showHover', 'newFile')" class="action" :aria-label="$t('sidebar.newFile')" :title="$t('sidebar.newFile')">
-          <i class="material-icons">note_add</i>
-          <span>{{ $t('sidebar.newFile') }}</span>
-        </button>
       </div>
-
       <div>
-        <router-link class="action" to="/settings" :aria-label="$t('sidebar.settings')" :title="$t('sidebar.settings')">
-          <i class="material-icons">settings_applications</i>
-          <span>{{ $t('sidebar.settings') }}</span>
-        </router-link>
-
-        <button v-if="!noAuth" @click="logout" class="action" id="logout" :aria-label="$t('sidebar.logout')" :title="$t('sidebar.logout')">
-          <i class="material-icons">exit_to_app</i>
-          <span>{{ $t('sidebar.logout') }}</span>
-        </button>
+        <a v-bind:href = supportLink class="action" :aria-label="$t('sidebar.contactUs')" :title="$t('sidebar.contactUs')">
+          <i class="material-icons">headset_mic</i>
+          <span>Contact Us</span>
+        </a>
       </div>
-    </template>
-    <template v-else>
-      <router-link class="action" to="/login" :aria-label="$t('sidebar.login')" :title="$t('sidebar.login')">
-        <i class="material-icons">exit_to_app</i>
-        <span>{{ $t('sidebar.login') }}</span>
-      </router-link>
 
-      <router-link v-if="signup" class="action" to="/login" :aria-label="$t('sidebar.signup')" :title="$t('sidebar.signup')">
-        <i class="material-icons">person_add</i>
-        <span>{{ $t('sidebar.signup') }}</span>
-      </router-link>
     </template>
 
     <p class="credits">
       <span>
-        <span v-if="disableExternal">File Browser</span>
-        <a v-else rel="noopener noreferrer" target="_blank" href="https://github.com/filebrowser/filebrowser">File Browser</a>
+        <span>Beta version</span>
         <span> {{ version }}</span>
       </span>
-      <span><a @click="help">{{ $t('sidebar.help') }}</a></span>
     </p>
   </nav>
 </template>
@@ -57,7 +34,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import * as auth from '@/utils/auth'
-import { version, signup, disableExternal, noAuth } from '@/utils/constants'
+import { version, signup, disableExternal, noAuth, config } from '@/utils/constants'
 
 export default {
   name: 'sidebar',
@@ -68,6 +45,7 @@ export default {
       return this.$store.state.show === 'sidebar'
     },
     signup: () => signup,
+    supportLink: () => config.supportLink,
     version: () => version,
     disableExternal: () => disableExternal,
     noAuth: () => noAuth,
