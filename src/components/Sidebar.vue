@@ -13,9 +13,11 @@
           <span>{{ $t('sidebar.newFolder') }}</span>
         </button>
       </div>
-      <div class="action" :aria-label="$t('sidebar.contactUs')" :title="$t('sidebar.contactUs')">
-        <i class="material-icons">headset_mic</i>
-        <a v-bind:href = supportLink >Contact Us</a>
+      <div>
+        <a v-bind:href = supportLink class="action" :aria-label="$t('sidebar.contactUs')" :title="$t('sidebar.contactUs')">
+          <i class="material-icons">headset_mic</i>
+          <span>Contact Us</span>
+        </a>
       </div>
 
     </template>
