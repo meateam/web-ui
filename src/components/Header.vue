@@ -125,7 +125,8 @@ export default {
       'user',
       'loading',
       'reload',
-      'multiple'
+      'multiple',
+      'selected'
     ]),
     logoURL: () => logoURL,
     isMobile () {
@@ -138,7 +139,8 @@ export default {
       return this.isEditor
     },
     showDownloadButton () {
-      return this.isFiles && this.selectedCount === 1;
+      // Show only if one file selected and the selected file is not a folder.
+      return this.isFiles && this.selectedCount === 1 && ! this.req.items[this.selected[0]].isDir;
     },
     showDeleteButton () {
       return this.isFiles && (this.isListing
