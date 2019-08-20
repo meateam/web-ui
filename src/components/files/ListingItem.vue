@@ -165,8 +165,10 @@ export default {
       }
     },
     open: function () {
-      this.$store.commit("pushFolder", {id: this.id, name: this.name});
-      this.$store.commit("setReload", true);
+      if (this.isDir){
+        this.$store.commit("pushFolder", {id: this.id, name: this.name});
+        this.$store.commit("setReload", true);
+      }
     }
   }
 }
