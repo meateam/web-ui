@@ -174,5 +174,4 @@ export default {
 
 <style scoped>
   .folder { color:#2979ff }
-  .folder[aria-checked="true"] { color:aliceblue }
 </style>
