@@ -7,6 +7,7 @@ Vue.use(Vuex)
 
 const state = {
   user: null,
+  path: [{name: "", id: ""}],
   req: {},
   oldReq: {},
   clipboard: {
