@@ -67,9 +67,9 @@ export async function validateLogin () {
     } else {
       window.open(config.authUrl, '_self');
     }
-
   } catch (_) {
     console.warn('Invalid JWT token in storage') // eslint-disable-line
+    window.open(config.authUrl, '_self');
   }
 }
 
