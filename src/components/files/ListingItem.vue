@@ -13,7 +13,7 @@
   :aria-label="name"
   :aria-selected="isSelected">
     <div>
-      <i class="material-icons">{{ icon }}</i>
+      <i class="material-icons" v-bind:class="activeClass">{{ icon }}</i>
     </div>
 
     <div>
@@ -42,7 +42,7 @@ export default {
       touches: 0
     }
   },
-  props: ['name', 'isDir', 'url', 'type', 'size', 'modified', 'index'],
+  props: ['name', 'id', 'isDir', 'url', 'type', 'size', 'modified', 'index'],
   computed: {
     ...mapState(['selected', 'req']),
     ...mapGetters(['selectedCount']),
@@ -66,10 +66,13 @@ export default {
       }
 
       return true
+    },
+    activeClass () {
+      return !this.isSelected ? this.icon : '';
     }
   },
   methods: {
-    ...mapMutations(['addSelected', 'removeSelected', 'resetSelected']),
+    ...mapMutations(['addSelected', 'removeSelected', 'resetSelected', 'pushFolder']),
     humanSize: function () {
       return filesize(this.size)
     },
@@ -162,8 +165,13 @@ export default {
       }
     },
     open: function () {
-      this.$router.push({path: this.url})
+      this.$store.commit("pushFolder", {id: this.id, name: this.name});
+      this.$store.commit("setReload", true);
     }
   }
 }
 </script>
+
+<style scoped>
+  .folder { color:#2979ff }
+</style>

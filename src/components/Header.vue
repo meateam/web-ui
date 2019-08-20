@@ -4,7 +4,7 @@
       <button @click="openSidebar" :aria-label="$t('buttons.toggleSidebar')" :title="$t('buttons.toggleSidebar')" class="action">
         <i class="material-icons">menu</i>
       </button>
-      <img :src="logoURL" alt="File Browser">
+      <img @click="redirectToMain" :src="logoURL" alt="File Browser">
       <!-- <search v-if="isLogged"></search> -->
     </div>
     <div>
@@ -122,7 +122,8 @@ export default {
       'user',
       'loading',
       'reload',
-      'multiple'
+      'multiple',
+      'selected'
     ]),
     logoURL: () => logoURL,
     isMobile () {
@@ -135,7 +136,8 @@ export default {
       return this.isEditor
     },
     showDownloadButton () {
-      return this.isFiles && this.selectedCount === 1;
+      // Show only if one file selected and the selected file is not a folder.
+      return this.isFiles && this.selectedCount === 1 && ! this.req.items[this.selected[0]].isDir;
     },
     showDeleteButton () {
       return this.isFiles && (this.isListing
@@ -185,6 +187,11 @@ export default {
     },
     resetPrompts () {
       this.$store.commit('closeHovers')
+    },
+    redirectToMain() {
+      this.$router.push({path: '/files'});
+      this.$store.commit('changeFolder', '');
+      this.$store.commit('setReload', true);
     }
   }
 }

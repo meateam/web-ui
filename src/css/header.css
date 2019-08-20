@@ -22,12 +22,11 @@ header a:hover {
 }
 
 header>div:first-child>.action,
-header img {
-  margin-right: 1em;
-}
 
 header img {
   height: 2.5em;
+  margin-right: 1em;
+  cursor: pointer;
 }
 
 header>div:first-child>.action {

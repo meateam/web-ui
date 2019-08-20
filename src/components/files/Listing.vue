@@ -65,6 +65,7 @@
         :key="base64(item.name)"
         v-bind:index="item.index"
         v-bind:name="item.name"
+        v-bind:id="item.id"
         v-bind:isDir="item.isDir"
         v-bind:url="item.url"
         v-bind:modified="item.modified"
@@ -362,7 +363,7 @@ export default {
       })
     },
     uploadInput (event) {
-      this.checkConflict(event.currentTarget.files, this.req.items, '')
+      this.checkConflict(event.currentTarget.files, this.req.items, this.$store.getters.currentFolder.id)
     },
     resetOpacity () {
       let items = document.getElementsByClassName('item')

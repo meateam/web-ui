@@ -82,6 +82,15 @@ const mutations = {
   },
   setProgress: (state, value) => {
     state.progress = value
+  },
+  pushFolder: (state, value) => {
+    if (typeof value !== 'object') return;
+    if(!value.id || !value.name) return;
+    state.path.push(value);
+  },
+  changeFolder: (state, value) => {
+      let index =  value ? state.path.findIndex(folder => folder.id === value) : 0;
+      state.path = state.path.slice(0, index + 1);
   }
 }
 

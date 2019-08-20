@@ -1,6 +1,5 @@
 import { fetchURL, removePrefix } from './utils'
-import { baseURL } from '@/utils/constants'
-import { folderContentType } from '../utils/constants';
+import { baseURL, folderContentType } from '@/utils/constants'
 import store from '@/store'
 
 export async function fetch(url) {
@@ -9,7 +8,7 @@ export async function fetch(url) {
 
 	if (url !== "") {
 		// get parent folder
-		const res = await fetchURL(`/api/files${url}`, {});
+		const res = await fetchURL(`/api/files/${url}`, {});
 		if (res.status === 200) {
 			data = await res.json();
 			if (data.type === folderContentType) {
@@ -42,8 +41,10 @@ export async function fetch(url) {
 			delete data.items[i].updatedAt;
 			if (data.items[i].type === folderContentType) {
 				numDirs++;
+				data.items[i].isDir = true;
 			} else {
 				numFiles++;
+				data.items[i].isDir = false;
 			}
 		}
 
@@ -178,6 +179,46 @@ export async function post(base, file, onupload) {
 		}
 
 		this.upload(url, file, headers, onupload).then(resolve).catch(reject);
+	}).finally(() => { window.onbeforeunload = null });
+}
+
+export async function uploadFolder(parent, name, onUpload) {
+	return new Promise(async (resolve, reject) => {
+		let url = `${baseURL}/api/upload?parent=${parent}&uploadType=multipart`;
+		let headers = {
+			"Authorization": 'Bearer ' + store.state.jwt,
+			"Content-Type": folderContentType,
+			"Content-Disposition": `filename=${encodeURIComponent(name)}`
+		}
+
+		let request = new XMLHttpRequest();
+		request.open('POST', url, true);
+		request.withCredentials = true;
+		for (let prop in headers) {
+			request.setRequestHeader(prop, headers[prop]);
+		}
+
+		if (typeof onupload === 'function') {
+			request.upload.onprogress = onUpload;
+		}
+
+		// Send a message to user before closing the tab during file upload
+		window.onbeforeunload = () => "Creating a folder.";
+
+		request.onload = () => {
+			if (request.status === 200) {
+				resolve(request.responseText)
+			} else if (request.status === 409) {
+				reject(request.status)
+			} else {
+				reject(request.responseText)
+			}
+		}
+
+		request.onerror = (error) => {
+			reject(error)
+		}
+		request.send();
 	}).finally(() => { window.onbeforeunload = null });
 }
 
