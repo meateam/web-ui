@@ -188,7 +188,7 @@ export async function uploadFolder(parent, name, onUpload) {
 		let headers = {
 			"Authorization": 'Bearer ' + store.state.jwt,
 			"Content-Type": folderContentType,
-			"Content-Disposition": `filename=${name}`
+			"Content-Disposition": `filename=${encodeURIComponent(name)}`
 		}
 
 		let request = new XMLHttpRequest();
