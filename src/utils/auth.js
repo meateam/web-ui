@@ -60,10 +60,11 @@ export function parseToken () {
   store.commit('setUser', user)
 }
 
-export async function validateLogin () {
+export function validateLogin () {
   try {
     if (getCookie("kd-token")) {
       parseToken();
+      return true;
     } else {
       window.open(config.authUrl, '_self');
     }
@@ -71,6 +72,8 @@ export async function validateLogin () {
     console.warn('Invalid JWT token in storage') // eslint-disable-line
     window.open(config.authUrl, '_self');
   }
+
+  return false;
 }
 
 export async function renew (jwt) {
