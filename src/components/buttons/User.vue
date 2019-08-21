@@ -1,11 +1,14 @@
 <template>
-  <div v-show="nameExists" @click="toggleUser" class="action">
-    <div>{{nameLetters}}</div>
-    <div :class="{'fade-on':userToggled}" class="speech-bubble fade">
-      {{$t('header.signedAs')}}&nbsp;
-      <span class="bold-name">{{fullName}}</span>
+  <span id="user-button">
+    <div v-show="nameExists" class="action" @click="toggleUser" :aria-label="$t('buttons.user')" :title="$t('buttons.user')">
+      <div>{{ nameLetters }}</div>
+      <span>{{ $t('buttons.user') }}</span>
     </div>
-  </div>
+    <div :class="{'fade-on': userToggled}" class="speech-bubble fade">
+        {{$t('header.signedAs')}}&nbsp;
+        <span class="bold-name">{{ fullName }}</span>
+    </div>
+  </span>
 </template>
 
 <script>
@@ -30,7 +33,7 @@ export default {
     }
   },
   methods: {
-    toggleUser: function() {
+    toggleUser: function () {
       this.userToggled = !this.userToggled;
       if(this.userToggledTimeout) clearTimeout(this.userToggledTimeout);
       this.userToggledTimeout = setTimeout(() => this.userToggled = false, 2000);
@@ -38,12 +41,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-div {
-  padding: 0.4em;
-}
-span {
-  display: initial !important
-}
-</style>
