@@ -165,6 +165,7 @@ export default {
       }
     },
     open: function () {
+      if (!this.isDir) return;
       this.$store.commit("pushFolder", {id: this.id, name: this.name});
       this.$store.commit("setReload", true);
     }

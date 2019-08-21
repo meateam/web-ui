@@ -15,7 +15,10 @@ async function start () {
 	await fetchConfig();
 	await initApm(config);
 
-	await validateLogin();
+	if (!validateLogin()) {
+		return
+	}
+	
 	new Vue({
 		el: '#app',
 		store,
