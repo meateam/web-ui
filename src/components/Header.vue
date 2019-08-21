@@ -45,13 +45,7 @@
           <download-button v-show="showDownloadButton"></download-button>
           <upload-button v-show="showUpload"></upload-button>
           <info-button v-show="isFiles"></info-button>
-          
-
-          <button v-show="isListing" @click="openSelect" :aria-label="$t('buttons.selectMultiple')" :title="$t('buttons.selectMultiple')" class="action">
-            <i class="material-icons">check_circle</i>
-            <span>{{ $t('buttons.select') }}</span>
-          </button>
-
+          <select-button v-show="isListing"></select-button>
           <user-button :user="user"></user-button>
         </div>
       </template>
@@ -73,6 +67,7 @@ import MoveButton from './buttons/Move'
 // import CopyButton from './buttons/Copy'
 // import ShareButton from './buttons/Share'
 import UserButton from './buttons/User';
+import SelectButton from './buttons/Select';
 import {mapGetters, mapState} from 'vuex'
 import { logoURL } from '@/utils/constants'
 import * as api from '@/api'
@@ -91,7 +86,8 @@ export default {
     UploadButton,
     SwitchButton,
     MoveButton,
-    UserButton
+    UserButton,
+    SelectButton
   },
   data: function () {
     return {      
