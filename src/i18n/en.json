@@ -32,6 +32,7 @@
     "toggleSidebar": "Toggle sidebar",
     "update": "Update",
     "upload": "Upload",
+    "user": "User",
     "permalink": "Get Permanent Link"
   },
   "success": {
@@ -109,7 +110,7 @@
     "numberDirs": "Number of directories",
     "numberFiles": "Number of files",
     "replace": "Replace",
-    "replaceMessage": "One of the files you're trying to upload is conflicting because of its name. Do you wish to replace the existing one?\n",
+    "replaceMessage": "One of the files you're trying to upload is conflicting because of its name.",
     "rename": "Rename",
     "renameMessage": "Insert a new name for",
     "show": "Show",

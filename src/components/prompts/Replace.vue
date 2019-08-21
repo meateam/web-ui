@@ -9,14 +9,14 @@
     </div>
 
     <div class="card-action">
-      <button class="button button--flat button--grey"
+      <button class="button button--flat button--blue"
         @click="$store.commit('closeHovers')"
         :aria-label="$t('buttons.cancel')"
-        :title="$t('buttons.cancel')">{{ $t('buttons.cancel') }}</button>
-      <button class="button button--flat button--red"
+        :title="$t('buttons.ok')">{{ $t('buttons.ok') }}</button>
+      <!-- <button class="button button--flat button--red"
         @click="showConfirm"
         :aria-label="$t('buttons.replace')"
-        :title="$t('buttons.replace')">{{ $t('buttons.replace') }}</button>
+        :title="$t('buttons.replace')">{{ $t('buttons.replace') }}</button> -->
     </div>
   </div>
 </template>
@@ -26,6 +26,6 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'replace',
-  computed: mapState(['showConfirm'])
+  // computed: mapState(['showConfirm'])
 }
 </script>
