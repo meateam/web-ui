@@ -15,7 +15,7 @@
         :title="$t('buttons.cancel')">{{ $t('buttons.cancel') }}</button>
       <button class="button button--flat"
         @click="move"
-        :disabled="$route.path === dest"
+        :disabled="$store.getters.currentFolder.id === dest.dest"
         :aria-label="$t('buttons.move')"
         :title="$t('buttons.move')">{{ $t('buttons.move') }}</button>
     </div>
@@ -34,10 +34,10 @@ export default {
   data: function () {
     return {
       current: window.location.pathname,
-      dest: null
+      dest: {}
     }
   },
-  computed: mapState(['req', 'selected']),
+  computed: mapState(['req', 'selected', 'path']),
   methods: {
     move: async function (event) {
       event.preventDefault()
@@ -45,22 +45,25 @@ export default {
       let items = []
 
       for (let item of this.selected) {
-        items.push({
-          from: this.req.items[item].url,
-          to: this.dest + encodeURIComponent(this.req.items[item].name)
-        })
+        items.push(this.req.items[item].id)
       }
 
       try {
-        api.move(items)
-        buttons.success('move')
-        this.$router.push({ path: this.dest })
+        await api.move(items, this.dest.dest.id);
+        buttons.success('move');
+        if (this.dest.path.findIndex(path => path.id === this.dest.dest.id) < 0) {
+          this.$store.commit('setPath', this.dest.path.concat([this.dest.dest]));
+        } else {
+          this.$store.commit('setPath', this.dest.path);
+        }
+
+        this.$store.commit('setReload', true);
       } catch (e) {
-        buttons.done('move')
-        this.$showError(e)
+        buttons.done('move');
+        this.$showError(e);
       }
 
-      event.preventDefault()
+      event.preventDefault();
     }
   }
 }

@@ -10,6 +10,7 @@
   @dblclick="open"
   @touchstart="touchstart"
   :data-dir="isDir"
+  :data-id="id"
   :aria-label="name"
   :aria-selected="isSelected">
     <div>
@@ -60,7 +61,7 @@ export default {
       if (!this.isDir) return false
 
       for (let i of this.selected) {
-        if (this.req.items[i].url === this.url) {
+        if (this.req.items[i].id === this.id) {
           return false
         }
       }
@@ -105,25 +106,22 @@ export default {
       el.style.opacity = 1
     },
     drop: function (event) {
-      if (!this.canDrop) return
-      event.preventDefault()
+      if (!this.canDrop) return;
+      event.preventDefault();
 
-      if (this.selectedCount === 0) return
+      if (this.selectedCount === 0) return;
 
-      let items = []
+      let items = [];
 
-      for (let i of this.selected) {
-        items.push({
-          from: this.req.items[i].url,
-          to: this.url + this.req.items[i].name
-        })
+      for (let item of this.selected) {
+        items.push(this.req.items[item].id);
       }
 
-      api.move(items)
+      api.move(items, this.id)
         .then(() => {
           this.$store.commit('setReload', true)
         })
-        .catch(this.$showError)
+        .catch(this.$showError);
     },
     click: function (event) {
       if (this.selectedCount !== 0) event.preventDefault()
@@ -165,9 +163,10 @@ export default {
       }
     },
     open: function () {
-      if (!this.isDir) return;
-      this.$store.commit("pushFolder", {id: this.id, name: this.name});
-      this.$store.commit("setReload", true);
+      if (this.isDir){
+        this.$store.commit("pushFolder", {id: this.id, name: this.name});
+        this.$store.commit("setReload", true);
+      }
     }
   }
 }
