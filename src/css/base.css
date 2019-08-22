@@ -93,6 +93,7 @@ main {
   display: flex;
   align-items: center;
   color: #6f6f6f;
+  user-select: none;
 }
 
 #breadcrumbs div {
