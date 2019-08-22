@@ -316,11 +316,11 @@ export default {
 
       let base = ''
       if (el !== null && el.classList.contains('item') && el.dataset.dir === 'true') {
-        base = el.querySelector('.name').innerHTML + '/'
+        base = el.dataset.id;
       }
 
       if (base !== '') {
-        api.fetch(this.$route.path + base)
+        api.fetch(base)
           .then(req => {
             this.checkConflict(files, req.items, base)
           })
@@ -329,7 +329,7 @@ export default {
         return
       }
 
-      this.checkConflict(files, this.req.items, base)
+      this.checkConflict(files, this.req.items, this.$store.getters.currentFolder.id);
     },
     checkConflict (files, items, base) {
       if (typeof items === 'undefined' || items === null) {
