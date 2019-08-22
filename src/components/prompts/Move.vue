@@ -49,16 +49,21 @@ export default {
       }
 
       try {
-        api.move(items, this.dest.dest.id)
-        buttons.success('move')
-        this.$store.commit('setPath', this.dest.path.concat([this.dest.dest]));
-        this.$store.commit('setReload', true)
+        api.move(items, this.dest.dest.id);
+        buttons.success('move');
+        if (this.dest.path.findIndex(path => path.id === this.dest.dest.id) < 0) {
+          this.$store.commit('setPath', this.dest.path.concat([this.dest.dest]));
+        } else {
+          this.$store.commit('setPath', this.dest.path);
+        }
+
+        this.$store.commit('setReload', true);
       } catch (e) {
-        buttons.done('move')
-        this.$showError(e)
+        buttons.done('move');
+        this.$showError(e);
       }
 
-      event.preventDefault()
+      event.preventDefault();
     }
   }
 }

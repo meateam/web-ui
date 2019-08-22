@@ -146,7 +146,8 @@ export default {
 
       // Otherwise select the element.
       this.selected = event.currentTarget.dataset.id
-      this.$emit('update:selected', {dest:{id:this.selected.id, name:this.selected.name}, path: this.parents})
+      const name = event.currentTarget.dataset.name == backwards ? '' : event.currentTarget.dataset.name;
+      this.$emit('update:selected', {dest:{id:this.selected, name}, path: this.parents})
     }
   }
 }
