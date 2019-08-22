@@ -276,7 +276,8 @@ header .search-button {
   width: max-content;
   height: 2em;
 	background: #546e7a;
-	border-radius: .3em;
+  border-radius: .3em;
+  user-select: none;
 }
 
 .speech-bubble:after {
