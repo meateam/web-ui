@@ -49,7 +49,7 @@ export default {
       }
 
       try {
-        api.move(items, this.dest.dest.id);
+        await api.move(items, this.dest.dest.id);
         buttons.success('move');
         if (this.dest.path.findIndex(path => path.id === this.dest.dest.id) < 0) {
           this.$store.commit('setPath', this.dest.path.concat([this.dest.dest]));
