@@ -14,6 +14,7 @@ const state = {
     key: '',
     items: []
   },
+  quota: 0,
   jwt: '',
   progress: 0,
   loading: false,

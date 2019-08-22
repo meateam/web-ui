@@ -205,6 +205,9 @@
     "hugoNew": "Hugo New",
     "preview": "Preview"
   },
+  "quota": {
+    "usage": "Current usage"
+  },
   "search": {
     "images": "Images",
     "music": "Music",
