@@ -7,9 +7,10 @@
         role="button"
         tabindex="0"
         :aria-label="item.name"
-        :aria-selected="selected == item.url"
+        :aria-selected="selected == item.id"
         :key="item.name" v-for="item in items"
-        :data-url="item.url">{{ item.name }}</li>
+        :data-id="item.id"
+        :data-name="item.name">{{ item.name }}</li>
     </ul>
 
     <p>{{ $t('prompts.currentlyNavigating') }} <code>{{ nav }}</code>.</p>
@@ -18,8 +19,9 @@
 
 <script>
 import { mapState } from 'vuex'
-import url from '@/utils/url'
 import { files } from '@/api'
+
+const backwards = '..';
 
 export default {
   name: 'file-list',
@@ -31,16 +33,21 @@ export default {
         count: 0
       },
       selected: null,
-      current: window.location.pathname
+      current: this.$store.getters.currentFolder,
+      parents: []
     }
   },
   computed: {
-    ...mapState([ 'req' ]),
+    ...mapState([ 'req', 'path' ]),
     nav () {
-      return decodeURIComponent(this.current)
+      return decodeURIComponent(this.current.name || '/')
     }
   },
   mounted () {
+    for (let i = 0; i < this.path.length - 1; i++) {
+      this.parents.push({id: this.path[i].id, name: this.path[i].name});
+    }
+
     // If we're showing this on a listing,
     // we can use the current request object
     // to fill the move options.
@@ -51,7 +58,7 @@ export default {
 
     // Otherwise, we must be on a preview or editor
     // so we fetch the data from the previous directory.
-    files.fetch(url.removeLastDir(this.$route.path))
+    files.fetch(this.current.id)
       .then(this.fillOptions)
       .catch(this.$showError)
   },
@@ -59,18 +66,18 @@ export default {
     fillOptions (req) {
       // Sets the current path and resets
       // the current items.
-      this.current = req.url
-      this.items = []
+      this.current = req.id ? { id: req.id, name: req.name } : { id: '', name: '' };
+      this.items = [];
 
-      this.$emit('update:selected', this.current)
+      this.$emit('update:selected', {dest:{id:this.current.id, name:this.current.name}, path: this.parents});
 
       // If the path isn't the root path,
       // show a button to navigate to the previous
       // directory.
-      if (req.url !== '/files') {
+      if (this.parents.length > 0) {
         this.items.push({
-          name: '..',
-          url: url.removeLastDir(req.url) + '/'
+          name: backwards,
+          id: this.parents[this.parents.length - 1].id
         })
       }
 
@@ -84,7 +91,7 @@ export default {
 
         this.items.push({
           name: item.name,
-          url: item.url
+          id: item.id
         })
       }
     },
@@ -92,14 +99,20 @@ export default {
       // Retrieves the URL of the directory the user
       // just clicked in and fill the options with its
       // content.
-      let uri = event.currentTarget.dataset.url
+      if (event.currentTarget.dataset.name === backwards) {
+        this.parents.pop();
+      } else {
+        this.parents.push({ id: this.current.id, name: this.current.name });
+      }
 
-      files.fetch(uri)
+      let id = event.currentTarget.dataset.id
+
+      files.fetch(id)
         .then(this.fillOptions)
         .catch(this.$showError)
     },
     touchstart (event) {
-      let url = event.currentTarget.dataset.url
+      let url = event.currentTarget.dataset.id
 
       // In 300 milliseconds, we shall reset the count.
       setTimeout(() => {
@@ -125,15 +138,16 @@ export default {
     },
     select: function (event) {
       // If the element is already selected, unselect it.
-      if (this.selected === event.currentTarget.dataset.url) {
+      if (this.selected === event.currentTarget.dataset.id) {
         this.selected = null
-        this.$emit('update:selected', this.current)
+        this.$emit('update:selected', {dest:{id:this.current.id, name:this.current.name}, path: this.parents})
         return
       }
 
       // Otherwise select the element.
-      this.selected = event.currentTarget.dataset.url
-      this.$emit('update:selected', this.selected)
+      this.selected = event.currentTarget.dataset.id
+      const name = event.currentTarget.dataset.name == backwards ? '' : event.currentTarget.dataset.name;
+      this.$emit('update:selected', {dest:{id:this.selected, name}, path: this.parents})
     }
   }
 }
