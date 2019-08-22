@@ -356,14 +356,14 @@ export default {
       this.$store.commit('showHover', {
         prompt: 'replace',
         confirm: (event) => {
-          event.preventDefault()
-          this.$store.commit('closeHovers')
-          this.handleFiles(files, base, true)
+          event.preventDefault();
+          this.$store.commit('closeHovers');
         }
       })
     },
     uploadInput (event) {
-      this.checkConflict(event.currentTarget.files, this.req.items, this.$store.getters.currentFolder.id)
+      this.checkConflict(event.currentTarget.files, this.req.items, this.$store.getters.currentFolder.id);
+      event.currentTarget.value=""; // resets file choice
     },
     resetOpacity () {
       let items = document.getElementsByClassName('item')
