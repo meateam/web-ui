@@ -69,7 +69,13 @@ export default {
       this.current = req.id ? { id: req.id, name: req.name } : { id: '', name: '' };
       this.items = [];
 
-      this.$emit('update:selected', {dest:{id:this.current.id, name:this.current.name}, path: this.parents});
+      this.$emit('update:selected', { 
+        dest: {
+          id: this.current.id,
+          name: this.current.name
+        },
+        path: this.parents
+      });
 
       // If the path isn't the root path,
       // show a button to navigate to the previous

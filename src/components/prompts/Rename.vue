@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapMutations, mapState, mapGetters } from 'vuex'
 import { files as api } from '@/api'
 
 export default {
@@ -38,37 +38,44 @@ export default {
     this.name = this.oldName()
   },
   computed: {
-    ...mapState(['req', 'selected', 'selectedCount']),
+    ...mapMutations(['renameFolder']),
+    ...mapState(['req', 'selected', 'selectedCount', 'path']),
     ...mapGetters(['isListing'])
   },
   methods: {
     cancel: function () {
-      this.$store.commit('closeHovers')
+      this.$store.commit('closeHovers');
     },
     oldName: function () {
       if (!this.isListing) {
-        return this.req.name
+        return this.req.name;
       }
 
       if (this.selectedCount === 0 || this.selectedCount > 1) {
         // This shouldn't happen.
-        return
+        return;
       }
 
-      return this.req.items[this.selected[0]].name
+      return this.req.items[this.selected[0]].name;
     },
     submit: async function () {
-      const id = this.req.items[this.selected[0]].id;      
+      const id = this.isListing ? this.req.items[this.selected[0]].id : this.req.id;
 
       try {
-        await api.rename(id, this.name)
+        await api.rename(id, this.name);
 
-        this.$store.commit('setReload', true)
+        if (!this.isListing) {
+          // Update file name in path.
+          this.$store.commit('renameFolder', { id, name: this.name });
+        }
+
+        // Update file name in listing.
+        this.$store.commit('setReload', true);
       } catch (e) {
-        this.$showError(e)
+        this.$showError(e);
       }
 
-      this.$store.commit('closeHovers')
+      this.$store.commit('closeHovers');
     }
   }
 }
