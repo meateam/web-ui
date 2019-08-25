@@ -67,14 +67,12 @@
 
 <script>
 import { mapState } from 'vuex';
-import { baseURL } from '@/utils/constants';
+import { baseURL, checkMimeType } from '@/utils/constants';
 import { files as api } from '@/api';
 import InfoButton from '@/components/buttons/Info';
 import DeleteButton from '@/components/buttons/Delete';
 import RenameButton from '@/components/buttons/Rename';
 import DownloadButton from '@/components/buttons/Download';
-
-const mediaTypes = ['image', 'video', 'audio', 'blob'];
 
 export default {
   name: 'preview',
@@ -176,29 +174,15 @@ export default {
         }
 
         for (let j = i - 1; j >= 0; j--) {
-          let foundType = false;
-          for (let k = 0; k < mediaTypes.length && !foundType; k++) {
-            if (items[j].type.startsWith(mediaTypes[k])) {
-              this.previousLink = { id: items[j].id, name: items[j].name };
-              foundType = true;
-            }
-          }
-
-          if (foundType) {
+          if (checkMimeType(items[j].type)) {
+            this.previousLink = { id: items[j].id, name: items[j].name };
             break;
           }
         }
 
         for (let j = i + 1; j < items.length; j++) {
-          let foundType = false;
-          for (let k = 0; k < mediaTypes.length && !foundType; k++) {
-            if (items[j].type.startsWith(mediaTypes[k])) {
-              this.nextLink = { id: items[j].id, name: items[j].name };
-              foundType = true;
-            }
-          }
-
-          if (foundType) {
+          if (checkMimeType(items[j].type)) {
+            this.nextLink = { id: items[j].id, name: items[j].name };
             break;
           }
         }
