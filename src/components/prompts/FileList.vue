@@ -137,17 +137,22 @@ export default {
       }
     },
     select: function (event) {
+      let parents = [...this.parents];
+      if (parents.length === 0) {
+        parents.push({id:'', name:''});
+      }
+
       // If the element is already selected, unselect it.
       if (this.selected === event.currentTarget.dataset.id) {
         this.selected = null
-        this.$emit('update:selected', {dest:{id:this.current.id, name:this.current.name}, path: this.parents})
+        this.$emit('update:selected', {dest:{id:this.current.id, name:this.current.name}, path: parents})
         return
       }
 
       // Otherwise select the element.
       this.selected = event.currentTarget.dataset.id
       const name = event.currentTarget.dataset.name == backwards ? '' : event.currentTarget.dataset.name;
-      this.$emit('update:selected', {dest:{id:this.selected, name}, path: this.parents})
+      this.$emit('update:selected', {dest:{id:this.selected, name}, path: parents})
     }
   }
 }
