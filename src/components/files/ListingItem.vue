@@ -33,31 +33,31 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters, mapState } from "vuex";
-import filesize from "filesize";
-import moment from "moment";
-import { files as api } from "@/api";
+import { mapMutations, mapGetters, mapState } from 'vuex';
+import filesize from 'filesize';
+import moment from 'moment';
+import { files as api } from '@/api';
 
 export default {
-  name: "item",
+  name: 'item',
   data: function() {
     return {
       touches: 0
     };
   },
-  props: ["name", "id", "isDir", "type", "size", "modified", "index"],
+  props: ['name', 'id', 'isDir', 'type', 'size', 'modified', 'index'],
   computed: {
-    ...mapState(["selected", "req"]),
-    ...mapGetters(["selectedCount"]),
+    ...mapState(['selected', 'req']),
+    ...mapGetters(['selectedCount']),
     isSelected() {
       return this.selected.indexOf(this.index) !== -1;
     },
     icon() {
-      if (this.isDir) return "folder";
-      if (this.type.startsWith("image")) return "insert_photo";
-      if (this.type.startsWith("audio")) return "volume_up";
-      if (this.type.startsWith("video")) return "movie";
-      return "insert_drive_file";
+      if (this.isDir) return 'folder';
+      if (this.type.startsWith('image')) return 'insert_photo';
+      if (this.type.startsWith('audio')) return 'volume_up';
+      if (this.type.startsWith('video')) return 'movie';
+      return 'insert_drive_file';
     },
     canDrop() {
       if (!this.isDir) return false;
@@ -71,15 +71,15 @@ export default {
       return true;
     },
     activeClass() {
-      return !this.isSelected ? this.icon : "";
+      return !this.isSelected ? this.icon : '';
     }
   },
   methods: {
     ...mapMutations([
-      "addSelected",
-      "removeSelected",
-      "resetSelected",
-      "pushFolder"
+      'addSelected',
+      'removeSelected',
+      'resetSelected',
+      'pushFolder'
     ]),
     humanSize: function() {
       return filesize(this.size);
@@ -105,7 +105,7 @@ export default {
       let el = event.target;
 
       for (let i = 0; i < 5; i++) {
-        if (!el.classList.contains("item")) {
+        if (!el.classList.contains('item')) {
           el = el.parentElement;
         }
       }
@@ -127,7 +127,7 @@ export default {
       api
         .move(items, this.id)
         .then(() => {
-          this.$store.commit("setReload", true);
+          this.$store.commit('setReload', true);
         })
         .catch(this.$showError);
     },
@@ -171,8 +171,8 @@ export default {
       }
     },
     open: function() {
-      this.$store.commit("pushFolder", { id: this.id, name: this.name });
-      this.$store.commit("setReload", true);
+      this.$store.commit('pushFolder', { id: this.id, name: this.name });
+      this.$store.commit('setReload', true);
     }
   }
 };

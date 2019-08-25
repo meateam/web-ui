@@ -20,7 +20,7 @@
     <editor v-else-if="isEditor"></editor>
     <listing :class="{ multiple }" v-else-if="isListing"></listing>
     <preview v-else-if="isPreview"></preview>
-    <div v-else-if="!isPreview">
+    <div v-else>
       <h2 class="message">
         <span>{{ $t('files.loading') }}</span>
       </h2>

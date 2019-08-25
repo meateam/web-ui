@@ -66,18 +66,18 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { baseURL } from "@/utils/constants";
-import { files as api } from "@/api";
-import InfoButton from "@/components/buttons/Info";
-import DeleteButton from "@/components/buttons/Delete";
-import RenameButton from "@/components/buttons/Rename";
-import DownloadButton from "@/components/buttons/Download";
+import { mapState } from 'vuex';
+import { baseURL } from '@/utils/constants';
+import { files as api } from '@/api';
+import InfoButton from '@/components/buttons/Info';
+import DeleteButton from '@/components/buttons/Delete';
+import RenameButton from '@/components/buttons/Rename';
+import DownloadButton from '@/components/buttons/Download';
 
-const mediaTypes = ["image", "video", "audio", "blob"];
+const mediaTypes = ['image', 'video', 'audio', 'blob'];
 
 export default {
-  name: "preview",
+  name: 'preview',
   components: {
     InfoButton,
     DeleteButton,
@@ -86,29 +86,29 @@ export default {
   },
   data: function() {
     return {
-      previousLink: { id: "", name: "" },
-      nextLink: { id: "", name: "" },
+      previousLink: { id: '', name: '' },
+      nextLink: { id: '', name: '' },
       listing: null,
       subtitles: []
     };
   },
   computed: {
-    ...mapState(["req", "user", "oldReq", "path"]),
+    ...mapState(['req', 'user', 'oldReq', 'path']),
     hasPrevious() {
-      return this.previousLink.id !== "";
+      return this.previousLink.id !== '';
     },
     hasNext() {
-      return this.nextLink.id !== "";
+      return this.nextLink.id !== '';
     },
     download() {
       return `${baseURL}/api/files/${this.req.id}?alt=media`;
     },
     raw() {
-      return this.download;
+      return `${this.download}&inline=true`;
     }
   },
   async mounted() {
-    window.addEventListener("keyup", this.key);
+    window.addEventListener('keyup', this.key);
 
     if (this.req.subtitles) {
       this.subtitles = this.req.subtitles.map(
@@ -129,34 +129,34 @@ export default {
     }
   },
   beforeDestroy() {
-    window.removeEventListener("keyup", this.key);
+    window.removeEventListener('keyup', this.key);
   },
   methods: {
     back() {
       const currentIndex = this.path.findIndex(path => path.id === this.req.id);
       this.$store.commit(
-        "changeFolder",
+        'changeFolder',
         this.path[currentIndex > 0 ? currentIndex - 1 : 0].id
       );
-      this.$store.commit("setReload", true);
+      this.$store.commit('setReload', true);
     },
     prev() {
       const currentIndex = this.path.findIndex(path => path.id === this.req.id);
       this.$store.commit(
-        "changeFolder",
+        'changeFolder',
         this.path[currentIndex > 0 ? currentIndex - 1 : 0].id
       );
-      this.$store.commit("pushFolder", this.previousLink);
-      this.$store.commit("setReload", true);
+      this.$store.commit('pushFolder', this.previousLink);
+      this.$store.commit('setReload', true);
     },
     next() {
       const currentIndex = this.path.findIndex(path => path.id === this.req.id);
       this.$store.commit(
-        "changeFolder",
+        'changeFolder',
         this.path[currentIndex > 0 ? currentIndex - 1 : 0].id
       );
-      this.$store.commit("pushFolder", this.nextLink);
-      this.$store.commit("setReload", true);
+      this.$store.commit('pushFolder', this.nextLink);
+      this.$store.commit('setReload', true);
     },
     key(event) {
       event.preventDefault();
