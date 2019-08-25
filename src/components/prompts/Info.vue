@@ -7,7 +7,7 @@
     <div class="card-content">
       <p v-if="selected.length > 1">{{ $t('prompts.filesSelected', { count: selected.length }) }}</p>
 
-      <p v-if="selected.length < 2"><strong>{{ $t('prompts.displayName') }}</strong> {{ name }}</p>
+      <p v-if="selected.length < 2"><strong>{{ $t('prompts.displayName') }}</strong> {{ name || $t('sidebar.myFiles.title') }}</p>
       <p v-if="!dir || selected.length > 1"><strong>{{ $t('prompts.size') }}:</strong> <span id="content_length"></span> {{ humanSize }}</p>
 			<p v-if="!dir || selected.length == 1"><strong>{{ $t('prompts.type') }}:</strong> {{ type }}</p>
       <p v-if="selected.length < 2"><strong>{{ $t('prompts.lastModified') }}:</strong> {{ humanTime }}</p>
@@ -48,13 +48,12 @@ export default {
     ...mapGetters(['selectedCount', 'isListing']),
     humanSize: function () {
       if (this.selectedCount === 0 || !this.isListing) {
-        return filesize(this.req.size)
+        return filesize(this.req.size || 0)
       }
-
       let sum = 0
 
       for (let selected of this.selected) {
-        sum += this.req.items[selected].size
+        sum += this.req.items[selected].size || 0
       }
 
       return filesize(sum)

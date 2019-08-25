@@ -35,10 +35,12 @@ export async function fetch(url) {
 	if (data.items) {
 		let numDirs = 0;
 		let numFiles = 0;
+		data.size = 0;
 		for (let i = 0; i < data.items.length; i++) {
 			data.items[i].index = i;
 			data.items[i].modified = new Date(data.items[i].updatedAt);
 			delete data.items[i].updatedAt;
+			data.size += data.items[i].size || 0;
 			if (data.items[i].type === folderContentType) {
 				numDirs++;
 				data.items[i].isDir = true;
