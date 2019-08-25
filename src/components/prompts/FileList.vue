@@ -69,7 +69,13 @@ export default {
       this.current = req.id ? { id: req.id, name: req.name } : { id: '', name: '' };
       this.items = [];
 
-      this.$emit('update:selected', {dest:{id:this.current.id, name:this.current.name}, path: this.parents});
+      this.$emit('update:selected', { 
+        dest: {
+          id: this.current.id,
+          name: this.current.name
+        },
+        path: this.parents
+      });
 
       // If the path isn't the root path,
       // show a button to navigate to the previous
@@ -145,14 +151,26 @@ export default {
       // If the element is already selected, unselect it.
       if (this.selected === event.currentTarget.dataset.id) {
         this.selected = null
-        this.$emit('update:selected', {dest:{id:this.current.id, name:this.current.name}, path: parents})
+        this.$emit('update:selected', {
+          dest: {
+            id: this.current.id,
+            name: this.current.name
+          },
+          path: parents
+        });
         return
       }
 
       // Otherwise select the element.
       this.selected = event.currentTarget.dataset.id
       const name = event.currentTarget.dataset.name == backwards ? '' : event.currentTarget.dataset.name;
-      this.$emit('update:selected', {dest:{id:this.selected, name}, path: parents})
+      this.$emit('update:selected', {
+        dest: {
+          id: this.selected,
+          name
+        },
+        path: parents
+      });
     }
   }
 }

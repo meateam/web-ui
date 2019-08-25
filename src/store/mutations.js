@@ -92,6 +92,10 @@ const mutations = {
     let index = value ? state.path.findIndex(folder => folder.id === value) : 0;
     state.path = state.path.slice(0, index + 1);
   },
+  renameFolder: (state, value) => {
+    let index = value ? state.path.findIndex(folder => folder.id === value.id) : 0;
+    state.path[index].name = value.name;
+  },
   setPath: (state, value) => {
     if (!value) return;
     state.path = value;
