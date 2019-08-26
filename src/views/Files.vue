@@ -80,8 +80,8 @@ export default {
 
       breadcrumbs.shift();
 
-      if (breadcrumbs.length > 3) {
-        while (breadcrumbs.length !== 4) {
+      if (breadcrumbs.length > 6) {
+        while (breadcrumbs.length !== 7) {
           breadcrumbs.shift();
         }
 
