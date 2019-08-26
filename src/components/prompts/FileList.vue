@@ -144,9 +144,9 @@ export default {
     },
     select: function (event) {
       let parents = [...this.parents];
-      if (parents.length === 0) {
-        parents.push({id:'', name:''});
-      }
+      if (parents.findIndex(parent => parent.id === this.current.id) < 0 ) {
+        parents.push({ id: this.current.id, name: this.current.name });
+      }  
 
       // If the element is already selected, unselect it.
       if (this.selected === event.currentTarget.dataset.id) {

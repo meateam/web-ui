@@ -246,10 +246,9 @@ export function move(items, to) {
 
 		// Send a message to user before closing the tab during file upload
 		window.onbeforeunload = () => "Moving files.";
-
 		request.onload = () => {
       if (request.status === 200) {
-        resolve(request.responseText);
+				resolve(request.responseText);
       } else if (request.status === 409) {
         reject(request.status);
       } else {
