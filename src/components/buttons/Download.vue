@@ -19,7 +19,7 @@ export default {
   methods: {
     download: function () {
       if (!this.isListing) {
-        api.download([this.$route.path]);
+        api.download([this.req.id]);
         return;
       }
 
