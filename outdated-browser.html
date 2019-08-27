@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>OUTDATED BROWSER</title>
+  <style>
+    div.buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+
+    a {
+      margin: 4px;
+      flex: 1 1 0;
+    }
+
+    body {
+      font-family: sans-serif;
+      font-size: 25px;
+      background: linear-gradient(90deg, #b3daec, #b7e0bc);
+      display: flex;
+      justify-content: center;
+      margin-top: 27vh;
+      font-weight: bold;
+      color: #212121;
+    }
+
+    button {
+      width: 100%;
+      font-size: 20px;
+      border-radius: 10px;
+      padding: 10px;
+      cursor: pointer;
+      background-color: #69f0ae;
+      border: none;
+      outline: none;
+      box-shadow: 1px 1px 2px rgba(96, 125, 139, 1);
+    }
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spacer {
+      display: flex;
+      flex: 1 0 0;
+    }
+
+    svg {
+      margin: 0 16px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div>
+    <div class="row">
+      <h1>KDrive</h1>
+    </div>
+    <p>+הדפדפן בו הינך משתמש אינו מעודכן. יש להשתמש בכרום גירסה 51</p>
+    <p>Your browser is outdated! Please use Chrome 51+</p>
+    <div class="buttons">
+      <a id="download-button"><button>Download Now | הורד עכשיו</button></a>
+    </div>
+  </div>
+</body>
+
+</html>
+
+<script>
+  var callback = function () {
+    var req = new XMLHttpRequest();
+
+    req.onload = function () {
+      if (req.status === 200) {
+        var conf = JSON.parse(req.response);
+        document.getElementById("download-button").setAttribute("href", conf.chromeDownloadLink);
+      }
+    }
+
+    req.open('GET', '/api/config');
+    req.send();
+  };
+
+  if (
+    document.readyState === "complete" ||
+    (document.readyState !== "loading" && !document.documentElement.doScroll)
+  ) {
+    callback();
+  } else {
+    document.addEventListener("DOMContentLoaded", callback);
+  }
+</script>
