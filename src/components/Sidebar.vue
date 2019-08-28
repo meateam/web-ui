@@ -14,7 +14,7 @@
         </button>
       </div>
       <div>
-        <a v-bind:href = supportLink class="action" :aria-label="$t('sidebar.contactUs')" :title="$t('sidebar.contactUs')">
+        <a v-bind:href = supportLink class="action" target="_blank" :aria-label="$t('sidebar.contactUs')" :title="$t('sidebar.contactUs')">
           <i class="material-icons">headset_mic</i>
           <span>{{$t('sidebar.contactUs')}}</span>
         </a>
