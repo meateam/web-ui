@@ -49,7 +49,14 @@ export default {
       }
 
       try {
-        await api.move(items, this.dest.dest.id);
+        let updated = await api.move(items, this.dest.dest.id);
+        updated = JSON.parse(updated);
+        const successfulUpdateCount = (updated && updated.length) || 0;
+        if (successfulUpdateCount !== items.length) {
+          const failedCount = items.length - successfulUpdateCount;
+          throw new Error(`failed to move ${failedCount} item${failedCount > 1 ? 's' : ''}`);
+        }
+
         buttons.success('move');
         if (this.dest.path.findIndex(path => path.id === this.dest.dest.id) < 0) {
           this.$store.commit('setPath', this.dest.path.concat([this.dest.dest]));

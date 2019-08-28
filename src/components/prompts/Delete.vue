@@ -27,7 +27,7 @@ export default {
   name: 'delete',
   computed: {
     ...mapGetters(['isListing', 'selectedCount']),
-    ...mapState(['req', 'selected'])
+    ...mapState(['req', 'selected', 'path'])
   },
   methods: {
     ...mapMutations(['closeHovers']),
@@ -37,9 +37,14 @@ export default {
 
       try {
         if (!this.isListing) {
-          await api.remove(this.$route.path)
-          buttons.success('delete')
-          this.$router.push({ path: url.removeLastDir(this.$route.path) + '/' })
+          await api.remove(this.req.id);
+          buttons.success('delete');
+          const currentIndex = this.path.findIndex(path => path.id === this.req.id);
+          this.$store.commit(
+            'changeFolder',
+            this.path[currentIndex > 0 ? currentIndex - 1 : 0].id
+          );
+          this.$store.commit('setReload', true);
           return
         }
 

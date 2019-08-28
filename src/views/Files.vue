@@ -19,8 +19,8 @@
     </div>
     <editor v-else-if="isEditor"></editor>
     <listing :class="{ multiple }" v-else-if="isListing"></listing>
-    <!-- <preview v-else-if="isPreview"></preview> -->
-    <div v-else-if="!isPreview">
+    <preview v-else-if="isPreview"></preview>
+    <div v-else>
       <h2 class="message">
         <span>{{ $t('files.loading') }}</span>
       </h2>
@@ -34,6 +34,7 @@ import NotFound from "./errors/404";
 import InternalError from "./errors/500";
 import Listing from "@/components/files/Listing";
 import Editor from "@/components/files/Editor";
+import Preview from "@/components/files/Preview";
 import { files as api } from "@/api";
 import { mapGetters, mapState, mapMutations } from "vuex";
 
@@ -48,7 +49,8 @@ export default {
     NotFound,
     InternalError,
     Listing,
-    Editor
+    Editor,
+    Preview
   },
   computed: {
     ...mapGetters(["selectedCount", "isListing", "isEditor", "isFiles"]),
@@ -78,8 +80,8 @@ export default {
 
       breadcrumbs.shift();
 
-      if (breadcrumbs.length > 3) {
-        while (breadcrumbs.length !== 4) {
+      if (breadcrumbs.length > 6) {
+        while (breadcrumbs.length !== 7) {
           breadcrumbs.shift();
         }
 
