@@ -10,6 +10,7 @@ services:
       GW_FILE_SERVICE: 'file-service:8080'
       GW_ALLOW_ORIGINS: http://localhost*
       GW_SUPPORT_LINK: https://open.rocket.chat/home
+      GW_CHROME_DOWNLOAD_URL: "https://google.com/chrome/"
       ELASTICSEARCH_URL: http://localhost:9200
       LOG_INDEX: kdrive
       LOG_LEVEL: info
