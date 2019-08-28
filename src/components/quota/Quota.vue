@@ -18,7 +18,8 @@ export default {
   },
   computed: {
     quotaPercentage() {
-      return Math.round(this.quota.used / this.quota.limit * 100) / 100;
+      const percent = this.quota.used / this.quota.limit * 100;
+      return Number(percent.toFixed(2));
     }
   }
 };
