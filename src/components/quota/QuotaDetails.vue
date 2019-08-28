@@ -1,13 +1,22 @@
 <template>
   <div class="quota-usage-container">
-      {{`${$t('quota.usage')}: ${percentage}%`}}
+      {{`${$t('quota.usage')}: ${used} / ${limit}`}}
   </div>
 </template>
 
 <script>
+import filesize from 'filesize';
 export default {
   name: "quota-details",
-  props: ["percentage"]
+  props: ["quota"],
+  computed: {
+    used() {
+      return filesize(this.quota.used);
+    },
+    limit() {
+      return filesize(this.quota.limit);
+    }
+  }
 };
 </script>
 

@@ -1,7 +1,7 @@
 <template>
-  <div id="quota" :title="quotaPercentage">
-    <quota-bar :percentage="quota"></quota-bar>
-    <quota-details :percentage="quota"></quota-details>
+  <div id="quota">
+    <quota-bar :percentage="quotaPercentage"></quota-bar>
+    <quota-details :quota="quota"></quota-details>
   </div>
 </template>
 
@@ -18,7 +18,7 @@ export default {
   },
   computed: {
     quotaPercentage() {
-      return this.quota + "%";
+      return Math.round(this.quota.used / this.quota.limit * 100) / 100;
     }
   }
 };

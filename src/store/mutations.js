@@ -99,6 +99,11 @@ const mutations = {
   setPath: (state, value) => {
     if (!value) return;
     state.path = value;
+  },
+  setQuota: (state, value) => {
+    if (!value || !value.limit) return;
+    state.quota.used = value.used || 0;
+    state.quota.limit = value.limit;
   }
 }
 

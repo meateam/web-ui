@@ -14,7 +14,10 @@ const state = {
     key: '',
     items: []
   },
-  quota: 0,
+  quota: {
+    used: 0,
+    limit: 0
+  },
   jwt: '',
   progress: 0,
   loading: false,

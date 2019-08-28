@@ -35,12 +35,12 @@ import InternalError from "./errors/500";
 import Listing from "@/components/files/Listing";
 import Editor from "@/components/files/Editor";
 import Preview from "@/components/files/Preview";
-import { files as api } from "@/api";
+import { files as api, quota as quotaApi } from "@/api";
 import { mapGetters, mapState, mapMutations } from "vuex";
 
-function clean(path) {
-  return path.endsWith("/") ? path.slice(0, -1) : path;
-}
+// function clean(path) {
+//   return path.endsWith("/") ? path.slice(0, -1) : path;
+// }
 
 export default {
   name: "files",
@@ -135,6 +135,9 @@ export default {
         const res = await api.fetch(url);
         this.$store.commit("updateRequest", res);
         document.title = res.name || "Files";
+
+        const quota = await quotaApi.getQuota();
+        this.$store.commit("setQuota", quota);
       } catch (e) {
         console.error(e);
         this.error = e;
