@@ -27,8 +27,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import { files as api } from '@/api'
+import { checkConflict } from '@/utils/files'
 
 export default {
   name: 'new-dir',
@@ -38,6 +39,7 @@ export default {
     };
   },
   computed: {
+    ...mapState([ 'req' ]),
     ...mapGetters([ 'isFiles', 'isListing', 'currentFolder' ])
   },
   methods: {
@@ -46,6 +48,21 @@ export default {
 
       let folderName = this.name;
       let currentFolderId = this.$store.getters.currentFolder.id;
+      let folder = {
+        name: folderName
+      };
+
+      const conflicts = checkConflict([folder], this.req.items, currentFolderId);
+      if (conflicts) {
+        this.$store.commit('showHover', {
+          prompt: 'replace',
+          confirm: (event) => {
+            event.preventDefault();
+            this.$store.commit('closeHovers');
+          }
+        });
+        return
+      }
 
       try {
         await api.uploadFolder(currentFolderId, folderName, () => console.log("Uploading folder"));

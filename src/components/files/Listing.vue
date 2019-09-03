@@ -105,6 +105,7 @@ import Item from './ListingItem'
 import css from '@/utils/css'
 import { users, files as api } from '@/api'
 import buttons from '@/utils/buttons'
+import { checkConflict } from '@/utils/files'
 
 export default {
   name: 'listing',
@@ -266,13 +267,13 @@ export default {
       if (this.$store.state.clipboard.key === 'x') {
         api.move(items).then(() => {
           this.$store.commit('setReload', true)
-        }).catch(this.$showError)
+        }).catch(e => this.$showError(e))
         return
       }
 
       api.copy(items).then(() => {
         this.$store.commit('setReload', true)
-      }).catch(this.$showError)
+      }).catch(e => this.$showError(e))
     },
     resizeEvent () {
       // Update the columns size based on the window width.
@@ -324,30 +325,14 @@ export default {
           .then(req => {
             this.checkConflict(files, req.items, base)
           })
-          .catch(this.$showError)
-
+          .catch(e => this.$showError(e))
         return
       }
 
       this.checkConflict(files, this.req.items, this.$store.getters.currentFolder.id);
     },
     checkConflict (files, items, base) {
-      if (typeof items === 'undefined' || items === null) {
-        items = []
-      }
-
-      let conflict = false
-      for (let i = 0; i < files.length; i++) {
-        let res = items.findIndex(function hasConflict (element) {
-          return (element.name === this)
-        }, files[i].name)
-
-        if (res >= 0) {
-          conflict = true
-          break
-        }
-      }
-
+      const conflict = checkConflict(files, items, base);
       if (!conflict) {
         this.handleFiles(files, base)
         return

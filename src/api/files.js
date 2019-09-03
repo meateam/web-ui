@@ -184,8 +184,8 @@ export async function post(base, file, onupload) {
 	}).finally(() => { window.onbeforeunload = null });
 }
 
-export async function uploadFolder(parent, name, onUpload) {
-	return new Promise(async (resolve, reject) => {
+export function uploadFolder(parent, name, onUpload) {
+	return new Promise((resolve, reject) => {
 		let url = `${baseURL}/api/upload?parent=${parent}&uploadType=multipart`;
 		let headers = {
 			"Authorization": 'Bearer ' + store.state.jwt,

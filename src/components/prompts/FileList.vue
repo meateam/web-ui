@@ -60,7 +60,7 @@ export default {
     // so we fetch the data from the previous directory.
     files.fetch(this.current.id)
       .then(this.fillOptions)
-      .catch(this.$showError)
+      .catch(e => this.$showError(e))
   },
   methods: {
     fillOptions (req) {
@@ -115,7 +115,7 @@ export default {
 
       files.fetch(id)
         .then(this.fillOptions)
-        .catch(this.$showError)
+        .catch(e => this.$showError(e))
     },
     touchstart (event) {
       let url = event.currentTarget.dataset.id
