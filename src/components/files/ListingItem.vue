@@ -130,7 +130,7 @@ export default {
         .then(() => {
           this.$store.commit('setReload', true);
         })
-        .catch(this.$showError);
+        .catch(e => this.$showError(e));
     },
     click: function(event) {
       if (this.selectedCount !== 0) event.preventDefault();

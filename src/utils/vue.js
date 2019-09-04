@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Noty from 'noty'
 import i18n from '@/i18n'
-import { disableExternal } from '@/utils/constants'
+import { disableExternal, config } from '@/utils/constants'
 
 Vue.config.productionTip = true
 
@@ -32,14 +32,15 @@ Vue.prototype.$showError = (error) => {
 
   if (!disableExternal) {
     btns.unshift(Noty.button(i18n.t('buttons.reportIssue'), '', function () {
-      window.open('https://github.com/filebrowser/filebrowser/issues/new/choose')
+      window.open(config.supportLink)
+      n.close()
     }))
   }
 
   let n = new Noty(Object.assign({}, notyDefault, {
-    text: error.message || error,
+    text: error.message || i18n.t('errors.general'),
     type: 'error',
-    timeout: null,
+    timeout: 5000,
     buttons: btns
   }))
 
