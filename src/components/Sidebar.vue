@@ -6,7 +6,6 @@
         <span v-if="nameExists">{{ $t('sidebar.myFiles.personalized', {person: user.firstName}) }}</span>
         <span v-else>{{ $t('sidebar.myFiles.title') }}</span>
       </div>
-
       <div>
         <button @click="$store.commit('showHover', 'newDir')" class="action" :aria-label="$t('sidebar.newFolder')" :title="$t('sidebar.newFolder')">
           <i class="material-icons">create_new_folder</i>
@@ -14,13 +13,17 @@
         </button>
       </div>
       <div>
-        <a v-bind:href = supportLink class="action" target="_blank" :aria-label="$t('sidebar.contactUs')" :title="$t('sidebar.contactUs')">
+        <a v-bind:href="supportLink" class="action" target="_blank" :aria-label="$t('sidebar.contactUs')" :title="$t('sidebar.contactUs')">
           <i class="material-icons">headset_mic</i>
           <span>{{$t('sidebar.contactUs')}}</span>
         </a>
       </div>
       <div>
-        <quota :quota="quota"></quota>
+        <a class="action" target="_blank" :aria-label="$t('sidebar.storage')" :title="$t('sidebar.storage')" style="cursor: default">
+          <i class="material-icons">storage</i>
+          <span>{{$t('sidebar.storage')}}</span>
+          <quota :quota="quota"></quota>
+        </a>
       </div>
     </template>
 
