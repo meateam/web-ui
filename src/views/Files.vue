@@ -53,7 +53,7 @@ export default {
     Preview
   },
   computed: {
-    ...mapGetters(["selectedCount", "isListing", "isEditor", "isFiles"]),
+    ...mapGetters(["selectedCount", "isListing", "isEditor", "isFiles", "isActiveDialog"]),
     ...mapState(["req", "user", "reload", "multiple", "loading", "path"]),
     isPreview() {
       return !this.loading && !this.isListing && !this.isEditor;
@@ -146,6 +146,9 @@ export default {
       }
     },
     keyEvent(event) {
+      // Shortcuts on files shouldn't work when a dialog is active
+      if(this.$store.getters.isActiveDialog) return;
+
       // Esc!
       if (event.keyCode === 27) {
         this.$store.commit("closeHovers");
