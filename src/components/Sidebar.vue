@@ -14,13 +14,17 @@
         </button>
       </div>
       <div>
-        <a v-bind:href = supportLink class="action" target="_blank" :aria-label="$t('sidebar.contactUs')" :title="$t('sidebar.contactUs')">
+        <a v-bind:href="supportLink" class="action" target="_blank" :aria-label="$t('sidebar.contactUs')" :title="$t('sidebar.contactUs')">
           <i class="material-icons">headset_mic</i>
           <span>{{$t('sidebar.contactUs')}}</span>
         </a>
       </div>
       <div>
-        <quota :quota="quota"></quota>
+        <a class="action" target="_blank" :aria-label="$t('sidebar.storage')" :title="$t('sidebar.storage')">
+          <i class="material-icons">storage</i>
+          <span>{{$t('sidebar.storage')}}</span>
+          <quota :quota="quota"></quota>
+        </a>
       </div>
     </template>
 

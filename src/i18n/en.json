@@ -199,6 +199,7 @@
       "title": "My files",
       "personalized": "{person}'s files"
     },
+    "storage": "Storage",
     "newFile": "New file",
     "newFolder": "New folder",
     "settings": "Settings",
