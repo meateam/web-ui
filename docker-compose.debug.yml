@@ -131,8 +131,22 @@ services:
     ports:
       - '8086:8080'
     environment:
-      KARTOFFEL_URL: http://localhost:8080
+      KARTOFFEL_URL: http://13.69.137.179:8080
       RPC_PORT: 8080
+  permission-service:
+    image: bluehub.azurecr.io/meateam/permission-service:develop
+    ports:
+      - '8088:8080'
+    environment:
+      PORT: 8080
+      HEALTH_CHECK_INTERVAL: 3
+      ELASTIC_APM_IGNORE_URLS: "/grpc.health.v1.Health/Check"
+      MONGO_HOST: "mongodb://mongo:27017/permission"
+      MONGO_CLIENT_CONNECTION_TIMEOUT: 10
+      MONGO_CLIENT_PING_TIMEOUT: 10
+    depends_on:
+      - api-gateway
+      - mongo
   web-ui:
     image: web-ui
     build: .
