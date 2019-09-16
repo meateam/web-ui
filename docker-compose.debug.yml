@@ -145,7 +145,6 @@ services:
       MONGO_CLIENT_CONNECTION_TIMEOUT: 10
       MONGO_CLIENT_PING_TIMEOUT: 10
     depends_on:
-      - api-gateway
       - mongo
   web-ui:
     image: web-ui
