@@ -198,13 +198,6 @@ table tr>*:last-child {
   font-size: 1em;
 }
 
-.card#share ul li input,
-.card#share ul li select {
-  padding: .2em;
-  margin-right: .5em;
-  border: 1px solid #dadada;
-}
-
 .card#share .action.copy-clipboard::after {
   content: 'Copied!';
   position: absolute;

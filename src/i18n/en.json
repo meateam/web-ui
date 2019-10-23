@@ -240,12 +240,9 @@
     "ro": "Romanian",
     "svSE": "Swedish (Sweden)"
   },
-  "time": {
-    "unit": "Time Unit",
-    "seconds": "Seconds",
-    "minutes": "Minutes",
-    "hours": "Hours",
-    "days": "Days"
+  "role": {
+    "input": "role",
+    "read": "read"
   },
   "download": {
     "downloadFile": "Download File",

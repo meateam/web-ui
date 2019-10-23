@@ -1,6 +1,9 @@
-import { fetchURL, removePrefix } from './utils'
+import axios from 'axios';
+
 import { baseURL, folderContentType } from '@/utils/constants'
 import store from '@/store'
+
+import { fetchURL, removePrefix } from './utils'
 
 export async function fetch(url) {
 	url = removePrefix(url);
@@ -242,7 +245,7 @@ export function move(items, to) {
 		let request = new XMLHttpRequest();
 		request.open('PUT', `${baseURL}/api/files`, true);
 		request.withCredentials = true;
-		request.setRequestHeader('Authorization','Bearer ' + store.state.jwt);
+		request.setRequestHeader('Authorization', 'Bearer ' + store.state.jwt);
 
 		// Send a message to user before closing the tab during file upload
 		window.onbeforeunload = () => "Moving files.";
@@ -275,7 +278,7 @@ export function rename(id, name) {
 		let request = new XMLHttpRequest();
 		request.open('PUT', `${baseURL}/api/files/${id}`, true);
 		request.withCredentials = true;
-		request.setRequestHeader('Authorization','Bearer ' + store.state.jwt);
+		request.setRequestHeader('Authorization', 'Bearer ' + store.state.jwt);
 
 		// Send a message to user before closing the tab during file upload
 		window.onbeforeunload = () => "Renaming file.";
@@ -308,4 +311,8 @@ export function copy(items) {
 export async function checksum(url, algo) {
 	const data = await resourceAction(`${url}?checksum=${algo}`, 'GET')
 	return (await data.json()).checksums[algo]
+}
+
+export async function getPermissions(id) {
+	return axios.get(`${baseURL}/api/files/${id}/permissions`, { headers: {Authorization: 'Bearer ' + store.state.jwt} })
 }

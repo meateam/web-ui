@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   api-gateway:
-    image: api-gateway:latest
+    image: bluehub.azurecr.io/meateam/api-gateway:develop
     environment:
       GW_AUTH_URL: 'http://localhost:8084/auth/login'
       GW_PORT: 8080
@@ -42,7 +42,7 @@ services:
       MINIO_SECRET_KEY: BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR
     command: server /data
   upload-service:
-    image: 'upload-service:latest'
+    image: 'bluehub.azurecr.io/meateam/upload-service:develop'
     environment:
       S3_ACCESS_KEY: F6WUUG27HBUFSIXVZL59
       S3_SECRET_KEY: BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR
@@ -65,7 +65,7 @@ services:
     ports:
       - '8081:8080'
   download-service:
-    image: 'download-service:latest'
+    image: 'bluehub.azurecr.io/meateam/download-service:develop'
     environment:
       S3_ACCESS_KEY: F6WUUG27HBUFSIXVZL59
       S3_SECRET_KEY: BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR
@@ -88,7 +88,7 @@ services:
     depends_on:
       - minio
   file-service:
-    image: file-service
+    image: bluehub.azurecr.io/meateam/file-service:develop
     environment:
       MONGO_HOST: mongodb://mongo:27017/devDB
     ports:
@@ -104,7 +104,7 @@ services:
     depends_on:
       - minio
   authentication-service:
-    image: authentication-service:latest
+    image: bluehub.azurecr.io/meateam/authentication-service:develop
     ports:
       - '8084:8080'
     environment:
@@ -127,14 +127,14 @@ services:
       SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: 'http://localhost:8084/auth/metadata.xml/callback'
       SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE: 'http://localhost:8084/auth/logout'
   user-service:
-    image: bluehub.azurecr.io/meateam/user-service:ec68a07
+    image: bluehub.azurecr.io/meateam/user-service:develop
     ports:
       - '8086:8080'
     environment:
       KARTOFFEL_URL: 'http://localhost:8080'
       RPC_PORT: 8080
   permission-service:
-    image: bluehub.azurecr.io/meateam/permission-service:latest
+    image: bluehub.azurecr.io/meateam/permission-service:develop
     ports:
       - '8088:8080'
     environment:
