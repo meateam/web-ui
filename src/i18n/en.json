@@ -33,7 +33,8 @@
     "update": "Update",
     "upload": "Upload",
     "user": "User",
-    "permalink": "Get Permanent Link"
+    "permalink": "Get Permanent Link",
+    "morePlural": "More"
   },
   "success": {
     "linkCopied": "Link copied!"
@@ -119,7 +120,8 @@
 		"type": "Type",
     "schedule": "Schedule",
     "scheduleMessage": "Pick a date and time to schedule the publication of this post.",
-    "newArchetype": "Create a new post based on an archetype. Your file will be created on content folder."
+    "newArchetype": "Create a new post based on an archetype. Your file will be created on content folder.",
+    "permissions": "Permissions"
   },
   "settings": {
     "instanceName": "Instance name",

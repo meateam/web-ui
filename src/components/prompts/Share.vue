@@ -19,7 +19,6 @@
           </li>
         </ul>
       </div>
-      <permission-list :id="selectedItem.id"></permission-list>
     </div>
 
     <div class="card-action">
@@ -89,10 +88,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.user-role-select {
-  border-bottom: 1px solid #dadce0;
-  padding-bottom: 16px;
-}
-
-</style>

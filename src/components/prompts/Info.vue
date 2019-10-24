@@ -8,7 +8,7 @@
       <p v-if="selected.length > 1">{{ $t('prompts.filesSelected', { count: selected.length }) }}</p>
 
       <p v-if="selected.length < 2"><strong>{{ $t('prompts.displayName') }}</strong> {{ name || $t('sidebar.myFiles.title') }}</p>
-      <p v-if="!dir || selected.length > 1"><strong>{{ $t('prompts.size') }}:</strong> <span id="content_length"></span> {{ humanSize }}</p>
+      <p v-if="!dir || selected.length > 1"><strong>{{ $t('prompts.size') }}:</strong><span id="content_length"></span> {{ humanSize }}</p>
 			<p v-if="!dir || selected.length == 1"><strong>{{ $t('prompts.type') }}:</strong> {{ type }}</p>
       <p v-if="selected.length < 2"><strong>{{ $t('prompts.lastModified') }}:</strong> {{ humanTime }}</p>
 
@@ -17,12 +17,10 @@
         <p><strong>{{ $t('prompts.numberDirs') }}:</strong> {{ req.numDirs }}</p>
       </template>
 
-      <!-- <template v-if="!dir">
-        <p><strong>MD5: </strong><code><a @click="checksum($event, 'md5')">{{ $t('prompts.show') }}</a></code></p>
-        <p><strong>SHA1: </strong><code><a @click="checksum($event, 'sha1')">{{ $t('prompts.show') }}</a></code></p>
-        <p><strong>SHA256: </strong><code><a @click="checksum($event, 'sha256')">{{ $t('prompts.show') }}</a></code></p>
-        <p><strong>SHA512: </strong><code><a @click="checksum($event, 'sha512')">{{ $t('prompts.show') }}</a></code></p>
-      </template> -->
+      <div class="permission-list" v-if="showPermissionList">
+        <strong>{{$t('prompts.permissions')}}:</strong>
+        <permission-list :id="selectedItem.id"></permission-list>
+      </div>
     </div>
 
     <div class="card-action">
@@ -40,9 +38,13 @@ import {mapState, mapGetters} from 'vuex'
 import filesize from 'filesize'
 import moment from 'moment'
 import { files as api } from '@/api'
+import PermissionList from '../common/PermissionList'
 
 export default {
   name: 'info',
+  components: {
+    PermissionList
+  },
   computed: {
     ...mapState(['req', 'selected']),
     ...mapGetters(['selectedCount', 'isListing']),
@@ -75,6 +77,12 @@ export default {
       return this.selectedCount > 1 || (this.selectedCount === 0
         ? this.req.isDir
         : this.req.items[this.selected[0]].isDir)
+    },
+    selectedItem: function() {
+      return this.selectedCount > 0 && this.selectedCount < 2 ? this.req.items[this.selected[0]] : this.req;
+    },
+    showPermissionList: function() {
+      return (this.selectedCount > 0 && this.selectedCount < 2) || this.req.id
     }
   },
   methods: {
@@ -99,3 +107,9 @@ export default {
   }
 }
 </script>
+<style scoped>
+.permission-list {
+  border-top: 1px solid #dadce0;
+  padding-top: 16px;
+}
+</style>

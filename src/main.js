@@ -12,7 +12,7 @@ import { fetchConfig } from '@/utils/constants';
 import { initApm } from '@/utils/apm';
 import { config } from '@/utils/constants';
 
-Vue.use(VTooltip)
+Vue.use(VTooltip);
 sync(store, router);
 
 async function start () {
