@@ -117,7 +117,7 @@ main {
   left: 0;
   width: 100%;
   height: 3px;
-  z-index: 9999999999;
+  z-index: 4;
 }
 
 #progress div {
@@ -125,4 +125,26 @@ main {
   background-color: #40c4ff;
   width: 0;
   transition: .2s ease width;
+}
+
+.tooltip {
+  z-index: 3;
+}
+
+.tooltip-inner {
+  background: black;
+  color: white;
+  border-radius: 16px;
+  padding: 8px 10px 8px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.tooltip-arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  margin: 5px;
+  border-color: black;
+  z-index: 3;
 }

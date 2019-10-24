@@ -314,5 +314,6 @@ export async function checksum(url, algo) {
 }
 
 export async function getPermissions(id) {
-	return axios.get(`${baseURL}/api/files/${id}/permissions`, { headers: {Authorization: 'Bearer ' + store.state.jwt} })
+	const response = await axios.get(`${baseURL}/api/files/${id}/permissions`, { headers: {Authorization: 'Bearer ' + store.state.jwt} });
+	return response.data;
 }

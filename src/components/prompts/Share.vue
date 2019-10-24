@@ -5,18 +5,21 @@
     </div>
 
     <div class="card-content">
-      <ul>
-        <li>
-          <autocomplete :search="search" :autoSelect="true" @submit="saveUser"></autocomplete>
-          <select v-model="role" :aria-label="$t('role.input')">
-            <option value="READ" >{{ $t('role.read') }}</option>
-          </select>
-          <button class="action"
-            @click="submit"
-            :aria-label="$t('buttons.create')"
-            :title="$t('buttons.create')"><i class="material-icons">add</i></button>
-        </li>
-      </ul>
+      <div class="user-role-select">
+        <ul id="user-role-list">
+          <li>
+            <autocomplete :search="search" :autoSelect="true" @submit="saveUser"></autocomplete>
+            <select v-model="role" :aria-label="$t('role.input')">
+              <option value="READ" >{{ $t('role.read') }}</option>
+            </select>
+            <button class="action"
+              @click="submit"
+              :aria-label="$t('buttons.create')"
+              :title="$t('buttons.create')"><i class="material-icons">add</i></button>
+          </li>
+        </ul>
+      </div>
+      <permission-list :id="selectedItem.id"></permission-list>
     </div>
 
     <div class="card-action">
@@ -33,13 +36,15 @@ import { mapState, mapGetters } from 'vuex'
 import { share as api } from '@/api'
 import { baseURL } from '@/utils/constants'
 import Autocomplete from '@trevoreyre/autocomplete-vue'
+import PermissionList from '../common/PermissionList'
 import moment from 'moment'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
 
 export default {
   name: 'share',
   components: {
-    Autocomplete
+    Autocomplete,
+    PermissionList,
   },
   data: function () {
     return {
@@ -84,3 +89,10 @@ export default {
   }
 }
 </script>
+<style scoped>
+.user-role-select {
+  border-bottom: 1px solid #dadce0;
+  padding-bottom: 16px;
+}
+
+</style>
