@@ -139,6 +139,7 @@ export default {
         const quota = await quotaApi.getQuota();
         this.$store.commit("setQuota", quota);
       } catch (e) {
+        // eslint-disable-next-line
         console.error(e);
         this.error = e;
       } finally {
