@@ -13,18 +13,18 @@ services:
       GW_SUPPORT_LINK: 'https://open.rocket.chat/home'
       GW_CHROME_DOWNLOAD_URL: 'https://google.com/chrome/'
       ELASTICSEARCH_URL: 'http://localhost:9200'
-      LOG_INDEX: kdrive
-      LOG_LEVEL: info
+      LOG_INDEX: 'kdrive'
+      LOG_LEVEL: 'info'
       ELASTIC_APM_SERVER_URL: 'http://localhost:8200'
       ELASTIC_APM_SERVICE_NAME: api-gateway
       ELASTIC_APM_SERVICE_VERSION: 0.1
       ELASTIC_APM_ENVIRONMENT: development
       ELASTIC_APM_ACTIVE: 'true'
-      ELASTIC_APM_IGNORE_URLS: /api/healthcheck
-      ELASTIC_APM_CAPTURE_BODY: all
-      ELASTIC_APM_METRICS_INTERVAL: 10s
+      ELASTIC_APM_IGNORE_URLS: '/api/healthcheck'
+      ELASTIC_APM_CAPTURE_BODY: 'all'
+      ELASTIC_APM_METRICS_INTERVAL: '10s'
       GW_EXTERNAL_APM_URL: 'http://localhost:8200'
-      GW_SECRET: pandora@drive
+      GW_SECRET: 'pandora@drive'
     ports:
       - '8080:8080'
     depends_on:
@@ -40,17 +40,17 @@ services:
     ports:
       - '9000:9000'
     environment:
-      MINIO_ACCESS_KEY: F6WUUG27HBUFSIXVZL59
-      MINIO_SECRET_KEY: BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR
+      MINIO_ACCESS_KEY: 'F6WUUG27HBUFSIXVZL59'
+      MINIO_SECRET_KEY: 'BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR'
     command: server /data
   upload-service:
     image: 'bluehub.azurecr.io/meateam/upload-service:develop'
     environment:
-      S3_ACCESS_KEY: F6WUUG27HBUFSIXVZL59
-      S3_SECRET_KEY: BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR
+      S3_ACCESS_KEY: 'F6WUUG27HBUFSIXVZL59'
+      S3_SECRET_KEY: 'BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR'
       S3_ENDPOINT: 'http://minio:9000'
-      TCP_PORT: 8080
-      HOST_NAME: upload-service
+      TCP_PORT: '8080'
+      HOST_NAME: 'upload-service'
       ELASTICSEARCH_URL: 'http://localhost:9200'
       LOG_INDEX: kdrive
       LOG_LEVEL: debug
@@ -61,7 +61,7 @@ services:
       ELASTIC_APM_ACTIVE: 'true'
       ELASTIC_APM_CAPTURE_BODY: 'all'
       ELASTIC_APM_METRICS_INTERVAL: '10s'
-      ELASTIC_APM_IGNORE_URLS: /grpc.health.v1.Health/Check
+      ELASTIC_APM_IGNORE_URLS: '/grpc.health.v1.Health/Check'
     depends_on:
       - minio
     ports:
@@ -69,14 +69,14 @@ services:
   download-service:
     image: 'bluehub.azurecr.io/meateam/download-service:develop'
     environment:
-      S3_ACCESS_KEY: F6WUUG27HBUFSIXVZL59
-      S3_SECRET_KEY: BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR
+      S3_ACCESS_KEY: 'F6WUUG27HBUFSIXVZL59'
+      S3_SECRET_KEY: 'BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR'
       S3_ENDPOINT: 'http://minio:9000'
-      TCP_PORT: 8080
-      HOST_NAME: download-service
+      TCP_PORT: '8080'
+      HOST_NAME: 'download-service'
       ELASTICSEARCH_URL: 'http://localhost:9200'
-      LOG_INDEX: kdrive
-      LOG_LEVEL: debug
+      LOG_INDEX: 'kdrive'
+      LOG_LEVEL: 'debug'
       ELASTIC_APM_SERVER_URL: 'http://localhost:8200'
       ELASTIC_APM_SERVICE_NAME: 'download-service'
       ELASTIC_APM_SERVICE_VERSION: '0.1'
@@ -84,7 +84,7 @@ services:
       ELASTIC_APM_ACTIVE: 'true'
       ELASTIC_APM_CAPTURE_BODY: 'all'
       ELASTIC_APM_METRICS_INTERVAL: '10s'
-      ELASTIC_APM_IGNORE_URLS: /grpc.health.v1.Health/Check
+      ELASTIC_APM_IGNORE_URLS: '/grpc.health.v1.Health/Check'
     ports:
       - '8082:8080'
     depends_on:
@@ -96,7 +96,7 @@ services:
       ELASTICSEARCH_URL: 'http://localhost:9200'
       ELASTICSEARCH_USER: ''
       ELASTICSEARCH_PASSWORD: ''
-      LOGGER_ELASTICSEARCH_PREFIX: 'kdrive'
+      LOG_INDEX: 'kdrive'
       APM_SECRET_TOKEN: ''
       FS_APM_SERVICE_NAME: 'file-service'
       ELASTIC_APM_VERIFY_SERVER_CERT: 'false'
@@ -128,9 +128,9 @@ services:
       SAML_ISSUER: 'http://localhost:8084/auth/metadata.xml'
       SAML_CALLBACK_URL: 'http://localhost:8084/auth/metadata.xml/callback'
       USERS_RPC_ENDPOINT: 'user-service:8080'
-      SECRET_KEY: pandora@drive
+      SECRET_KEY: 'pandora@drive'
       CLIENT_ENDPOINT: 'http://localhost'
-      STRATEGY: saml
+      STRATEGY: 'saml'
     depends_on:
       - saml-idp
       - user-service
@@ -148,13 +148,14 @@ services:
       - '8086:8080'
     environment:
       ELASTIC_APM_SERVER_URL: 'http://localhost:8200'
-      LOGGER_ELASTICSEARCH: 'http://localhost:9200'
+      ELASTICSEARCH_URL: 'http://localhost:9200'
       KARTOFFEL_URL: 'http://kartoffel-master.eastus.cloudapp.azure.com:3000'
-      RPC_PORT: 8080
+      RPC_PORT: '8080'
       REDIS_PORT: '6379'
       REDIS_HOST: 'redis'
       SPIKE_CLIENT_ID: 'EPBpjCiczupCXZgBEq3ARZCinUt4LSXtOsVrI1Ub'
       SPIKE_CLIENT_SECRET: 'TODO_SPIKE_SECRET'
+      LOG_INDEX: 'kdrive'
       SPIKE_REQUIRED: "false"
       SPIKE_URL: 'https://spike.westeurope.cloudapp.azure.com'
       SPIKE_AUTH_SERVER_PORT: '1337'
@@ -173,7 +174,7 @@ services:
     environment:
       PORT: 8080
       HEALTH_CHECK_INTERVAL: 3
-      ELASTIC_APM_IGNORE_URLS: /grpc.health.v1.Health/Check
+      ELASTIC_APM_IGNORE_URLS: '/grpc.health.v1.Health/Check'
       MONGO_HOST: 'mongodb://mongo:27017/permission'
       MONGO_CLIENT_CONNECTION_TIMEOUT: 10
       MONGO_CLIENT_PING_TIMEOUT: 10
