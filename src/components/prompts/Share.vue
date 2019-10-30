@@ -38,7 +38,6 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { share as api, users as usersApi } from '@/api'
-import { baseURL } from '@/utils/constants'
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import PermissionList from '../common/PermissionList'
 import moment from 'moment'
