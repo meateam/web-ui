@@ -8,7 +8,12 @@
       <div class="user-role-select">
         <ul id="user-role-list">
           <li>
-            <autocomplete :search="search" :autoSelect="true" @submit="saveUser"></autocomplete>
+            <autocomplete
+              :search="search"
+              :autoSelect="true"
+              placeholder="Search User"
+              @submit="saveUser"
+            ></autocomplete>
             <select v-model="role" :aria-label="$t('role.input')">
               <option value="READ" >{{ $t('role.read') }}</option>
             </select>
@@ -32,12 +37,13 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { share as api } from '@/api'
+import { share as api, users as usersApi } from '@/api'
 import { baseURL } from '@/utils/constants'
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import PermissionList from '../common/PermissionList'
 import moment from 'moment'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
+
 
 export default {
   name: 'share',
@@ -74,13 +80,19 @@ export default {
       if (!this.user) return
       
       try {
-        const res = await api.create(this.selectedItem.id, this.user, this.role)
+        await api.create(this.selectedItem.id, this.user.id, this.role);
       } catch (e) {
         this.$showError(e)
       }
     },
-    search(input) {
-      return [input];
+    async search(input) {
+      if (input.length < 2) { return [] }
+      const res = await usersApi.searchUserByName(input);
+      const users = res.data.users;
+      const names = users.map(user => {
+        return {name: `${user.firstName} ${user.lastName}`, mail: user.mail, id: user.id};
+      });
+      return names;
     },
     humanTime (time) {
       return moment(time * 1000).fromNow()
