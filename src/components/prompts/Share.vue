@@ -37,14 +37,13 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { share as api } from '@/api'
+import { share as api, users as usersApi } from '@/api'
 import { baseURL } from '@/utils/constants'
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import PermissionList from '../common/PermissionList'
 import moment from 'moment'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
-import axios from 'axios'
-import store from '@/store'
+
 
 export default {
   name: 'share',
@@ -88,11 +87,7 @@ export default {
     },
     async search(input) {
       if (input.length < 2) { return [] }
-      const res = await axios.get(
-        `${baseURL}/api/users`,
-        { headers: {Authorization: 'Bearer ' + store.state.jwt},
-        params: { partial: input } }
-      );
+      const res = await usersApi.searchUserByName(input);
       const users = res.data.users;
       const names = users.map(user => {
         return {name: `${user.firstName} ${user.lastName}`, mail: user.mail, id: user.id};
