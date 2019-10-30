@@ -6,6 +6,10 @@
         <span v-if="nameExists">{{ $t('sidebar.myFiles.personalized', {person: user.firstName}) }}</span>
         <span v-else>{{ $t('sidebar.myFiles.title') }}</span>
       </div>
+      <div @click="onSharedWithMeClick" class="action" to="/shares" :aria-label="$t('sidebar.sharedFiles')" :title="$t('sidebar.sharedFiles')">
+        <i class="material-icons">folder_shared</i>
+        <span>{{ $t('sidebar.sharedFiles') }}</span>
+      </div>
       <div>
         <button @click="$store.commit('showHover', 'newDir')" class="action" :aria-label="$t('sidebar.newFolder')" :title="$t('sidebar.newFolder')">
           <i class="material-icons">create_new_folder</i>
@@ -59,7 +63,7 @@ export default {
     disableExternal: () => disableExternal,
     noAuth: () => noAuth,
     nameExists: function () {
-       return this.user.firstName && this.user.lastName 
+       return this.user.firstName && this.user.lastName
     }
   },
   methods: {
@@ -67,6 +71,12 @@ export default {
       this.$store.commit('showHover', 'help')
     },
     onMyFilesClick() {
+      this.$store.commit("setShares", false);
+      this.$store.commit("changeFolder", '');
+      this.$store.commit("setReload", true);
+    },
+    onSharedWithMeClick() {
+      this.$store.commit("setShares", true);
       this.$store.commit("changeFolder", '');
       this.$store.commit("setReload", true);
     },

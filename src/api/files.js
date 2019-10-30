@@ -35,29 +35,7 @@ export async function fetch(url) {
 		}
 	}
 
-	if (data.items) {
-		let numDirs = 0;
-		let numFiles = 0;
-		data.size = 0;
-		for (let i = 0; i < data.items.length; i++) {
-			data.items[i].index = i;
-			data.items[i].modified = new Date(data.items[i].updatedAt);
-			delete data.items[i].updatedAt;
-			data.size += data.items[i].size || 0;
-			if (data.items[i].type === folderContentType) {
-				numDirs++;
-				data.items[i].isDir = true;
-			} else {
-				numFiles++;
-				data.items[i].isDir = false;
-			}
-		}
-
-		data.numDirs = numDirs;
-		data.numFiles = numFiles;
-	}
-
-	return data
+	return parseData(data);
 }
 
 async function resourceAction(url, method, content) {
@@ -80,6 +58,15 @@ async function resourceAction(url, method, content) {
 
 export async function remove(file) {
 	const res = await fetchURL(`/api/files/${file}`, { method: 'DELETE' });
+	if (res.status !== 200) {
+		throw new Error(res.responseText);
+	} else {
+		return res;
+	}
+}
+
+export async function unShare(file, user) {
+	const res = await fetchURL(`/api/files/${file}/permissions?userId=${user}`, { method: 'DELETE' });
 	if (res.status !== 200) {
 		throw new Error(res.responseText);
 	} else {
@@ -316,4 +303,36 @@ export async function checksum(url, algo) {
 export async function getPermissions(id) {
 	const response = await axios.get(`${baseURL}/api/files/${id}/permissions`, { headers: {Authorization: 'Bearer ' + store.state.jwt} });
 	return response.data;
+}
+
+export async function getSharedWithMe() {
+	const response = await axios.get(`${baseURL}/api/files?shares`, { headers: {Authorization: 'Bearer ' + store.state.jwt} });
+	const data = { items: response.data, isDir: true };
+	
+	return parseData(data);
+}
+
+function parseData(data) {
+	if (!data || !data.items) return data;
+	let numDirs = 0;
+	let numFiles = 0;
+	data.size = 0;
+	for (let i = 0; i < data.items.length; i++) {
+		data.items[i].index = i;
+		data.items[i].modified = new Date(data.items[i].updatedAt);
+		delete data.items[i].updatedAt;
+		data.size += data.items[i].size || 0;
+		if (data.items[i].type === folderContentType) {
+			numDirs++;
+			data.items[i].isDir = true;
+		} else {
+			numFiles++;
+			data.items[i].isDir = false;
+		}
+	}
+
+	data.numDirs = numDirs;
+	data.numFiles = numFiles;
+
+	return data;
 }

@@ -131,8 +131,24 @@ services:
     ports:
       - '8086:8080'
     environment:
-      KARTOFFEL_URL: 'http://localhost:8080'
+      ELASTIC_APM_SERVER_URL: 'http://localhost:8200'
+      LOGGER_ELASTICSEARCH: 'http://localhost:9200'
+      KARTOFFEL_URL: 'http://kartoffel-master.eastus.cloudapp.azure.com:3000'
       RPC_PORT: 8080
+      REDIS_PORT: '6379'
+      REDIS_HOST: 'redis'
+      SPIKE_CLIENT_ID: ""
+      SPIKE_CLIENT_SECRET: ""
+      SPIKE_URL: "https://spike.westeurope.cloudapp.azure.com"
+      SPIKE_AUTH_SERVER_PORT: 1337
+      SPIKE_TOKEN_URL: "https://spike.westeurope.cloudapp.azure.com:1337/oauth2/token"
+      TOKEN: ""
+    depends_on:
+      - redis
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - '6379:6379'
   permission-service:
     image: bluehub.azurecr.io/meateam/permission-service:develop
     ports:

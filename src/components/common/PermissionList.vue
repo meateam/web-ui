@@ -3,7 +3,7 @@
     <div class="item" v-for="user in usersToDisplay" :key="user.userID" v-tooltip.bottom="user.label">
       <div>{{user.letters}}</div>
     </div>
-    <div class="item extra-permissions" v-tooltip.bottom="extraUsersTooltip">
+    <div v-if="extraUsers.length > 0" class="item extra-permissions" v-tooltip.bottom="extraUsersTooltip">
       <div>+{{extraUsers.length}}</div>
     </div>
   </div>

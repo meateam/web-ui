@@ -111,7 +111,9 @@ export default {
       'isFiles',
       'isEditor',
       'isListing',
-      'isLogged'
+      'isLogged',
+      'shares',
+      'currentFolder',
     ]),
     ...mapState([
       'req',
@@ -126,7 +128,7 @@ export default {
       return this.width <= 736
     },
     showUpload () {
-      return this.isListing
+      return this.isListing && !this.shares && this.selectedCount === 0
     },
     showSaveButton () {
       return this.isEditor
@@ -138,22 +140,22 @@ export default {
     showDeleteButton () {
       return this.isFiles && (this.isListing
         ? (this.selectedCount !== 0)
-        : true)
+        : true) && ((this.shares && this.currentFolder.id == '') || !this.shares)
     },
     showRenameButton () {
       return this.isFiles && (this.isListing
         ? (this.selectedCount === 1)
-        : true)
+        : true) && !this.shares
     },
     showShareButton () {
       return this.isFiles && (this.isListing
         ? (this.selectedCount === 1)
-        : true)
+        : true) && !this.shares
     },
     showMoveButton () {
       return this.isFiles && (this.isListing
         ? (this.selectedCount > 0)
-        : true)
+        : true) && !this.shares
     },
     showCopyButton () {
       return this.isFiles && (this.isListing
