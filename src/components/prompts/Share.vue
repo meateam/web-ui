@@ -88,10 +88,13 @@ export default {
       if (input.length < 2) { return [] }
       const res = await usersApi.searchUserByName(input);
       const users = res.data.users;
-      const names = users.map(user => {
-        return {name: `${user.firstName} ${user.lastName}`, mail: user.mail, id: user.id};
-      });
-      return names;
+      if (users) {
+        const names = users.map(user => {
+          return {name: `${user.firstName} ${user.lastName}`, mail: user.mail, id: user.id};
+        });
+        return names;
+      }
+      return [];
     },
     humanTime (time) {
       return moment(time * 1000).fromNow()
