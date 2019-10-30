@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-import { files } from "@/api";
+import { files, users } from "@/api";
 import VTooltip from "v-tooltip";
 
 const roles = {
@@ -45,8 +45,9 @@ export default {
     // TODO: get user's details from each file permissions.
     this.users = await files.getPermissions(this.id);
     for (let i = 0; i < this.users.length; i++) {
-      this.users[i].letters = (this.users[i].userID[0] + this.users[i].userID[1]).toUpperCase();
-      this.users[i].label = `user ${this.users[i].userID} has ${roles[this.users[i].role]} permission`;
+      const user = (await users.get(this.users[i].userID)).user;
+      this.users[i].letters = (user.firstName[0] + user.lastName[0]).toUpperCase();
+      this.users[i].label = `user ${user.fullName} has ${roles[this.users[i].role]} permission`;
 
       if (this.usersToDisplay.length < 6) {
         this.usersToDisplay.push(this.users[i]);
