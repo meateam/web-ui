@@ -4,6 +4,7 @@ const baseURL = '';
 const signup = false;
 const version = '2';
 const logoURL = `/img/logo.svg`;
+const minAutoComplete = 2;
 const noAuth = false;
 const loginPage = false;
 const folderContentType = "application/vnd.drive.folder";
@@ -38,6 +39,7 @@ export {
   name,
   disableExternal,
   baseURL,
+  minAutoComplete,
   logoURL,
   signup,
   version,

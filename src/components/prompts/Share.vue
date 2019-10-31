@@ -8,12 +8,24 @@
       <div class="user-role-select">
         <ul id="user-role-list">
           <li>
-            <autocomplete
-              :search="search"
+            <autocomplete :search="search"
               :autoSelect="true"
-              placeholder="Search User"
               @submit="saveUser"
-            ></autocomplete>
+              :get-result-value="getResultValue"
+              placeholder="Search User"
+            >
+              <template v-slot:result="{ result, props }">
+                <li v-bind="props" class="share-result">
+                <div>
+                    <div class="share-title">
+                      {{ getResultValue(result) }}
+                    </div>
+                    <div class="share-snippet">{{result.hierarchyFlat}}</div>
+                    </div>
+                </li>
+              </template>
+            </autocomplete>
+
             <select v-model="role" :aria-label="$t('role.input')">
               <option value="READ" >{{ $t('role.read') }}</option>
             </select>
@@ -25,7 +37,6 @@
         </ul>
       </div>
       <hr/>
-      <edit-permission-list></edit-permission-list>
     </div>
 
     <div class="card-action">
@@ -37,10 +48,42 @@
   </div>
 </template>
 
+<style scoped>
+  #app {
+    min-width: 200px;
+    margin: 0 auto;
+  }
+
+  .share-result {    
+    min-width: 100px;
+    padding: 5px;
+    background: transparent;
+  }
+
+  .share-result:hover {
+    background: #bdddf0;
+  }
+
+  .share-title {
+    font-size: 20px;
+    margin-bottom: 1px;
+    margin-top: 1px;
+    margin-right: 10px;
+  }
+
+  .share-snippet {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.54);
+  }
+</style>
+
+
+
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { share as api, users as usersApi } from '@/api'
+import { share as shareApi, users as usersApi } from '@/api'
 import Autocomplete from '@trevoreyre/autocomplete-vue'
+import { minAutoComplete } from '@/utils/constants'
 import EditPermissionList from '../common/EditPermissionList'
 import moment from 'moment'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
@@ -81,25 +124,29 @@ export default {
       if (!this.user) return
       
       try {
-        await api.create(this.selectedItem.id, this.user.id, this.role);
+        await shareApi.create(this.selectedItem.id, this.user.id, this.role);
+        this.$showSuccess(`successfully shared with ${this.getResultValue(this.user)}`);
+        this.$store.commit('closeHovers');
       } catch (e) {
         this.$showError(e)
       }
     },
     async search(input) {
-      if (input.length < 2) { return [] }
+      if (input.length < minAutoComplete) {
+         return [];
+      }
       const res = await usersApi.searchUserByName(input);
       const users = res.data.users;
       if (users) {
-        const names = users.map(user => {
-          return {name: `${user.firstName} ${user.lastName}`, mail: user.mail, id: user.id};
-        });
-        return names;
+        return users;
       }
       return [];
     },
     humanTime (time) {
       return moment(time * 1000).fromNow()
+    },
+    getResultValue(result) {
+      return `${result.firstName} ${result.lastName}`;
     }
   }
 }

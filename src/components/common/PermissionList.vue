@@ -10,7 +10,6 @@
 </template>
 <script>
 import { files, users } from "@/api";
-import VTooltip from "v-tooltip";
 
 const roles = {
   1: "owner",
@@ -20,7 +19,6 @@ export default {
   name: "permission-list",
   props: ["id"],
   components: {
-    VTooltip
   },
   data: function() {
     return {
