@@ -51,18 +51,17 @@
 <style scoped>
   #app {
     min-width: 200px;
-    max-width: 100px;
     margin: 0 auto;
   }
 
   .share-result {    
-    float: left;
-    clear: left;
     min-width: 100px;
-    display: block; /* Make the links appear below each other */
-    border-top: 1px solid #eee;
     padding: 5px;
     background: transparent;
+  }
+
+  .share-result:hover {
+    background: #bdddf0;
   }
 
   .share-title {
