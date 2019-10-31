@@ -28,7 +28,8 @@ export default {
   },
   computed: {
     extraUsers() {
-      return this.users.length > 6 ? this.users.slice(6) : [];
+      // return this.users.length > 6 ? this.users.slice(6) : [];
+      return [];
     },
     extraUsersTooltip() {
       // Switch direction for hebrew.
@@ -47,9 +48,9 @@ export default {
       this.users[i].letters = (user.firstName[0] + user.lastName[0]).toUpperCase();
       this.users[i].label = `user ${user.fullName} has ${roles[this.users[i].role]} permission`;
 
-      if (this.usersToDisplay.length < 6) {
+      // if (this.usersToDisplay.length < 6) {
         this.usersToDisplay.push(this.users[i]);
-      }
+      // }
     }
   }
 };
@@ -64,6 +65,7 @@ export default {
   padding: 0 16px 0 0;
   height: 48px;
   position: relative;
+  overflow-x: auto;
 }
 
 .item {

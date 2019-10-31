@@ -36,6 +36,7 @@
           </li>
         </ul>
       </div>
+      <hr/>
     </div>
 
     <div class="card-action">
@@ -84,6 +85,7 @@ import { mapState, mapGetters } from 'vuex'
 import { share as shareApi, users as usersApi } from '@/api'
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import { minAutoComplete } from '@/utils/constants'
+import EditPermissionList from '../common/EditPermissionList'
 import moment from 'moment'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
 
@@ -92,6 +94,7 @@ export default {
   name: 'share',
   components: {
     Autocomplete,
+    EditPermissionList
   },
   data: function () {
     return {
