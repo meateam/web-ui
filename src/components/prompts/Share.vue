@@ -48,37 +48,6 @@
   </div>
 </template>
 
-<style scoped>
-  #app {
-    min-width: 200px;
-    margin: 0 auto;
-  }
-
-  .share-result {    
-    min-width: 100px;
-    padding: 5px;
-    background: transparent;
-  }
-
-  .share-result:hover {
-    background: #bdddf0;
-  }
-
-  .share-title {
-    font-size: 20px;
-    margin-bottom: 1px;
-    margin-top: 1px;
-    margin-right: 10px;
-  }
-
-  .share-snippet {
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.54);
-  }
-</style>
-
-
-
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { share as shareApi, users as usersApi } from '@/api'
@@ -151,3 +120,32 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  #app {
+    min-width: 200px;
+    margin: 0 auto;
+  }
+
+  .share-result {    
+    min-width: 100px;
+    padding: 5px;
+    background: transparent;
+  }
+
+  .share-result:hover {
+    background: #bdddf0;
+  }
+
+  .share-title {
+    font-size: 20px;
+    margin-bottom: 1px;
+    margin-top: 1px;
+    margin-right: 10px;
+  }
+
+  .share-snippet {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.54);
+  }
+</style>

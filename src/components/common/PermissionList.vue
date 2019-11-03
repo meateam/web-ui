@@ -18,8 +18,7 @@ const roles = {
 export default {
   name: "permission-list",
   props: ["id"],
-  components: {
-  },
+  components: {},
   data: function() {
     return {
       users: [],
@@ -44,13 +43,19 @@ export default {
     // TODO: get user's details from each file permissions.
     this.users = await files.getPermissions(this.id);
     for (let i = 0; i < this.users.length; i++) {
-      const user = (await users.get(this.users[i].userID)).user;
-      this.users[i].letters = (user.firstName[0] + user.lastName[0]).toUpperCase();
-      this.users[i].label = `user ${user.fullName} has ${roles[this.users[i].role]} permission`;
-
-      // if (this.usersToDisplay.length < 6) {
-        this.usersToDisplay.push(this.users[i]);
-      // }
+      try {
+        const res = (await users.get(this.users[i].userID));
+        if (!res || !res.user) { continue; }
+        const user = res.user;
+        if (user.firstName && user.lastName && user.fullName) {
+          this.users[i].letters = (user.firstName[0] + user.lastName[0]).toUpperCase();
+          this.users[i].label = `user ${user.fullName} has ${roles[this.users[i].role]} permission`;
+          // if (this.usersToDisplay.length < 6) {
+            this.usersToDisplay.push(this.users[i]);
+          // }  
+        }
+        // eslint-disable-next-line
+      } catch(err) {}
     }
   }
 };
