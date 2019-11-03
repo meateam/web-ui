@@ -65,6 +65,7 @@ export default {
       }
 
       try {
+        // eslint-disable-next-line
         await api.uploadFolder(currentFolderId, folderName, () => console.log("Uploading folder"));
         this.$store.commit('setReload', true)
       } catch (e) {

@@ -38,10 +38,6 @@ import Preview from "@/components/files/Preview";
 import { files as api, quota as quotaApi } from "@/api";
 import { mapGetters, mapState, mapMutations } from "vuex";
 
-// function clean(path) {
-//   return path.endsWith("/") ? path.slice(0, -1) : path;
-// }
-
 export default {
   name: "files",
   components: {
@@ -53,7 +49,7 @@ export default {
     Preview
   },
   computed: {
-    ...mapGetters(["selectedCount", "isListing", "isEditor", "isFiles", "isActiveDialog"]),
+    ...mapGetters(["selectedCount", "isListing", "isEditor", "isFiles", "isActiveDialog", "shares"]),
     ...mapState(["req", "user", "reload", "multiple", "loading", "path"]),
     isPreview() {
       return !this.loading && !this.isListing && !this.isEditor;
@@ -132,13 +128,20 @@ export default {
       let url = this.$store.getters.currentFolder.id;
 
       try {
-        const res = await api.fetch(url);
+        let res = null;
+        if (this.shares && url === '') {
+          res = await api.getSharedWithMe();
+        } else {
+          res = await api.fetch(url);
+        }
+
         this.$store.commit("updateRequest", res);
         document.title = res.name || "Files";
 
         const quota = await quotaApi.getQuota();
         this.$store.commit("setQuota", quota);
       } catch (e) {
+        // eslint-disable-next-line
         console.error(e);
         this.error = e;
       } finally {

@@ -1,4 +1,8 @@
 import { fetchURL, fetchJSON, removePrefix } from './utils'
+import store from '@/store'
+import { baseURL } from '@/utils/constants'
+
+import axios from 'axios'
 
 export async function getHash(hash) {
   return fetchJSON(`/api/public/share/${hash}`)
@@ -19,14 +23,8 @@ export async function remove(hash) {
   }
 }
 
-export async function create(url, expires = '', unit = 'hours') {
-  url = removePrefix(url)
-  url = `/api/share${url}`
-  if (expires !== '') {
-    url += `?expires=${expires}&unit=${unit}`
-  }
-
-  return fetchJSON(url, {
-    method: 'POST'
-  })
+export async function create(id, userID, role) {
+  return axios.put(`${baseURL}/api/files/${id}/permissions`,
+    { userID, role },
+    { headers: { Authorization: 'Bearer ' + store.state.jwt } });
 }

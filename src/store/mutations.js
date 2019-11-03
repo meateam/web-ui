@@ -104,6 +104,9 @@ const mutations = {
     if (!value || !value.limit) return;
     state.quota.used = value.used || 0;
     state.quota.limit = value.limit;
+  },
+  setShares: (state, value) => {
+    state.shares = value;
   }
 }
 
