@@ -9,6 +9,7 @@
     "copyToClipboard": "Copy to clipboard",
     "create": "Create",
     "delete": "Delete",
+    "deletePermission": "מחק הרשאה",
     "removeShare": "Remove Share",
     "download": "Download",
     "info": "Info",
@@ -247,6 +248,11 @@
     "minutes": "Minutes",
     "hours": "Hours",
     "days": "Days"
+  },
+  "role": {
+    "input": "הרשאה",
+    "read": "קריאה",
+    "owner": "בעלים"
   },
   "download": {
     "downloadFile": "Download File",

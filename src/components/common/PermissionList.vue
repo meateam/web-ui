@@ -1,6 +1,6 @@
 <template>
   <div class="list">
-    <div class="item" v-for="user in usersToDisplay" :key="user.userID" v-tooltip.bottom="user.label">
+    <div class="item" v-for="user in usersToDisplay" :key="user.id" v-tooltip.bottom="user.label">
       <div>{{user.letters}}</div>
     </div>
     <div v-if="extraUsers.length > 0" class="item extra-permissions" v-tooltip.bottom="extraUsersTooltip">
@@ -40,23 +40,26 @@ export default {
     }
   },
   async mounted() {
-    // TODO: get user's details from each file permissions.
-    this.users = await files.getPermissions(this.id);
-    for (let i = 0; i < this.users.length; i++) {
-      try {
-        const res = (await users.get(this.users[i].userID));
-        if (!res || !res.user) { continue; }
-        const user = res.user;
-        if (user.firstName && user.lastName && user.fullName) {
-          this.users[i].letters = (user.firstName[0] + user.lastName[0]).toUpperCase();
-          this.users[i].label = `user ${user.fullName} has ${roles[this.users[i].role]} permission`;
-          // if (this.usersToDisplay.length < 6) {
-            this.usersToDisplay.push(this.users[i]);
-          // }  
-        }
-        // eslint-disable-next-line
-      } catch(err) {}
+    const promises = [];
+    const permissions = await files.getPermissions(this.id);
+    const permissionsMap = {};
+    for (let i = 0; i < permissions.length; i++) {
+      permissionsMap[permissions[i].userID] = permissions[i];
+      promises.push(users.get(permissions[i].userID));
     }
+
+    try {
+      this.users = (await Promise.all(promises))
+        .filter(res => !!res && !!res.user && res.user.firstName && res.user.lastName && res.user.fullName)
+        .map(res => {
+          res.user.letters = (res.user.firstName[0] + res.user.lastName[0]).toUpperCase();
+          res.user.label = `user ${res.user.fullName} has ${roles[permissionsMap[res.user.id].role]} permission`;
+
+          return res.user;
+        });
+      this.usersToDisplay = this.users;
+      // eslint-disable-next-line
+    } catch(err) {}
   }
 };
 </script>

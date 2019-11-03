@@ -1,27 +1,109 @@
 <template>
-    <div>edit-permission-list</div>
+  <div class="list">
+    <div class="item" v-if="owner.id">
+      <span class="user-info">
+        <span>{{owner.fullName}} </span>
+        <p>{{owner.hierarchyFlat}}</p>
+      </span>
+      <span class="owner-label">
+        {{$t('role.owner')}}
+      </span>
+    </div>
+    <div v-for="user in users" :key="user.userID" class="item">
+      <span class="user-info">
+        <span>{{user.fullName}} </span>
+        <p>{{user.hierarchyFlat}}</p>
+      </span>
+      <span
+        class="delete-permission"
+        @click="deletePermission(user)"
+        :aria-label="$t('buttons.deletePermission')"
+        :title="$t('buttons.deletePermission')">
+          <i class="material-icons">delete</i>
+      </span>
+    </div>
+  </div>
 </template>
 <script>
+import { files, users } from "@/api";
+
+const ownerRole = 1;
+
 export default {
     name: "edit-permission-list",
     props: ["id"],
     data: function() {
     return {
-      permissions: []
+      users: [],
+      owner: {}
     };
   },
   async mounted() {
-    // TODO: get user's details from each file permissions.
-    this.users = await files.getPermissions(this.id);
-    for (let i = 0; i < this.users.length; i++) {
-      const user = (await users.get(this.users[i].userID)).user;
-      this.users[i].letters = (user.firstName[0] + user.lastName[0]).toUpperCase();
-      this.users[i].label = `user ${user.fullName} has ${roles[this.users[i].role]} permission`;
+    await this.onMount();
+  },
+  methods: {
+    deletePermission: async function(user) {
+      await files.unShare(this.id, user.id);
+      await this.onMount();
+    },
+    onMount: async function() {
+      const permissions = await files.getPermissions(this.id);
+      let ownerID = '';
+      let promises = [];
+      for (let i = 0; i < permissions.length; i++) {
+        if (permissions[i].role === ownerRole) {
+          ownerID = permissions[i].userID;
+        }
 
-      // if (this.usersToDisplay.length < 6) {
-        this.usersToDisplay.push(this.users[i]);
-      // }
+        promises.push(users.get(permissions[i].userID));
+      }
+
+      try {
+        this.users = (await Promise.all(promises))
+          .filter(res => !!res && !!res.user)
+          .map(res => res.user)
+          .filter(user => {
+            if (user.id === ownerID) {
+              this.owner = user;
+
+              return false;
+            }
+
+            return true;
+          });
+          // eslint-disable-next-line
+      } catch (err) {}
+    },
+    addUser: function(user) {
+      if (!user) return;
+      this.users.push(user);
     }
   }
 }
 </script>
+<style scoped>
+  .user-info {
+    display: block;
+    width: 90%;
+    margin: 0;
+  }
+
+  .user-info > p {
+    font-size: 13px; 
+    margin-top: 2px; 
+    margin-bottom: 0;
+  }
+
+  .delete-permission {
+    cursor: pointer;
+  }
+
+  .owner-label{
+    line-height: 2em;
+  }
+
+  .item {
+    margin-bottom: 10px;
+    display: flex;
+  }
+</style>

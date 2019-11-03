@@ -26,7 +26,7 @@
               </template>
             </autocomplete>
 
-            <select v-model="role" :aria-label="$t('role.input')">
+            <select style="display:none;" v-model="role" :aria-label="$t('role.input')">
               <option value="READ" >{{ $t('role.read') }}</option>
             </select>
             <button class="action"
@@ -37,6 +37,9 @@
         </ul>
       </div>
       <hr/>
+      <edit-permission-list
+        :id="selectedItem.id" ref="editPermissionList">
+      </edit-permission-list>
     </div>
 
     <div class="card-action">
@@ -68,7 +71,7 @@ export default {
     return {
       role: 'READ',
       searchText: '',
-      user:'',
+      user:''
     }
   },
   computed: {
@@ -95,7 +98,7 @@ export default {
       try {
         await shareApi.create(this.selectedItem.id, this.user.id, this.role);
         this.$showSuccess(`successfully shared with ${this.getResultValue(this.user)}`);
-        this.$store.commit('closeHovers');
+        this.$refs.editPermissionList.addUser(this.user);
       } catch (e) {
         this.$showError(e)
       }

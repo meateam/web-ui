@@ -10,7 +10,7 @@
         <i class="material-icons">folder_shared</i>
         <span>{{ $t('sidebar.sharedFiles') }}</span>
       </div>
-      <div>
+      <div v-if="!shares">
         <button @click="$store.commit('showHover', 'newDir')" class="action" :aria-label="$t('sidebar.newFolder')" :title="$t('sidebar.newFolder')">
           <i class="material-icons">create_new_folder</i>
           <span>{{ $t('sidebar.newFolder') }}</span>
@@ -53,7 +53,7 @@ export default {
   },
   computed: {
     ...mapState([ 'user', 'quota' ]),
-    ...mapGetters([ 'isLogged' ]),
+    ...mapGetters([ 'isLogged', 'shares' ]),
     active () {
       return this.$store.state.show === 'sidebar'
     },

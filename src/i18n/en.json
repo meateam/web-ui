@@ -9,6 +9,7 @@
     "copyToClipboard": "Copy to clipboard",
     "create": "Create",
     "delete": "Delete",
+    "deletePermission": "Delete Permission",
     "removeShare": "Remove Share",
     "download": "Download",
     "info": "Info",
@@ -248,8 +249,9 @@
     "svSE": "Swedish (Sweden)"
   },
   "role": {
-    "input": "role",
-    "read": "read"
+    "input": "Role",
+    "read": "Read",
+    "owner": "Owner"
   },
   "download": {
     "downloadFile": "Download File",
