@@ -8,6 +8,7 @@ services:
       GW_UPLOAD_SERVICE: 'upload-service:8080'
       GW_DOWNLOAD_SERVICE: 'download-service:8080'
       GW_FILE_SERVICE: 'file-service:8080'
+      GW_PERMISSION_SERVICE: 'permission-service:8080'
       GW_USER_SERVICE: 'user-service:8080'
       GW_ALLOW_ORIGINS: 'http://localhost*'
       GW_SUPPORT_LINK: 'https://open.rocket.chat/home'
@@ -33,6 +34,7 @@ services:
       - file-service
       - authentication-service
       - user-service
+      - permission-service
   minio:
     image: minio/minio
     volumes:
