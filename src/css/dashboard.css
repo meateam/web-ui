@@ -103,11 +103,10 @@ table tr>*:last-child {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 99999;
+  z-index: 3;
   max-width: 25em;
   width: 90%;
   max-height: 95%;
-  z-index: 99999;
   animation: .1s show forwards;
 }
 
@@ -198,13 +197,6 @@ table tr>*:last-child {
   font-size: 1em;
 }
 
-.card#share ul li input,
-.card#share ul li select {
-  padding: .2em;
-  margin-right: .5em;
-  border: 1px solid #dadada;
-}
-
 .card#share .action.copy-clipboard::after {
   content: 'Copied!';
   position: absolute;
@@ -232,7 +224,7 @@ table tr>*:last-child {
   left: 0;
   height: 100%;
   width: 100%;
-  z-index: 9999;
+  z-index: 2;
   animation: .1s show forwards;
 }
 

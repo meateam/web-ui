@@ -1,4 +1,8 @@
 import { fetchURL, fetchJSON } from './utils'
+import { baseURL } from '@/utils/constants'
+import axios from 'axios'
+import store from '@/store'
+
 
 export async function getAll () {
   return fetchJSON(`/api/users`, {})
@@ -35,10 +39,18 @@ export async function update (user, which = ['all']) {
       data: user
     })
   })
-
+  
   if (res.status !== 200) {
     throw new Error(res.status)
   }
+}
+
+export async function searchUserByName(partialName) {
+  return axios.get(
+    `${baseURL}/api/users`,
+    { headers: {Authorization: 'Bearer ' + store.state.jwt},
+    params: { partial: partialName } }
+  );
 }
 
 export async function remove (id) {

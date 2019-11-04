@@ -5,47 +5,41 @@
     </div>
 
     <div class="card-content">
-      <ul>
-        <li v-if="!hasPermanent">
-          <a @click="getPermalink" :aria-label="$t('buttons.permalink')">{{ $t('buttons.permalink') }}</a>
-        </li>
+      <div class="user-role-select">
+        <ul id="user-role-list">
+          <li>
+            <autocomplete :search="search"
+              :autoSelect="true"
+              @submit="saveUser"
+              :get-result-value="getResultValue"
+              placeholder="Search User"
+            >
+              <template v-slot:result="{ result, props }">
+                <li v-bind="props" class="share-result">
+                <div>
+                    <div class="share-title">
+                      {{ getResultValue(result) }}
+                    </div>
+                    <div class="share-snippet">{{result.hierarchyFlat}}</div>
+                    </div>
+                </li>
+              </template>
+            </autocomplete>
 
-        <li v-for="link in links" :key="link.hash">
-          <a :href="buildLink(link.hash)" target="_blank">
-            <template v-if="link.expire !== 0">{{ humanTime(link.expire) }}</template>
-            <template v-else>{{ $t('permanent') }}</template>
-          </a>
-
-          <button class="action"
-            @click="deleteLink($event, link)"
-            :aria-label="$t('buttons.delete')"
-            :title="$t('buttons.delete')"><i class="material-icons">delete</i></button>
-
-          <button class="action copy-clipboard"
-            :data-clipboard-text="buildLink(link.hash)"
-            :aria-label="$t('buttons.copyToClipboard')"
-            :title="$t('buttons.copyToClipboard')"><i class="material-icons">content_paste</i></button>
-        </li>
-
-        <li>
-          <input v-focus
-            type="number"
-            max="2147483647"
-            min="0"
-            @keyup.enter="submit"
-            v-model.trim="time">
-          <select v-model="unit" :aria-label="$t('time.unit')">
-            <option value="seconds">{{ $t('time.seconds') }}</option>
-            <option value="minutes">{{ $t('time.minutes') }}</option>
-            <option value="hours">{{ $t('time.hours') }}</option>
-            <option value="days">{{ $t('time.days') }}</option>
-          </select>
-          <button class="action"
-            @click="submit"
-            :aria-label="$t('buttons.create')"
-            :title="$t('buttons.create')"><i class="material-icons">add</i></button>
-        </li>
-      </ul>
+            <select style="display:none;" v-model="role" :aria-label="$t('role.input')">
+              <option value="READ" >{{ $t('role.read') }}</option>
+            </select>
+            <button class="action"
+              @click="submit"
+              :aria-label="$t('buttons.create')"
+              :title="$t('buttons.create')"><i class="material-icons">add</i></button>
+          </li>
+        </ul>
+      </div>
+      <hr/>
+      <edit-permission-list
+        :id="selectedItem.id" ref="editPermissionList">
+      </edit-permission-list>
     </div>
 
     <div class="card-action">
@@ -59,109 +53,102 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { share as api } from '@/api'
-import { baseURL } from '@/utils/constants'
+import { share as shareApi, users as usersApi } from '@/api'
+import Autocomplete from '@trevoreyre/autocomplete-vue'
+import { minAutoComplete } from '@/utils/constants'
+import EditPermissionList from '../common/EditPermissionList'
 import moment from 'moment'
-import Clipboard from 'clipboard'
+import '@trevoreyre/autocomplete-vue/dist/style.css'
+
 
 export default {
   name: 'share',
+  components: {
+    Autocomplete,
+    EditPermissionList
+  },
   data: function () {
     return {
-      time: '',
-      unit: 'hours',
-      hasPermanent: false,
-      links: [],
-      clip: null
+      role: 'READ',
+      searchText: '',
+      user:''
     }
   },
   computed: {
     ...mapState([ 'req', 'selected', 'selectedCount' ]),
     ...mapGetters([ 'isListing' ]),
-    url () {
-      if (!this.isListing) {
-        return this.$route.path
-      }
-
-      if (this.selectedCount === 0 || this.selectedCount > 1) {
-        // This shouldn't happen.
-        return
-      }
-
-      return this.req.items[this.selected[0]].url
+    selectedItem() {
+      return this.req.items[this.selected[0]];
     }
   },
   async beforeMount () {
-    try {
-      const links = await api.get(this.url)
-      this.links = links
-      this.sort()
-
-      for (let link of this.links) {
-        if (link.expire === 0) {
-          this.hasPermanent = true
-          break
-        }
-      }
-    } catch (e) {
-      this.$showError(e)
-    }
   },
   mounted () {
-    this.clip = new Clipboard('.copy-clipboard')
-    this.clip.on('success', () => {
-      this.$showSuccess(this.$t('success.linkCopied'))
-    })
   },
   beforeDestroy () {
-    this.clip.destroy()
   },
   methods: {
+    saveUser(user) {
+      this.user = user;
+    },
     submit: async function () {
-      if (!this.time) return
-
+      if (!this.role) return
+      if (!this.user) return
+      
       try {
-        const res = await api.create(this.url, this.time, this.unit)
-        this.links.push(res)
-        this.sort()
+        await shareApi.create(this.selectedItem.id, this.user.id, this.role);
+        this.$showSuccess(`successfully shared with ${this.getResultValue(this.user)}`);
+        this.$refs.editPermissionList.addUser(this.user);
       } catch (e) {
         this.$showError(e)
       }
     },
-    getPermalink: async function () {
-      try {
-        const res = await api.create(this.url)
-        this.links.push(res)
-        this.sort()
-        this.hasPermanent = true
-      } catch (e) {
-        this.$showError(e)
+    async search(input) {
+      if (input.length < minAutoComplete) {
+         return [];
       }
-    },
-    deleteLink: async function (event, link) {
-      event.preventDefault()
-       try {
-        await api.remove(link.hash)
-        if (link.expire === 0) this.hasPermanent = false
-        this.links = this.links.filter(item => item.hash !== link.hash)
-      } catch (e) {
-        this.$showError(e)
+      const res = await usersApi.searchUserByName(input);
+      const users = res.data.users;
+      if (users) {
+        return users;
       }
+      return [];
     },
     humanTime (time) {
       return moment(time * 1000).fromNow()
     },
-    buildLink (hash) {
-      return `${window.location.origin}${baseURL}/share/${hash}`
-    },
-    sort () {
-      this.links = this.links.sort((a, b) => {
-        if (a.expire === 0) return -1
-        if (b.expire === 0) return 1
-        return new Date(a.expire) - new Date(b.expire)
-      })
+    getResultValue(result) {
+      return `${result.firstName} ${result.lastName}`;
     }
   }
 }
 </script>
 
+<style scoped>
+  #app {
+    min-width: 200px;
+    margin: 0 auto;
+  }
+
+  .share-result {    
+    min-width: 100px;
+    padding: 5px;
+    background: transparent;
+  }
+
+  .share-result:hover {
+    background: #bdddf0;
+  }
+
+  .share-title {
+    font-size: 20px;
+    margin-bottom: 1px;
+    margin-top: 1px;
+    margin-right: 10px;
+  }
+
+  .share-snippet {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.54);
+  }
+</style>
