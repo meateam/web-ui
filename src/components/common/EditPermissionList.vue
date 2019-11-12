@@ -76,7 +76,9 @@ export default {
     },
     addUser: function(user) {
       if (!user) return;
-      this.users.push(user);
+      if (!this.users.find(currUser => currUser.id === user.id)) {
+        this.users.push(user);
+      }
     }
   }
 }
