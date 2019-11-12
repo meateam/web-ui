@@ -163,6 +163,31 @@ services:
       SPIKE_AUTH_SERVER_PORT: '1337'
       SPIKE_TOKEN_URL: 'https://spike.westeurope.cloudapp.azure.com:1337/oauth2/token'
       TOKEN: 'TODO_TOKEN'
+      DEBUG_MODE: 'true'
+      USR_MONGO_HOST: 'mongodb://mongo:27017/devDB'
+    depends_on:
+      - mongo
+      - redis
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - '6379:6379'
+  permission-service:
+    image: 'bluehub.azurecr.io/meateam/permission-service:develop'
+    ports:
+      - '8088:8080'
+    environment:
+      PORT: '8080'
+      HEALTH_CHECK_INTERVAL: '3'
+      ELASTIC_APM_IGNORE_URLS: '/grpc.health.v1.Health/Check'
+      PS_MONGO_HOST: 'mongodb://mongo:27017/permission'
+      PS_ELASTIC_APM_IGNORE_URLS: '/grpc.health.v1.Health/Check,/api/healthcheck'
+      MONGO_CLIENT_CONNECTION_TIMEOUT: '10'
+      MONGO_CLIENT_PING_TIMEOUT: '10'
+      PS_ELASTICSEARCH_URL: 'http://localhost:9200'
+      PS_ELASTIC_APM_SERVER_URL: 'http://localhost:8200'
+      PS_ELASTIC_APM_ENVIRONMENT: 'production'
+      PS_ELASTIC_APM_ACTIVE: 'true'
     depends_on:
       - redis
   redis:
