@@ -56,7 +56,7 @@
     "home": "Home",
     "lastModified": "Last modified",
     "loading": "Loading...",
-    "lonely": "It feels lonely here...",
+    "lonely": "No items",
     "metadata": "Metadata",
     "multipleSelectionEnabled": "Multiple selection enabled",
     "name": "Name",
@@ -125,7 +125,8 @@
     "schedule": "Schedule",
     "scheduleMessage": "Pick a date and time to schedule the publication of this post.",
     "newArchetype": "Create a new post based on an archetype. Your file will be created on content folder.",
-    "permissions": "Permissions"
+    "permissions": "Permissions",
+    "searchUser": "Search user"
   },
   "settings": {
     "instanceName": "Instance name",
@@ -206,7 +207,7 @@
       "titleShared": "Shared With Me",
       "personalized": "{person}'s files"
     },
-    "storage": "Storage",
+    "storage": "Current usage",
     "newFile": "New file",
     "newFolder": "New folder",
     "settings": "Settings",
@@ -216,7 +217,7 @@
     "sharedFiles": "Shared With Me"
   },
   "quota": {
-    "usage": "Current usage"
+    "usage": "{used} / {limit}"
   },
   "search": {
     "images": "Images",

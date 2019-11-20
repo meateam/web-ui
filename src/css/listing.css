@@ -1,9 +1,17 @@
-#listing h2 {
+#listing h2.ltr {
   margin: 0 0 0 0.5em;
   font-size: .9em;
   color: rgba(0, 0, 0, 0.38);
   font-weight: 500;
 }
+
+#listing h2.rtl {
+  margin: 0 0.5em 0 0;
+  font-size: .9em;
+  color: rgba(0, 0, 0, 0.38);
+  font-weight: 500;
+}
+
 
 #listing .item div:last-of-type * {
   text-overflow: ellipsis;
@@ -42,6 +50,11 @@
 #listing .item .size,
 #listing .item .modified {
   font-size: 0.9em;
+}
+
+#listing .item .size.rtl {
+  direction: ltr;
+  text-align: right;
 }
 
 #listing .item .name {
@@ -160,7 +173,7 @@
 #listing.list .item.header {
   display: flex !important;
   background: #fafafa;
-  z-index: 999;
+  z-index: 2;
   padding: .85em;
   border: 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);

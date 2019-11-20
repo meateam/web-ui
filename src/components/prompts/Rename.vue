@@ -9,7 +9,7 @@
       <input class="input input--block" v-focus type="text" @keyup.enter="submit" v-model.trim="name">
     </div>
 
-    <div class="card-action">
+    <div :class="direction" class="card-action">
       <button class="button button--flat button--grey"
         @click="$store.commit('closeHovers')"
         :aria-label="$t('buttons.cancel')"
@@ -40,7 +40,7 @@ export default {
   computed: {
     ...mapMutations(['renameFolder']),
     ...mapState(['req', 'selected', 'selectedCount', 'path']),
-    ...mapGetters(['isListing'])
+    ...mapGetters(['isListing', 'direction'])
   },
   methods: {
     cancel: function () {

@@ -55,7 +55,6 @@ nav {
   width: 16em;
   position: fixed;
   top: 4em;
-  left: 0;
 }
 
 nav .action {
@@ -77,9 +76,15 @@ nav .action>* {
   vertical-align: middle;
 }
 
-main {
+main.ltr {
   min-height: 1em;
   margin: 0 1em 1em auto;
+  width: calc(100% - 19em);
+}
+
+main.rtl {
+  min-height: 1em;
+  margin: 0 auto 1em 1em;
   width: calc(100% - 19em);
 }
 

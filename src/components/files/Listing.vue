@@ -53,13 +53,11 @@
           <p class="modified">
             <span>{{ $t('files.lastModified') }}</span>
           </p>
-
-
         </div>
       </div>
     </div>
 
-    <h2 v-if="req.numDirs > 0">{{ $t('files.folders') }}</h2>
+    <h2 :class="direction" v-if="req.numDirs > 0">{{ $t('files.folders') }}</h2>
     <div v-if="req.numDirs > 0">
       <item v-for="(item) in dirs"
         :key="base64(item.name)"
@@ -74,7 +72,7 @@
       </item>
     </div>
 
-    <h2 v-if="req.numFiles > 0">{{ $t('files.files') }}</h2>
+    <h2 :class="direction" v-if="req.numFiles > 0">{{ $t('files.files') }}</h2>
     <div v-if="req.numFiles > 0">
       <item v-for="(item) in files"
         :key="base64(item.name)"
@@ -100,7 +98,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapGetters, mapState, mapMutations } from 'vuex'
 import Item from './ListingItem'
 import css from '@/utils/css'
 import { users, files as api } from '@/api'
@@ -116,6 +114,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['direction']),
     ...mapState(['req', 'selected', 'user']),
     nameSorted () {
       return true;

@@ -4,7 +4,7 @@
       <p v-if="req.kind !== 'listing' && selectedCount < 2">{{ $t(singleMessage) }}</p>
       <p v-else>{{ $t(multipleMessage, { count: selectedCount}) }}</p>
     </div>
-    <div class="card-action">
+    <div :class="direction" class="card-action">
       <button @click="$store.commit('closeHovers')"
         class="button button--flat button--grey"
         :aria-label="$t('buttons.cancel')"
@@ -25,7 +25,7 @@ import buttons from '@/utils/buttons'
 export default {
   name: 'delete',
   computed: {
-    ...mapGetters(['isListing', 'selectedCount', 'shares']),
+    ...mapGetters(['isListing', 'selectedCount', 'shares', 'direction']),
     ...mapState(['req', 'selected', 'path', 'user']),
     buttonTitle: function() {
       return this.shares ? 'buttons.removeShare' : 'buttons.delete';

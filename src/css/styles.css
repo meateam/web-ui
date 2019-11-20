@@ -32,7 +32,7 @@
   padding: 0;
   box-shadow: none;
   vertical-align: middle;
-  text-align: left;
+  text-align: inherit;
   position: relative;
   user-select: none;
 }

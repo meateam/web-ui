@@ -12,7 +12,7 @@
               :autoSelect="true"
               @submit="saveUser"
               :get-result-value="getResultValue"
-              placeholder="Search User"
+             :placeholder="$t('prompts.searchUser')"
             >
               <template v-slot:result="{ result, props }">
                 <li v-bind="props" class="share-result">
@@ -42,7 +42,7 @@
       </edit-permission-list>
     </div>
 
-    <div class="card-action">
+    <div :class="direction" class="card-action">
       <button class="button button--flat"
         @click="$store.commit('closeHovers')"
         :aria-label="$t('buttons.close')"
@@ -76,7 +76,7 @@ export default {
   },
   computed: {
     ...mapState([ 'req', 'selected', 'selectedCount' ]),
-    ...mapGetters([ 'isListing' ]),
+    ...mapGetters([ 'isListing', 'direction' ]),
     selectedItem() {
       return this.req.items[this.selected[0]];
     }

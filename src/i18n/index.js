@@ -4,6 +4,7 @@ import VueI18n from 'vue-i18n'
 import ar from './ar.json'
 import de from './de.json'
 import en from './en.json'
+import he from './he.json'
 import es from './es.json'
 import fr from './fr.json'
 import is from './is.json'
@@ -33,6 +34,9 @@ export function detectLocale () {
       break
     case /^en.*/i.test(locale):
       locale = 'en'
+      break
+    case /^he.*/i.test(locale):
+      locale = 'he'
       break
     case /^it.*/i.test(locale):
       locale = 'it'
@@ -79,11 +83,12 @@ export function detectLocale () {
 
 const i18n = new VueI18n({
   locale: detectLocale(),
-  fallbackLocale: 'en',
+  fallbackLocale: 'he',
   messages: {
     'ar': ar,
     'de': de,
     'en': en,
+    'he': he,
     'es': es,
     'fr': fr,
     'is': is,
