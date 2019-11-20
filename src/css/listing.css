@@ -173,7 +173,7 @@
 #listing.list .item.header {
   display: flex !important;
   background: #fafafa;
-  z-index: 2;
+  z-index: 1;
   padding: .85em;
   border: 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
