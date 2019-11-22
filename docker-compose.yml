@@ -150,7 +150,7 @@ services:
     environment:
       ELASTIC_APM_SERVER_URL: 'http://localhost:8200'
       ELASTICSEARCH_URL: 'http://localhost:9200'
-      KARTOFFEL_URL: 'http://kartoffel-master.eastus.cloudapp.azure.com:3001'
+      KARTOFFEL_URL: 'http://kartoffel-master.eastus.cloudapp.azure.com:3000'
       RPC_PORT: '8080'
       REDIS_PORT: '6379'
       REDIS_HOST: 'redis'
