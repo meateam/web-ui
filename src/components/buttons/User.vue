@@ -4,7 +4,7 @@
       <div>{{ nameLetters }}</div>
       <span>{{ $t('buttons.user') }}</span>
     </div>
-    <div :class="{'fade-on': userToggled, 'rtl': direction == 'rtl', 'ltr': direction == 'ltr'}" class="speech-bubble fade">
+    <div :class="fullNameClass" class="speech-bubble fade">
         <span class="bold-name">{{ fullName }}</span>
     </div>
   </span>
@@ -31,6 +31,16 @@ export default {
     },
     nameLetters: function () {
       return this.user.firstName[0] + this.user.lastName[0];
+    },
+    fullNameClass() {
+      const elementClass = { 'fade-on': this.userToggled };
+      if (this.direction == 'rtl') {
+        elementClass.rtl = true;
+      } else {
+        elementClass.ltr = true;
+      }
+
+      return elementClass;
     }
   },
   methods: {
