@@ -28,31 +28,31 @@
     "select": "Select",
     "share": "שיתוף",
     "publish": "Publish",
-    "selectMultiple": "Select multiple",
+    "selectMultiple": "בחירה מרובה",
     "schedule": "Schedule",
-    "switchView": "Switch view",
+    "switchView": "שנה תצוגה",
     "toggleSidebar": "Toggle sidebar",
     "update": "Update",
-    "upload": "Upload",
-    "user": "User",
+    "upload": "העלאה",
+    "user": "משתמש",
     "permalink": "Get Permanent Link",
-    "morePlural": "More"
+    "morePlural": "נוספים"
   },
   "success": {
     "linkCopied": "Link copied!"
   },
   "errors": {
-    "general": "Something went wrong.",
-    "forbidden": "You don't have permissions to access this.",
-    "internal": "Something really went wrong.",
-    "notFound": "This location can't be reached."
+    "general": "משהו השתשבש.",
+    "forbidden": "לא קיימות הרשאות לגשת לפריט זה.",
+    "internal": "משהו ממש השתבש.",
+    "notFound": "לא נמצא."
   },
   "files": {
     "folders": "תיקיות",
     "files": "קבצים",
     "body": "Body",
-    "clear": "Clear",
-    "closePreview": "Close preview",
+    "clear": "סגירה",
+    "closePreview": "סגור תצוגה",
     "home": "Home",
     "lastModified": "שונה לאחרונה",
     "loading": "Loading...",
