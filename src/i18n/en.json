@@ -252,7 +252,8 @@
   "role": {
     "input": "Role",
     "read": "Read",
-    "owner": "Owner"
+    "owner": "Owner",
+    "permission": "user {user} has {role} permission"
   },
   "download": {
     "downloadFile": "Download File",

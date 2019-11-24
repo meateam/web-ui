@@ -250,9 +250,10 @@
     "svSE": "Swedish (Sweden)"
   },
   "role": {
-    "input": "Role",
-    "read": "Read",
-    "owner": "Owner"
+    "input": "הרשאה",
+    "read": "קריאה",
+    "owner": "בעלים",
+    "permission": "למשתמש {user} יש הרשאות {role}"
   },
   "download": {
     "downloadFile": "Download File",
