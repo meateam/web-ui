@@ -67,6 +67,14 @@
   vertical-align: bottom;
 }
 
+.context-icon {
+  font-size: inherit !important;
+}
+
+a.pointer {
+  cursor: pointer;
+}
+
 .message {
   text-align: center;
   font-size: 2em;

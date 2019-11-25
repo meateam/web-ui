@@ -68,7 +68,8 @@
         v-bind:url="item.url"
         v-bind:modified="item.modified"
         v-bind:type="item.type"
-        v-bind:size="item.size">
+        v-bind:size="item.size"
+        @contextmenu.prevent="$refs.menu.open($event, {file: item})">
       </item>
     </div>
 
@@ -82,9 +83,44 @@
         v-bind:id="item.id"
         v-bind:modified="item.modified"
         v-bind:type="item.type"
-        v-bind:size="item.size">
+        v-bind:size="item.size"
+        @contextmenu.prevent="$refs.menu.open($event, {file: item})">
       </item>
     </div>
+    <vue-context ref="menu">
+      <template slot-scope="child" v-if="child.data">
+        <li>
+          <a class="pointer" @click.prevent="showInfo(child.data.file)">
+            <i class="material-icons context-icon">info</i> {{ $t('buttons.info') }}
+          </a>
+        </li>
+        <li>
+          <a class="pointer" @click.prevent="download(child.data.file)">
+            <i class="material-icons context-icon">file_download</i> {{$t('buttons.download')}}
+          </a>
+        </li>
+        <li>
+          <a class="pointer" @click.prevent="deleteFile(child.data.file)">
+            <i class="material-icons context-icon">delete</i> {{$t('buttons.delete')}}
+          </a>
+        </li>
+        <li>
+          <a class="pointer" @click.prevent="showShare(child.data.file)">
+            <i class="material-icons context-icon">share</i> {{$t('buttons.share')}}
+          </a>
+        </li>
+        <li>
+          <a class="pointer" @click.prevent="showMove(child.data.file)">
+            <i class="material-icons rtl context-icon">forward</i> {{$t('buttons.move')}}
+          </a>
+        </li>
+        <li>
+          <a class="pointer" @click.prevent="showRename(child.data.file)">
+            <i class="material-icons context-icon">mode_edit</i> {{$t('buttons.rename')}}
+          </a>
+        </li>
+      </template>
+    </vue-context>
 
     <input style="display:none" type="file" id="upload-input" @change="uploadInput($event)" multiple>
 
@@ -98,7 +134,10 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from 'vuex'
+import { mapGetters, mapState, mapMutations } from 'vuex';
+import VueContext from 'vue-context';
+import 'vue-context/dist/css/vue-context.css';
+
 import Item from './ListingItem'
 import css from '@/utils/css'
 import { users, files as api } from '@/api'
@@ -107,7 +146,7 @@ import { checkConflict } from '@/utils/files'
 
 export default {
   name: 'listing',
-  components: { Item },
+  components: { Item, VueContext },
   data: function () {
     return {
       show: 50
@@ -194,7 +233,7 @@ export default {
     document.removeEventListener('drop', this.drop)
   },
   methods: {
-    ...mapMutations([ 'updateUser' ]),
+    ...mapMutations([ 'updateUser', 'addSelected', 'resetSelected' ]),
     base64: function (name) {
       return window.btoa(unescape(encodeURIComponent(name)))
     },
@@ -417,6 +456,33 @@ export default {
       }
 
       this.$store.commit('setReload', true)
+    },
+    showInfo: function (file) {
+      this.resetSelected();
+      this.addSelected(file.index);
+      this.$store.commit('showHover', 'info');
+    },
+    download: function (file) {
+      api.download([file.id]);
+    },
+    deleteFile: async function (file) {
+      await api.remove(file.id);
+      this.$store.commit('setReload', true);
+    },
+    showShare: function (file) {
+      this.resetSelected();
+      this.addSelected(file.index);
+      this.$store.commit('showHover', 'share');
+    },
+    showMove: function (file) {
+      this.resetSelected();
+      this.addSelected(file.index);
+      this.$store.commit('showHover', 'move');
+    },
+    showRename: function (file) {
+      this.resetSelected();
+      this.addSelected(file.index);
+      this.$store.commit('showHover', 'rename');
     }
   }
 }

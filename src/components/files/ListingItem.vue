@@ -14,6 +14,7 @@
     :data-id="id"
     :aria-label="name"
     :aria-selected="isSelected"
+    @contextmenu="emitContextMenu"
   >
     <div>
       <i class="material-icons" v-bind:class="activeClass">{{ icon }}</i>
@@ -38,9 +39,12 @@ import { checkMimeType } from '@/utils/constants';
 import filesize from 'filesize';
 import moment from 'moment';
 import { files as api } from '@/api';
+import VueContext from 'vue-context';
+import 'vue-context/dist/css/vue-context.css';
 
 export default {
   name: 'item',
+  components: { VueContext },
   data: function() {
     return {
       touches: 0
@@ -176,6 +180,9 @@ export default {
         this.$store.commit('pushFolder', { id: this.id, name: this.name });
         this.$store.commit('setReload', true);
       }
+    },
+    emitContextMenu: function(event) {
+      this.$emit("contextmenu", event);
     }
   }
 };
