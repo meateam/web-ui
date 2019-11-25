@@ -9,7 +9,7 @@
       <input class="input input--block" type="text" @keyup.enter="submit" v-model.trim="name" v-focus>
     </div>
 
-    <div class="card-action">
+    <div :class="direction" class="card-action">
       <button
         class="button button--flat button--grey"
         @click="$store.commit('closeHovers')"
@@ -40,7 +40,7 @@ export default {
   },
   computed: {
     ...mapState([ 'req' ]),
-    ...mapGetters([ 'isFiles', 'isListing', 'currentFolder' ])
+    ...mapGetters([ 'isFiles', 'isListing', 'currentFolder', 'direction' ])
   },
   methods: {
     submit: async function(event) {

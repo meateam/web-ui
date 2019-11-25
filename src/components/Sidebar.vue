@@ -30,20 +30,13 @@
         </a>
       </div>
     </template>
-
-    <p class="credits">
-      <span>
-        <span>Beta version</span>
-        <span> {{ version }}</span>
-      </span>
-    </p>
   </nav>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
 import * as auth from '@/utils/auth'
-import { version, signup, disableExternal, noAuth, config } from '@/utils/constants'
+import { signup, disableExternal, noAuth, config } from '@/utils/constants'
 import Quota from './quota/Quota'
 
 export default {
@@ -59,7 +52,6 @@ export default {
     },
     signup: () => signup,
     supportLink: () => config.supportLink,
-    version: () => version,
     disableExternal: () => disableExternal,
     noAuth: () => noAuth,
     nameExists: function () {

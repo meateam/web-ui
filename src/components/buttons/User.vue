@@ -4,14 +4,14 @@
       <div>{{ nameLetters }}</div>
       <span>{{ $t('buttons.user') }}</span>
     </div>
-    <div :class="{'fade-on': userToggled}" class="speech-bubble fade">
-        {{$t('header.signedAs')}}&nbsp;
+    <div :class="fullNameClass" class="speech-bubble fade">
         <span class="bold-name">{{ fullName }}</span>
     </div>
   </span>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: "user-button",
   props: ["user"],
@@ -22,6 +22,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['direction']),
     nameExists: function () {
       return this.user.firstName && this.user.lastName;
     },
@@ -30,6 +31,16 @@ export default {
     },
     nameLetters: function () {
       return this.user.firstName[0] + this.user.lastName[0];
+    },
+    fullNameClass() {
+      const elementClass = { 'fade-on': this.userToggled };
+      if (this.direction == 'rtl') {
+        elementClass.rtl = true;
+      } else {
+        elementClass.ltr = true;
+      }
+
+      return elementClass;
     }
   },
   methods: {

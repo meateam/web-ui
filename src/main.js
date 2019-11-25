@@ -12,17 +12,19 @@ import { fetchConfig } from '@/utils/constants';
 import { initApm } from '@/utils/apm';
 import { config } from '@/utils/constants';
 
-Vue.use(VTooltip);
+Vue.use(VTooltip, {
+	defaultBoundariesElement: 'window',
+});
 sync(store, router);
 
-async function start () {
+async function start() {
 	await fetchConfig();
 	await initApm(config);
 
 	if (!validateLogin()) {
 		return
 	}
-	
+
 	new Vue({
 		el: '#app',
 		store,

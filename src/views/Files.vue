@@ -7,9 +7,9 @@
 
       <span v-for="(folder, index) in breadcrumbs" :key="index">
         <span class="chevron">
-          <i class="material-icons">keyboard_arrow_right</i>
+          <i :class="direction" class="material-icons">keyboard_arrow_right</i>
         </span>
-        <div @click="onBreadcrumbsClick(folder.id)">{{ folder.name }}</div>
+        <div style="direction: ltr;" @click="onBreadcrumbsClick(folder.id)">{{ folder.name }}</div>
       </span>
     </div>
     <div v-if="error">
@@ -49,7 +49,7 @@ export default {
     Preview
   },
   computed: {
-    ...mapGetters(["selectedCount", "isListing", "isEditor", "isFiles", "isActiveDialog", "shares"]),
+    ...mapGetters(["selectedCount", "isListing", "isEditor", "isFiles", "isActiveDialog", "shares", "direction"]),
     ...mapState(["req", "user", "reload", "multiple", "loading", "path"]),
     isPreview() {
       return !this.loading && !this.isListing && !this.isEditor;

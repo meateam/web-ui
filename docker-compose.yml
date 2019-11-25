@@ -154,13 +154,15 @@ services:
       RPC_PORT: '8080'
       REDIS_PORT: '6379'
       REDIS_HOST: 'redis'
-      SPIKE_CLIENT_ID: '0QO_pz5TDK_80q5b0PsqnWKIqpxmllFaYyKuACS4'
-      SPIKE_CLIENT_SECRET: 'TODO_SPIKE_SECRET'
       LOG_INDEX: 'kdrive'
+      SPIKE_CLIENT_ID: EPBpjCiczupCXZgBEq3ARZCinUt4LSXtOsVrI1Ub
+      SPIKE_CLIENT_SECRET: TODO_SPIKE_SECRET
       SPIKE_REQUIRED: 'true'
       SPIKE_URL: 'https://spike.westeurope.cloudapp.azure.com'
       SPIKE_AUTH_SERVER_PORT: '1337'
       SPIKE_TOKEN_URL: 'https://spike.westeurope.cloudapp.azure.com:1337/oauth2/token'
+      TOKEN: >-
+        ENTER_TOKEN
       DEBUG_MODE: 'false'
       USR_MONGO_HOST: 'mongodb://mongo:27017/devDB'
     depends_on:
@@ -173,19 +175,20 @@ services:
   permission-service:
     image: 'bluehub.azurecr.io/meateam/permission-service:develop'
     ports:
-      - '8088:8080'
+      - '8087:8080'
     environment:
-      PORT: '8080'
-      HEALTH_CHECK_INTERVAL: '3'
-      ELASTIC_APM_IGNORE_URLS: '/grpc.health.v1.Health/Check'
+      PS_PORT: '8080'
       PS_MONGO_HOST: 'mongodb://mongo:27017/permission'
-      PS_ELASTIC_APM_IGNORE_URLS: '/grpc.health.v1.Health/Check,/api/healthcheck'
-      MONGO_CLIENT_CONNECTION_TIMEOUT: '10'
-      MONGO_CLIENT_PING_TIMEOUT: '10'
-      PS_ELASTICSEARCH_URL: 'http://localhost:9200'
-      PS_ELASTIC_APM_SERVER_URL: 'http://localhost:8200'
-      PS_ELASTIC_APM_ENVIRONMENT: 'production'
-      PS_ELASTIC_APM_ACTIVE: 'true'
+      PS_ELASTIC_APM_IGNORE_URLS: '/grpc.health.v1.Health/Check'
+      PS_MONGO_CLIENT_CONNECTION_TIMEOUT: '10'
+      PS_MONGO_CLIENT_PING_TIMEOUT: '10'
+      PS_HEALTH_CHECK_INTERVAL: '3'
+      ELASTICSEARCH_URL: 'http://localhost:9200'
+      ELASTIC_APM_SERVER_URL: 'http://localhost:8200'
+      ELASTIC_APM_ENVIRONMENT: 'development'
+      ELASTIC_APM_ACTIVE: 'true'
+      ELASTIC_APM_CAPTURE_BODY: 'all'
+      ELASTIC_APM_METRICS_INTERVAL: '10s'
     depends_on:
       - mongo
   web-ui:

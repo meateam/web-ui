@@ -5,7 +5,7 @@
     </div>
     <site-header></site-header>
     <sidebar></sidebar>
-    <main>
+    <main :class="direction">
       <router-view></router-view>
     </main>
     <prompts></prompts>
@@ -26,7 +26,7 @@ export default {
     Prompts,
   },
   computed: {
-    ...mapGetters([ 'isLogged' ]),
+    ...mapGetters([ 'isLogged', 'direction' ]),
     ...mapState([ 'user' ])
   },
   watch: {

@@ -8,7 +8,7 @@
       <file-list @update:selected="val => dest = val"></file-list>
     </div>
 
-    <div class="card-action">
+    <div :class="direction" class="card-action">
       <button class="button button--flat button--grey"
         @click="$store.commit('closeHovers')"
         :aria-label="$t('buttons.cancel')"
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import FileList from './FileList'
 import { files as api } from '@/api'
 import buttons from '@/utils/buttons'
@@ -37,7 +37,10 @@ export default {
       dest: {}
     }
   },
-  computed: mapState(['req', 'selected', 'path']),
+  computed: {
+    ...mapGetters(['direction']),
+    ...mapState(['req', 'selected', 'path']),
+  },
   methods: {
     move: async function (event) {
       event.preventDefault()

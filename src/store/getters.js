@@ -7,6 +7,7 @@ const getters = {
   selectedCount: state => state.selected.length,
   currentFolder: state => state.path[state.path.length - 1] || { id: '', name: '' },
   shares: state => state.shares,
+  direction: state => state.user && state.user.locale === 'he' ? 'rtl' : 'ltr'
 }
 
 export default getters

@@ -8,7 +8,9 @@
       <p v-if="selected.length > 1">{{ $t('prompts.filesSelected', { count: selected.length }) }}</p>
 
       <p v-if="selected.length < 2"><strong>{{ $t('prompts.displayName') }}</strong> {{ name || $t(defaultDisplayName) }}</p>
-      <p v-if="!dir || selected.length > 1"><strong>{{ $t('prompts.size') }}:</strong><span id="content_length"></span> {{ humanSize }}</p>
+      <p v-if="!dir || selected.length > 1"><strong>{{ $t('prompts.size') }}: </strong>
+        <span style="direction: ltr; display: inline-block;" id="content_length">{{ humanSize }}</span>
+      </p>
 			<p v-if="!dir || selected.length == 1"><strong>{{ $t('prompts.type') }}:</strong> {{ type }}</p>
       <p v-if="selected.length < 2"><strong>{{ $t('prompts.lastModified') }}:</strong> {{ humanTime }}</p>
 
@@ -23,7 +25,7 @@
       </div>
     </div>
 
-    <div class="card-action">
+    <div class="card-action" :class="direction">
       <button type="submit"
         @click="$store.commit('closeHovers')"
         class="button button--flat"
@@ -47,7 +49,7 @@ export default {
   },
   computed: {
     ...mapState(['req', 'selected']),
-    ...mapGetters(['selectedCount', 'isListing', 'shares']),
+    ...mapGetters(['selectedCount', 'isListing', 'shares', 'direction']),
     humanSize: function () {
       if (this.selectedCount === 0 || !this.isListing) {
         return filesize(this.req.size || 0)

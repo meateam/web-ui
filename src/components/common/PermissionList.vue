@@ -1,6 +1,6 @@
 <template>
   <div class="list">
-    <div class="item" v-for="user in usersToDisplay" :key="user.id" v-tooltip.bottom="user.label">
+    <div class="item" v-for="user in usersToDisplay" :key="user.id" v-tooltip.bottom="$t('role.permission', { user: user.fullName, role: i18nuserRole(user) })">
       <div>{{user.letters}}</div>
     </div>
     <div v-if="extraUsers.length > 0" class="item extra-permissions" v-tooltip.bottom="extraUsersTooltip">
@@ -53,13 +53,18 @@ export default {
         .filter(res => !!res && !!res.user && res.user.firstName && res.user.lastName && res.user.fullName)
         .map(res => {
           res.user.letters = (res.user.firstName[0] + res.user.lastName[0]).toUpperCase();
-          res.user.label = `user ${res.user.fullName} has ${roles[permissionsMap[res.user.id].role]} permission`;
+          res.user.role = roles[permissionsMap[res.user.id].role];
 
           return res.user;
         });
       this.usersToDisplay = this.users;
       // eslint-disable-next-line
     } catch(err) {}
+  },
+  methods: {
+    i18nuserRole(user) {
+      return this.$t(`role.${user.role}`);
+    }
   }
 };
 </script>
