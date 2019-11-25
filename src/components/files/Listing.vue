@@ -94,27 +94,27 @@
             <i class="material-icons context-icon">info</i> {{ $t('buttons.info') }}
           </a>
         </li>
-        <li>
+        <li v-if="!child.data.file.isDir">
           <a class="pointer" @click.prevent="download(child.data.file)">
             <i class="material-icons context-icon">file_download</i> {{$t('buttons.download')}}
           </a>
         </li>
         <li>
           <a class="pointer" @click.prevent="deleteFile(child.data.file)">
-            <i class="material-icons context-icon">delete</i> {{$t('buttons.delete')}}
+            <i class="material-icons context-icon">delete</i> {{$t(deleteButtonTitle)}}
           </a>
         </li>
-        <li>
+        <li v-if="!shares">
           <a class="pointer" @click.prevent="showShare(child.data.file)">
             <i class="material-icons context-icon">share</i> {{$t('buttons.share')}}
           </a>
         </li>
-        <li>
+        <li v-if="!shares">
           <a class="pointer" @click.prevent="showMove(child.data.file)">
             <i class="material-icons rtl context-icon">forward</i> {{$t('buttons.move')}}
           </a>
         </li>
-        <li>
+        <li v-if="!shares">
           <a class="pointer" @click.prevent="showRename(child.data.file)">
             <i class="material-icons context-icon">mode_edit</i> {{$t('buttons.rename')}}
           </a>
@@ -153,7 +153,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['direction']),
+    ...mapGetters(['direction', 'shares']),
     ...mapState(['req', 'selected', 'user']),
     nameSorted () {
       return true;
@@ -211,6 +211,9 @@ export default {
       }
 
       return 'arrow_upward'
+    },
+    deleteButtonTitle() {
+      return this.shares ? 'buttons.removeShare' : 'buttons.delete';
     }
   },
   mounted: function () {
@@ -466,7 +469,12 @@ export default {
       api.download([file.id]);
     },
     deleteFile: async function (file) {
-      await api.remove(file.id);
+      if (!this.shares){
+        await api.remove(file.id);
+      } else {
+        await api.unShare(file.id, this.user.id);
+      }
+      
       this.$store.commit('setReload', true);
     },
     showShare: function (file) {
