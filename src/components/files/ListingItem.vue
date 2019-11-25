@@ -39,12 +39,9 @@ import { checkMimeType } from '@/utils/constants';
 import filesize from 'filesize';
 import moment from 'moment';
 import { files as api } from '@/api';
-import VueContext from 'vue-context';
-import 'vue-context/dist/css/vue-context.css';
 
 export default {
   name: 'item',
-  components: { VueContext },
   data: function() {
     return {
       touches: 0
