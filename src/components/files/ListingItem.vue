@@ -14,6 +14,7 @@
     :data-id="id"
     :aria-label="name"
     :aria-selected="isSelected"
+    @contextmenu="emitContextMenu"
   >
     <div>
       <i class="material-icons" v-bind:class="activeClass">{{ icon }}</i>
@@ -176,6 +177,9 @@ export default {
         this.$store.commit('pushFolder', { id: this.id, name: this.name });
         this.$store.commit('setReload', true);
       }
+    },
+    emitContextMenu: function(event) {
+      this.$emit("contextmenu", event);
     }
   }
 };
