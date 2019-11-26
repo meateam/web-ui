@@ -14,44 +14,32 @@
       <div class="item header">
         <div></div>
         <div>
-<!-- Previous Item Header -->
-          <!-- <p :class="{ active: nameSorted }" class="name"
+          <p :class="{ active: nameSorted() }" class="name"
             role="button"
             tabindex="0"
             @click="sort('name')"
             :title="$t('files.sortByName')"
             :aria-label="$t('files.sortByName')">
             <span>{{ $t('files.name') }}</span>
-            <i class="material-icons">{{ nameIcon }}</i>
+            <i class="material-icons">{{ nameIcon() }}</i>
           </p>
-          <p :class="{ active: sizeSorted }" class="size"
+          <p :class="{ active: sizeSorted() }" class="size"
             role="button"
             tabindex="0"
             @click="sort('size')"
             :title="$t('files.sortBySize')"
             :aria-label="$t('files.sortBySize')">
             <span>{{ $t('files.size') }}</span>
-            <i class="material-icons">{{ sizeIcon }}</i>
+            <i class="material-icons">{{ sizeIcon() }}</i>
           </p>
-          <p :class="{ active: modifiedSorted }" class="modified"
+          <p :class="{ active: modifiedSorted() }" class="modified"
             role="button"
             tabindex="0"
             @click="sort('modified')"
             :title="$t('files.sortByLastModified')"
             :aria-label="$t('files.sortByLastModified')">
             <span>{{ $t('files.lastModified') }}</span>
-            <i class="material-icons">{{ modifiedIcon }}</i>
-          </p> -->
-
-<!-- New Item Header -->
-          <p class="name">
-            <span>{{ $t('files.name') }}</span>
-          </p>
-          <p class="size">
-            <span>{{ $t('files.size') }}</span>
-          </p>
-          <p class="modified">
-            <span>{{ $t('files.lastModified') }}</span>
+            <i class="material-icons">{{ modifiedIcon() }}</i>
           </p>
         </div>
       </div>
@@ -140,7 +128,7 @@ import 'vue-context/dist/css/vue-context.css';
 
 import Item from './ListingItem'
 import css from '@/utils/css'
-import { users, files as api } from '@/api'
+import { files as api } from '@/api'
 import buttons from '@/utils/buttons'
 import { checkConflict } from '@/utils/files'
 
@@ -149,74 +137,21 @@ export default {
   components: { Item, VueContext },
   data: function () {
     return {
-      show: 50
+      show: 50,
+      dirs: [],
+      files: [],
+      sorting: {by: 'name', asc: true}
     }
   },
   computed: {
     ...mapGetters(['direction', 'shares']),
     ...mapState(['req', 'selected', 'user']),
-    nameSorted () {
-      return true;
-    },
-    sizeSorted () {
-      return false;
-    },
-    modifiedSorted () {
-      return false;
-    },
-    ascOrdered () {
-      return true;
-    },
-    items () {
-      const dirs = []
-      const files = []
-
-      this.req.items.forEach((item) => {
-        if (item.isDir) {
-          dirs.push(item)
-        } else {
-          files.push(item)
-        }
-      })
-
-      return { dirs, files }
-    },
-    dirs () {
-      return this.items.dirs.slice(0, this.show)
-    },
-    files () {
-      let show = this.show - this.items.dirs.length
-
-      if (show < 0) show = 0
-
-      return this.items.files.slice(0, show)
-    },
-    nameIcon () {
-      if (this.nameSorted && !this.ascOrdered) {
-        return 'arrow_upward'
-      }
-
-      return 'arrow_downward'
-    },
-    sizeIcon () {
-      if (this.sizeSorted && this.ascOrdered) {
-        return 'arrow_downward'
-      }
-
-      return 'arrow_upward'
-    },
-    modifiedIcon () {
-      if (this.modifiedSorted && this.ascOrdered) {
-        return 'arrow_downward'
-      }
-
-      return 'arrow_upward'
-    },
     deleteButtonTitle() {
       return this.shares ? 'buttons.removeShare' : 'buttons.delete';
     }
   },
   mounted: function () {
+    this.refreshItems()
     // Check the columns size for the first time.
     this.resizeEvent()
 
@@ -237,6 +172,51 @@ export default {
   },
   methods: {
     ...mapMutations([ 'updateUser', 'addSelected', 'resetSelected' ]),
+    refreshItems: function() {
+      this.dirs = [];
+      this.files = [];
+      
+      this.req.items.forEach((item) => {
+        if (item.isDir) {
+          this.dirs.push(item)
+        } else {
+          this.files.push(item)
+        }
+      });
+    },
+    nameSorted: function() {
+      return (this.sorting.by === 'name')
+    },
+    sizeSorted: function() {
+      return (this.sorting.by === 'size')
+    },
+    modifiedSorted: function() {
+      return (this.sorting.by === 'modified')
+    },
+    ascOrdered: function() {
+      return this.sorting.asc
+    },
+    nameIcon: function() {
+      if (this.nameSorted() && this.ascOrdered()) {
+        return 'arrow_downward'
+      }
+
+      return 'arrow_upward'
+    },
+    sizeIcon () {
+      if (this.sizeSorted() && this.ascOrdered()) {
+        return 'arrow_downward'
+      }
+
+      return 'arrow_upward'
+    },
+    modifiedIcon () {
+      if (this.modifiedSorted() && this.ascOrdered()) {
+        return 'arrow_downward'
+      }
+
+      return 'arrow_upward'
+    },
     base64: function (name) {
       return window.btoa(unescape(encodeURIComponent(name)))
     },
@@ -435,30 +415,52 @@ export default {
 
       return false
     },
-    async sort (by) {
-      let asc = false
+    sort (by) {
+      const sorting = {by, asc: false};
 
-      if (by === 'name') {
-        if (this.nameIcon === 'arrow_upward') {
-          asc = true
+      switch (by) {
+        case 'name': {
+          sorting.asc = this.nameIcon() === 'arrow_upward';
+          
+          if (sorting.asc) {
+            this.dirs.sort((dirA, dirB) => dirA.name.localeCompare(dirB.name));
+            this.files.sort((fileA, fileB) => fileA.name.localeCompare(fileB.name));
+          } else {
+            this.dirs.sort((dirA, dirB) => dirB.name.localeCompare(dirA.name));
+            this.files.sort((fileA, fileB) => fileB.name.localeCompare(fileA.name));
+          }
+
+          break;
         }
-      } else if (by === 'size') {
-        if (this.sizeIcon === 'arrow_upward') {
-          asc = true
+        case 'size': {
+          sorting.asc = this.sizeIcon() === 'arrow_upward';
+          
+          if (sorting.asc) {
+            this.dirs.sort((dirA, dirB) => dirA.size - dirB.size);
+            this.files.sort((fileA, fileB) => fileA.size - fileB.size);
+          } else {
+            this.dirs.sort((dirA, dirB) => dirB.size - dirA.size);
+            this.files.sort((fileA, fileB) => fileB.size - fileA.size);
+          }
+          
+          break;
         }
-      } else if (by === 'modified') {
-        if (this.modifiedIcon === 'arrow_upward') {
-          asc = true
+        case 'modified': {
+          sorting.asc = this.modifiedIcon() === 'arrow_upward';
+          
+          if (sorting.asc) {
+            this.dirs.sort((dirA, dirB) => dirA.modified - dirB.modified);
+            this.files.sort((fileA, fileB) => fileA.modified - fileB.modified);
+          } else {
+            this.dirs.sort((dirA, dirB) => dirB.modified - dirA.modified);
+            this.files.sort((fileA, fileB) => fileB.modified - fileA.modified);
+          }
+
+          break;
         }
       }
 
-      try {
-        await users.update({ id: this.user.id, sorting: { by, asc } }, ['sorting'])
-      } catch (e) {
-        this.$showError(e)
-      }
-
-      this.$store.commit('setReload', true)
+      this.sorting = sorting;
     },
     showInfo: function (file) {
       this.resetSelected();
