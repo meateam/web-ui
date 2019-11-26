@@ -469,13 +469,9 @@ export default {
       api.download([file.id]);
     },
     deleteFile: async function (file) {
-      if (!this.shares){
-        await api.remove(file.id);
-      } else {
-        await api.unShare(file.id, this.user.id);
-      }
-      
-      this.$store.commit('setReload', true);
+      this.resetSelected();
+      this.addSelected(file.index);
+      this.$store.commit('showHover', 'delete');
     },
     showShare: function (file) {
       this.resetSelected();
