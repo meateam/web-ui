@@ -52,9 +52,9 @@ export default {
       }
 
       try {
-        let updated = await api.move(items, this.dest.dest.id);
-        updated = JSON.parse(updated);
-        const successfulUpdateCount = (updated && updated.length) || 0;
+        let failed = await api.move(items, this.dest.dest.id);
+        failed = JSON.parse(failed);
+        const successfulUpdateCount = items.length - ((failed && failed.length) || 0);
         if (successfulUpdateCount !== items.length) {
           const failedCount = items.length - successfulUpdateCount;
           throw new Error(`failed to move ${failedCount} item${failedCount > 1 ? 's' : ''}`);
