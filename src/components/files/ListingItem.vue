@@ -84,7 +84,7 @@ export default {
       'pushFolder'
     ]),
     humanSize: function() {
-      return filesize(this.size | 0);
+      return filesize(parseInt(this.size));
     },
     humanTime: function() {
       return moment(this.modified).fromNow();

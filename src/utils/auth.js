@@ -40,7 +40,7 @@ export function parseToken () {
     ...data,
     locale:"he",
     lockPassword:"false",
-    viewMode:"mosaic",
+    viewMode:"list",
     perm:{
       "admin": false,
       "execute": true,
