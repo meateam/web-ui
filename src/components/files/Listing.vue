@@ -497,7 +497,7 @@ export default {
       this.$store.commit('showHover', 'rename');
     },
     canPreview: function (file) {
-      return file && checkMimeType(file.type) || checkDocumentPreview(file.type);
+      return checkMimeType(file.type) || checkDocumentPreview(file.type);
     },
     preview: function (file) {
       if (checkMimeType(file.type)) {
