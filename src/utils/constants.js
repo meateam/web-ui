@@ -9,7 +9,7 @@ const noAuth = false;
 const loginPage = false;
 const folderContentType = "application/vnd.drive.folder";
 const mediaTypes = ['image', 'video', 'audio', 'blob'];
-const documentTypes = ['application/pdf'];
+const documentTypes = ['application/pdf', 'text'];
 const config = {
 	apmServerUrl: '',
 	authUrl: '',
