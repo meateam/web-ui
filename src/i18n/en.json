@@ -36,7 +36,8 @@
     "upload": "Upload",
     "user": "User",
     "permalink": "Get Permanent Link",
-    "morePlural": "More"
+    "morePlural": "More",
+    "pdfPreview": "Document preview"
   },
   "success": {
     "linkCopied": "Link copied!"

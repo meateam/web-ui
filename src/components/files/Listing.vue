@@ -92,6 +92,11 @@
             <i class="material-icons context-icon">delete</i> {{$t(deleteButtonTitle)}}
           </a>
         </li>
+        <li v-if="isPdf(child.data.file)">
+          <a class="pointer" @click.prevent="preview(child.data.file)">
+            <i class="material-icons context-icon">picture_as_pdf</i> {{$t('buttons.pdfPreview')}}
+          </a>
+        </li>
         <li v-if="!shares">
           <a class="pointer" @click.prevent="showShare(child.data.file)">
             <i class="material-icons context-icon">share</i> {{$t('buttons.share')}}
@@ -489,6 +494,12 @@ export default {
       this.resetSelected();
       this.addSelected(file.index);
       this.$store.commit('showHover', 'rename');
+    },
+    isPdf: function (file) {
+      return file && file.type == 'application/pdf';
+    },
+    preview: function (file) {
+      api.preview(file.id);
     }
   }
 }

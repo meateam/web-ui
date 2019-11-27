@@ -36,7 +36,8 @@
     "upload": "העלאה",
     "user": "משתמש",
     "permalink": "Get Permanent Link",
-    "morePlural": "נוספים"
+    "morePlural": "נוספים",
+    "pdfPreview": "תצוגת מסמך"
   },
   "success": {
     "linkCopied": "Link copied!"
