@@ -37,7 +37,7 @@
     "user": "משתמש",
     "permalink": "Get Permanent Link",
     "morePlural": "נוספים",
-    "pdfPreview": "תצוגת מסמך"
+    "preview": "תצוגה"
   },
   "success": {
     "linkCopied": "Link copied!"
