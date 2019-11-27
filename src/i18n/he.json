@@ -98,7 +98,7 @@
     "currentlyNavigating": "מנווט כעת ב:",
     "deleteMessageMultiple": "את/ה בטוח/ה שתרצה/י למחוק {count} פריטים?",
     "deleteMessageSingle": "את/ה בטוח/ה שתרצה/י למחוק פריט זה?",
-    "removeShareMessageSingle": "שאתה בטוח שתרצה להסיר שיתוף של פריט זה?",
+    "removeShareMessageSingle": "אתה בטוח שתרצה להסיר שיתוף של פריט זה?",
     "removeShareMessageMultiple": "אתה בטוח שתרצה להסיר שיתוף של {count} פריטים?",
     "deleteTitle": "Delete files",
     "displayName": "שם:",
