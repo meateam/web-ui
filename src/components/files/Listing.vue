@@ -82,6 +82,11 @@
             <i class="material-icons context-icon">info</i> {{ $t('buttons.info') }}
           </a>
         </li>
+        <li v-if="canPreview(child.data.file)">
+          <a class="pointer" @click.prevent="preview(child.data.file)">
+            <i class="material-icons context-icon">picture_as_pdf</i> {{$t('buttons.preview')}}
+          </a>
+        </li>
         <li v-if="!child.data.file.isDir">
           <a class="pointer" @click.prevent="download(child.data.file)">
             <i class="material-icons context-icon">file_download</i> {{$t('buttons.download')}}
@@ -90,11 +95,6 @@
         <li>
           <a class="pointer" @click.prevent="deleteFile(child.data.file)">
             <i class="material-icons context-icon">delete</i> {{$t(deleteButtonTitle)}}
-          </a>
-        </li>
-        <li v-if="isPdf(child.data.file)">
-          <a class="pointer" @click.prevent="preview(child.data.file)">
-            <i class="material-icons context-icon">picture_as_pdf</i> {{$t('buttons.pdfPreview')}}
           </a>
         </li>
         <li v-if="!shares">
@@ -135,6 +135,7 @@ import Item from './ListingItem'
 import css from '@/utils/css'
 import { files as api } from '@/api'
 import buttons from '@/utils/buttons'
+import { checkMimeType, checkDocumentPreview } from '@/utils/constants';
 import { checkConflict } from '@/utils/files'
 
 export default {
@@ -314,6 +315,7 @@ export default {
       }
     },
     dragEnter () {
+      if (this.shares) return;
       // When the user starts dragging an item, put every
       // file on the listing with 50% opacity.
       let items = document.getElementsByClassName('item')
@@ -323,9 +325,11 @@ export default {
       })
     },
     dragEnd () {
+      if (this.shares) return;
       this.resetOpacity()
     },
     drop: function (event) {
+      if (this.shares) return;
       event.preventDefault()
       this.resetOpacity()
 
@@ -495,11 +499,20 @@ export default {
       this.addSelected(file.index);
       this.$store.commit('showHover', 'rename');
     },
-    isPdf: function (file) {
-      return file && file.type == 'application/pdf';
+    canPreview: function (file) {
+      return checkMimeType(file.type) || checkDocumentPreview(file.type);
     },
     preview: function (file) {
-      api.preview(file.id);
+      if (checkMimeType(file.type)) {
+        this.$store.commit('pushFolder', { id: file.id, name: file.name });
+        this.$store.commit('setReload', true);
+
+        return;
+      }
+
+      if (checkDocumentPreview(file.type)) {
+        api.preview(file.id);
+      }
     }
   }
 }

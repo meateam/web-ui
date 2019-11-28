@@ -9,6 +9,7 @@ const noAuth = false;
 const loginPage = false;
 const folderContentType = "application/vnd.drive.folder";
 const mediaTypes = ['image', 'video', 'audio', 'blob'];
+const documentTypes = ['application/pdf', 'text'];
 const config = {
 	apmServerUrl: '',
 	authUrl: '',
@@ -19,6 +20,16 @@ const config = {
 export function checkMimeType(type) {
 	for (let k = 0; k < mediaTypes.length; k++) {
 		if (type.startsWith(mediaTypes[k])) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+export function checkDocumentPreview(type) {
+	for (let k = 0; k < documentTypes.length; k++) {
+		if (type.startsWith(documentTypes[k])) {
 			return true;
 		}
 	}
