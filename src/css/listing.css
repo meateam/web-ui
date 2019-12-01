@@ -215,6 +215,11 @@ a.pointer {
   margin-right: 3em;
 }
 
+#listing.list .item.header p {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 #listing.list .header span {
   vertical-align: middle;
 }
