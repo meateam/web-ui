@@ -62,8 +62,10 @@
     "multipleSelectionEnabled": "בחירה מרובה פועלת",
     "name": "שם",
     "size": "גודל",
+    "owner": "בעלים",
     "sortByName": "מיון לפי שם",
     "sortBySize": "מיון לפי גודל",
+    "sortByOwner": "מיון לפי בעלים",
     "sortByLastModified": "מיון לפי זמן שינוי אחרון"
   },
   "help": {

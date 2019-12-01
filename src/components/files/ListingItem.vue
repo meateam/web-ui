@@ -26,9 +26,12 @@
       <p v-if="isDir" class="size" data-order="-1">&mdash;</p>
       <p v-else :class="direction" class="size" :data-order="humanSize()">{{ humanSize() }}</p>
 
+      <p class="owner">{{ owner.fullName }}</p>
+
       <p class="modified">
         <time :datetime="modified">{{ humanTime() }}</time>
       </p>
+
     </div>
   </div>
 </template>
@@ -47,7 +50,7 @@ export default {
       touches: 0
     };
   },
-  props: ['name', 'id', 'isDir', 'type', 'size', 'modified', 'index'],
+  props: ['name', 'id', 'isDir', 'type', 'size', 'modified', 'index', 'owner'],
   computed: {
     ...mapState(['selected', 'req']),
     ...mapGetters(['selectedCount', 'direction']),
