@@ -8,7 +8,8 @@
       <div class="user-role-select">
         <ul id="user-role-list">
           <li>
-            <autocomplete :search="search"
+            <autocomplete 
+              :search="search"
               :autoSelect="true"
               @submit="saveUser"
               :get-result-value="getResultValue"
@@ -57,9 +58,25 @@ import { share as shareApi, users as usersApi } from '@/api'
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import { minAutoComplete } from '@/utils/constants'
 import EditPermissionList from '../common/EditPermissionList'
+
 import moment from 'moment'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
 
+// An async-debouncer function. 
+// The 'func' is called after the requested interval
+function asyncDebouncer(func, interval) {
+  let timer = null;
+
+  return (...args) => {
+    clearTimeout(timer);
+    return new Promise((resolve) => {
+      timer = setTimeout(
+        () => resolve(func(...args)),
+        interval,
+      );
+    });
+  };
+}
 
 export default {
   name: 'share',
@@ -69,6 +86,7 @@ export default {
   },
   data: function () {
     return {
+      debounce: asyncDebouncer(this.searchWait, 600),
       role: 'READ',
       searchText: '',
       user:''
@@ -103,11 +121,18 @@ export default {
         this.$showError(e)
       }
     },
+    // The search function, uses an async debouncer with the searchWait function
     async search(input) {
       if (input.length < minAutoComplete) {
-         return [];
+        return [];
       }
-      const res = await usersApi.searchUserByName(input);
+      this.input = input;
+      return await this.debounce();
+    },
+    // The function wich searches for the autocomplete,
+    // called after the debouncer interval ends
+    async searchWait() {
+      const res = await usersApi.searchUserByName(this.input);
       const users = res.data.users;
       if (users) {
         return users;
