@@ -226,9 +226,9 @@
     "pdf": "PDF",
     "types": "Types",
     "video": "Video",
-    "search": "Search...",
-    "typeToSearch": "Type to search...",
-    "pressToSearch": "Press enter to search..."
+    "search": "חיפוש",
+    "typeToSearch": "הקלד כדי לחפש",
+    "pressToSearch": "לחץ ENTER כדי לחפש"
   },
   "languages": {
     "ar": "العربية",
