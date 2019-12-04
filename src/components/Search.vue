@@ -43,7 +43,7 @@ export default {
       return result.name;
     },
     humanSize: function(size) {
-      return filesize(parseInt(size));
+      return size ? filesize(parseInt(size)) : filesize(parseInt(0));
     },
     humanTime: function(modified) {
       return moment(modified).fromNow();
