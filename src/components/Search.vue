@@ -1,7 +1,7 @@
 <template>
   <autocomplete
     :search="search"
-    :autoSelect="true"
+    :autoSelect="false"
     :get-result-value="getResultValue"
     :placeholder="$t('search.typeToSearch')"
   >
