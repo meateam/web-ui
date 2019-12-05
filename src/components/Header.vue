@@ -5,7 +5,7 @@
         <i class="material-icons">menu</i>
       </button>
       <img @click="redirectToMain" :src="logoURL" :class="direction" alt="File Browser">
-      <search v-if="isLogged"></search>
+      <search class="search" :class="direction" v-if="isLogged"></search>
     </div>
     <div>
       <template v-if="isLogged">
@@ -195,3 +195,14 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .search.ltr {
+    margin-left: 13em;
+    width: 75%;
+  }
+
+  .search.rtl {
+    margin-right: 13em;
+    width: 75%;
+  }
+</style>

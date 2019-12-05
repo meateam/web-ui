@@ -88,6 +88,12 @@ export function preview(file) {
 	return `${baseURL}/api/files/${file}?alt=media&preview`;
 }
 
+export async function getAncestors(file) {
+	const ancestors = await axios.get(`${baseURL}/api/files/${file}/ancestors`, { headers: {Authorization: 'Bearer ' + store.state.jwt} });
+
+	return ancestors ? ancestors.data : [];
+}
+
 export async function upload(url, file, headers, onupload) {
 	return new Promise((resolve, reject) => {
 		let request = new XMLHttpRequest();
