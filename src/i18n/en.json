@@ -62,8 +62,10 @@
     "multipleSelectionEnabled": "Multiple selection enabled",
     "name": "Name",
     "size": "Size",
+    "owner": "Owner",
     "sortByName": "Sort by name",
     "sortBySize": "Sort by size",
+    "sortByOwner": "Sort by owner",
     "sortByLastModified": "Sort by last modified"
   },
   "help": {
