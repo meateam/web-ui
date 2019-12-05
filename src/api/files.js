@@ -85,7 +85,7 @@ export function download(files) {
 }
 
 export function preview(file) {
-	window.open(`${baseURL}/api/files/${file}?alt=media&preview`, "_blank");
+	return `${baseURL}/api/files/${file}?alt=media&preview`;
 }
 
 export async function upload(url, file, headers, onupload) {

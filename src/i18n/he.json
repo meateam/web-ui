@@ -64,7 +64,8 @@
     "size": "גודל",
     "sortByName": "מיון לפי שם",
     "sortBySize": "מיון לפי גודל",
-    "sortByLastModified": "מיון לפי זמן שינוי אחרון"
+    "sortByLastModified": "מיון לפי זמן שינוי אחרון",
+    "cannotPreview": "לא ניתן להציג פריט זה"
   },
   "help": {
     "click": "select file or directory",

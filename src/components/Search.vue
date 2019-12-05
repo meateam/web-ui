@@ -6,7 +6,7 @@
     :placeholder="$t('search.typeToSearch')"
   >
     <template v-slot:result="{ result, props }">
-      <li v-bind="props" class="search-result">
+      <li v-bind="props" class="search-result" @click="onClick(result)">
         <div>
           <div class="result-name">{{ result.name }}</div>
           <span class="result-modified">{{ $t('files.lastModified') }} {{humanTime(result.updatedAt)}}</span>
@@ -21,7 +21,8 @@
 import moment from 'moment';
 import filesize from 'filesize';
 import Autocomplete from "@trevoreyre/autocomplete-vue";
-import { search } from "@/api";
+import { search, files as filesApi } from "@/api";
+import { checkMimeType, checkDocumentPreview } from '@/utils/constants';
 
 import "@trevoreyre/autocomplete-vue/dist/style.css";
 
@@ -31,6 +32,12 @@ export default {
     Autocomplete
   },
   methods: {
+    onClick(file) {
+      this.$store.commit('pushFolder', { id: file.id, name: file.name });
+      this.$store.commit('setReload', true);
+      
+      return;
+    },
     async search(input) {
       if (!input) return [];
   

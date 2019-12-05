@@ -64,7 +64,8 @@
     "size": "Size",
     "sortByName": "Sort by name",
     "sortBySize": "Sort by size",
-    "sortByLastModified": "Sort by last modified"
+    "sortByLastModified": "Sort by last modified",
+    "cannotPreview": "Can't preview this item"
   },
   "help": {
     "click": "select file or directory",
