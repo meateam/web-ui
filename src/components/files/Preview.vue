@@ -165,7 +165,7 @@ export default {
     },
     key(event) {
       event.preventDefault();
-
+      if(event.key === "Escape") this.back();
       if (event.which === 13 || event.which === 39) {
         // right arrow
         if (this.hasNext) this.next();
