@@ -4,6 +4,7 @@
     :autoSelect="false"
     :get-result-value="getResultValue"
     :placeholder="$t('search.typeToSearch')"
+    @submit="submit"
   >
     <template v-slot:result="{ result, props }">
       <li v-bind="props" class="search-result" @click="onClick(result)">
@@ -28,10 +29,10 @@
 <script>
 import moment from 'moment';
 import filesize from 'filesize';
-import {mapGetters} from 'vuex';
+import {mapGetters, mapMutations} from 'vuex';
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import { search, files as filesApi } from "@/api";
-import { checkMimeType, checkDocumentPreview } from '@/utils/constants';
+import { checkMimeType, checkDocumentPreview, folderContentType } from '@/utils/constants';
 
 import "@trevoreyre/autocomplete-vue/dist/style.css";
 
@@ -40,10 +41,16 @@ export default {
   components: {
     Autocomplete
   },
+  data: function () {
+    return {
+      results: [],
+    };
+  },
   computed: {
     ...mapGetters(['direction'])
   },
   methods: {
+    ...mapMutations(['setLoading']),
     async onClick(file) {
       const ancestors = await filesApi.getAncestors(file.id);
       this.$store.commit('changeFolder', '');
@@ -58,10 +65,18 @@ export default {
       return;
     },
     async search(input) {
-      if (!input) return [];
+      if (!input) {
+        this.results = [];
+        return [];
+      }
   
       const files = await search(input);
-      if (!files) return [];
+      if (!files) {
+        this.results = [];
+        return [];
+      }
+
+      this.results = files;
 
       return files;
     },
@@ -75,11 +90,25 @@ export default {
       return moment(modified).fromNow();
     },
     icon(file) {
-      if (file.type === 'application/vnd.drive.folder') return 'folder';
+      if (file.type === folderContentType) return 'folder';
       if (file.type.startsWith('image')) return 'insert_photo';
       if (file.type.startsWith('audio')) return 'volume_up';
       if (file.type.startsWith('video')) return 'movie';
       return 'insert_drive_file';
+    },
+    async submit() {
+      this.$store.commit("setReload", false);
+      this.$store.commit("resetSelected");
+      this.$store.commit("multiple", false);
+      this.$store.commit("closeHovers");
+
+      this.setLoading(true);
+      const data = filesApi.parseData({items: this.results, isDir: true});
+
+      this.$store.commit('changeFolder', '');
+      this.$store.commit("updateRequest", data);
+
+      this.setLoading(false);
     },
   }
 };

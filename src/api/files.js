@@ -322,7 +322,7 @@ export async function getSharedWithMe() {
 	return parseData(data);
 }
 
-function parseData(data) {
+export function parseData(data) {
 	if (!data || !data.items) return data;
 	let numDirs = 0;
 	let numFiles = 0;
