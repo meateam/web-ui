@@ -52,7 +52,7 @@
 
       <div v-show="showOverlay" @click="resetPrompts" class="overlay"></div>
     </div>
-    <img src="./giphy.gif">
+    <img src="/img/icons/krypton-gif.gif">
   </header>
 </template>
 
