@@ -173,16 +173,10 @@ export default {
       }
     },
     open: function() {
-      if (this.isDir || checkMimeType(this.type)) {
-        this.$store.commit('pushFolder', { id: this.id, name: this.name });
-        this.$store.commit('setReload', true);
-        
-        return;
-      }
-
-      if (checkDocumentPreview(this.type)) {
-        api.preview(this.id);
-      }
+      this.$store.commit('pushFolder', { id: this.id, name: this.name });
+      this.$store.commit('setReload', true);
+      
+      return;
     },
     emitContextMenu: function(event) {
       this.$emit("contextmenu", event);

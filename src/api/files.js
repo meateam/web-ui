@@ -85,7 +85,13 @@ export function download(files) {
 }
 
 export function preview(file) {
-	window.open(`${baseURL}/api/files/${file}?alt=media&preview`, "_blank");
+	return `${baseURL}/api/files/${file}?alt=media&preview`;
+}
+
+export async function getAncestors(file) {
+	const ancestors = await axios.get(`${baseURL}/api/files/${file}/ancestors`, { headers: {Authorization: 'Bearer ' + store.state.jwt} });
+
+	return ancestors ? ancestors.data : [];
 }
 
 export async function upload(url, file, headers, onupload) {
@@ -316,7 +322,7 @@ export async function getSharedWithMe() {
 	return parseData(data);
 }
 
-function parseData(data) {
+export function parseData(data) {
 	if (!data || !data.items) return data;
 	let numDirs = 0;
 	let numFiles = 0;

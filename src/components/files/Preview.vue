@@ -54,9 +54,10 @@
         >download it</a>
         and watch it with your favorite video player!
       </video>
-      <object v-else-if="req.extension == '.pdf'" class="pdf" :data="raw"></object>
-      <a v-else-if="req.type == 'blob'" :href="download">
+      <iframe v-else-if="isIframe" class="pdf" :src="iframe"></iframe>
+      <a v-else :href="download">
         <h2 class="message">
+          {{$t('files.cannotPreview')}}<br/><br/>
           {{ $t('buttons.download') }}
           <i class="material-icons">file_download</i>
         </h2>
@@ -67,7 +68,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { baseURL, checkMimeType } from '@/utils/constants';
+import { baseURL, checkMimeType, checkDocumentPreview } from '@/utils/constants';
 import { files as api } from '@/api';
 import InfoButton from '@/components/buttons/Info';
 import DeleteButton from '@/components/buttons/Delete';
@@ -103,6 +104,12 @@ export default {
     },
     raw() {
       return `${this.download}&inline=true`;
+    },
+    iframe() {
+      return api.preview(this.req.id);
+    },
+    isIframe() {
+      return checkDocumentPreview(this.req.type);
     }
   },
   async mounted() {
@@ -158,7 +165,7 @@ export default {
     },
     key(event) {
       event.preventDefault();
-
+      if(event.key === "Escape") this.back();
       if (event.which === 13 || event.which === 39) {
         // right arrow
         if (this.hasNext) this.next();
@@ -174,14 +181,14 @@ export default {
         }
 
         for (let j = i - 1; j >= 0; j--) {
-          if (checkMimeType(items[j].type)) {
+          if (!items[j].isDir) {
             this.previousLink = { id: items[j].id, name: items[j].name };
             break;
           }
         }
 
         for (let j = i + 1; j < items.length; j++) {
-          if (checkMimeType(items[j].type)) {
+          if (!items[j].isDir) {
             this.nextLink = { id: items[j].id, name: items[j].name };
             break;
           }

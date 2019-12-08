@@ -4,14 +4,14 @@
       <button @click="openSidebar" :aria-label="$t('buttons.toggleSidebar')" :title="$t('buttons.toggleSidebar')" class="action">
         <i class="material-icons">menu</i>
       </button>
-      <img @click="redirectToMain" :src="logoURL" alt="File Browser">
-      <!-- <search v-if="isLogged"></search> -->
+      <img @click="redirectToMain" :src="logoURL" :class="direction" alt="File Browser">
+      <search class="search" :class="direction" v-if="isLogged"></search>
     </div>
     <div>
       <template v-if="isLogged">
-        <!-- <button @click="openSearch" :aria-label="$t('buttons.search')" :title="$t('buttons.search')" class="search-button action">
+        <button @click="openSearch" :aria-label="$t('buttons.search')" :title="$t('buttons.search')" class="search-button action">
           <i class="material-icons">search</i>
-        </button> -->
+        </button>
 
         <button v-show="showSaveButton" :aria-label="$t('buttons.save')" :title="$t('buttons.save')" class="action" id="save-button">
           <i class="material-icons">save</i>
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-// import Search from './Search'
+import Search from './Search'
 import InfoButton from './buttons/Info'
 import DeleteButton from './buttons/Delete'
 import RenameButton from './buttons/Rename'
@@ -76,7 +76,7 @@ import buttons from '@/utils/buttons'
 export default {
   name: 'header-layout',
   components: {
-    // Search,
+    Search,
     InfoButton,
     DeleteButton,
     ShareButton,
@@ -114,6 +114,7 @@ export default {
       'isLogged',
       'shares',
       'currentFolder',
+      'direction'
     ]),
     ...mapState([
       'req',
@@ -194,3 +195,14 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .search.ltr {
+    margin-left: 13em;
+    width: 75%;
+  }
+
+  .search.rtl {
+    margin-right: 13em;
+    width: 75%;
+  }
+</style>

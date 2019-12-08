@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div id="breadcrumbs">
+    <div v-if="isSearch" id="breadcrumbs">
+      {{ $t('search.results') }}
+    </div>
+    <div v-else id="breadcrumbs">
       <div @click="onBreadcrumbsClick('')" :aria-label="$t('files.home')" :title="$t('files.home')">
         <i class="material-icons">home</i>
       </div>
@@ -49,7 +52,7 @@ export default {
     Preview
   },
   computed: {
-    ...mapGetters(["selectedCount", "isListing", "isEditor", "isFiles", "isActiveDialog", "shares", "direction"]),
+    ...mapGetters(["selectedCount", "isListing", "isEditor", "isFiles", "isActiveDialog", "shares", "direction", "isSearch"]),
     ...mapState(["req", "user", "reload", "multiple", "loading", "path"]),
     isPreview() {
       return !this.loading && !this.isListing && !this.isEditor;

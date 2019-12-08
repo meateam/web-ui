@@ -1,5 +1,12 @@
 version: '2.1'
 services:
+  web-ui:
+    image: web-ui
+    build: .
+    ports:
+      - '80:80'
+    depends_on:
+      - api-gateway
   api-gateway:
     image: 'bluehub.azurecr.io/meateam/api-gateway:develop'
     environment:
@@ -10,6 +17,8 @@ services:
       GW_FILE_SERVICE: 'file-service:8080'
       GW_PERMISSION_SERVICE: 'permission-service:8080'
       GW_USER_SERVICE: 'user-service:8080'
+      GW_SEARCH_SERVICE: 'search-service:8080'
+      GW_GOTENBERG_SERVICE: 'http://gotenberg-service:8080'
       GW_ALLOW_ORIGINS: 'http://localhost*'
       GW_SUPPORT_LINK: 'https://open.rocket.chat/home'
       GW_CHROME_DOWNLOAD_URL: 'https://google.com/chrome/'
@@ -34,6 +43,8 @@ services:
       - file-service
       - authentication-service
       - permission-service
+      - search-service
+      - gotenberg-service
   minio:
     image: minio/minio
     volumes:
@@ -191,10 +202,51 @@ services:
       ELASTIC_APM_METRICS_INTERVAL: '10s'
     depends_on:
       - mongo
-  web-ui:
-    image: web-ui
-    build: .
+  search-service:
+    image: search-service:latest
+    environment:
+      SS_PORT: 8080
+      SS_HOST_NAME: search-service
+      SS_ELASTICSEARCH_URL: http://elasticsearch:9200
+      SS_ELASTICSEARCH_INDEX: files
+      LOG_INDEX: kdrive
+      LOG_LEVEL: debug
+      SS_HEALTH_CHECK_INTERVAL: 5
+      ELASTIC_APM_SERVER_URL: 'http://localhost:8200'
+      ELASTIC_APM_SERVICE_NAME: 'search-service'
+      ELASTIC_APM_SERVICE_VERSION: '0.1'
+      ELASTIC_APM_ENVIRONMENT: 'development'
+      ELASTIC_APM_ACTIVE: 'true'
+      ELASTIC_APM_CAPTURE_BODY: 'all'
+      ELASTIC_APM_METRICS_INTERVAL: '10s'
+      SS_ELASTIC_APM_IGNORE_URLS: '/grpc.health.v1.Health/Check'
     ports:
-      - '80:80'
+      - 8088:8080
     depends_on:
-      - api-gateway
+      - elasticsearch
+  gotenberg-service:
+    image: thecodingmachine/gotenberg:6
+    environment:
+      DEFAULT_LISTEN_PORT: 8080
+      DISABLE_GOOGLE_CHROME: 1
+    tmpfs:
+      - /tmp
+      - /gotenberg/tmp
+    ports:
+      - 8089:8080
+  elasticsearch:
+    image: sebp/elk
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 5601:5601
+      - 5044:5044
+
+volumes:
+  es:
+    driver: local

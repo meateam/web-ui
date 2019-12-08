@@ -29,6 +29,10 @@ header img {
   cursor: pointer;
 }
 
+header img.rtl {
+  margin-left: 1em;
+}
+
 header>div:first-child>.action {
   display: none;
 }

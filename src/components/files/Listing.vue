@@ -141,6 +141,11 @@ import { checkConflict } from '@/utils/files'
 export default {
   name: 'listing',
   components: { Item, VueContext },
+  watch: {
+    req: function(val, oldVal) {
+      this.refreshItems();
+    }
+  },
   data: function () {
     return {
       show: 50,
