@@ -9,7 +9,18 @@ const noAuth = false;
 const loginPage = false;
 const folderContentType = "application/vnd.drive.folder";
 const mediaTypes = ['image', 'video', 'audio', 'blob'];
-const documentTypes = ['application/pdf', 'text'];
+const documentTypes = [
+	'application/pdf',
+	'text',
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+	'application/vnd.ms-excel',
+	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+	'application/vnd.ms-powerpoint',
+	'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+	'application/rtf',
+	'application/vnd.oasis.opendocument.text',
+	'application/vnd.oasis.opendocument.presentation',
+];
 const config = {
 	apmServerUrl: '',
 	authUrl: '',

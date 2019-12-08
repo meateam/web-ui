@@ -229,7 +229,8 @@
     "video": "Video",
     "search": "Search",
     "typeToSearch": "Type to search...",
-    "pressToSearch": "Press enter to search..."
+    "pressToSearch": "Press enter to search...",
+    "results": "Search Results"
   },
   "languages": {
     "ar": "العربية",

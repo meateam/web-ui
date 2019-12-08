@@ -86,18 +86,22 @@ const mutations = {
   pushFolder: (state, value) => {
     if (typeof value !== 'object') return;
     if (!value.id || !value.name) return;
+    state.search = false;
     state.path.push(value);
   },
   changeFolder: (state, value) => {
     let index = value ? state.path.findIndex(folder => folder.id === value) : 0;
+    state.search = false;
     state.path = state.path.slice(0, index + 1);
   },
   renameFolder: (state, value) => {
     let index = value ? state.path.findIndex(folder => folder.id === value.id) : 0;
+    state.search = false;
     state.path[index].name = value.name;
   },
   setPath: (state, value) => {
     if (!value) return;
+    state.search = false;
     state.path = value;
   },
   setQuota: (state, value) => {
@@ -107,7 +111,10 @@ const mutations = {
   },
   setShares: (state, value) => {
     state.shares = value;
-  }
+  },
+  activateSearch: (state) => {
+    state.search = true;
+  },
 }
 
 export default mutations

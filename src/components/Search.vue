@@ -104,9 +104,10 @@ export default {
 
       this.setLoading(true);
       const data = filesApi.parseData({items: this.results, isDir: true});
-
+      
       this.$store.commit('changeFolder', '');
       this.$store.commit("updateRequest", data);
+      this.$store.commit("activateSearch");
 
       this.setLoading(false);
     },
