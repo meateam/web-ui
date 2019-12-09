@@ -26,8 +26,7 @@
 </template>
 <script>
 import { files, users } from "@/api";
-
-const ownerRole = 1;
+import { Roles } from '@/utils/constants';
 
 export default {
     name: "edit-permission-list",
@@ -51,7 +50,7 @@ export default {
       let ownerID = '';
       let promises = [];
       for (let i = 0; i < permissions.length; i++) {
-        if (permissions[i].role === ownerRole) {
+        if (permissions[i].role === Roles.owner) {
           ownerID = permissions[i].userID;
         }
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { baseURL, folderContentType } from '@/utils/constants'
+import { baseURL, folderContentType, Roles } from '@/utils/constants'
 import store from '@/store'
 
 import { fetchURL, removePrefix } from './utils'
@@ -26,6 +26,7 @@ export async function fetch(url) {
 		}
 	} else {
 		data.isDir = true;
+		data.role = Roles.owner;
 		// get files in root folder
 		const res = await fetchURL(`/api/files`, {});
 		if (res.status === 200) {
@@ -317,7 +318,8 @@ export async function getPermissions(id) {
 
 export async function getSharedWithMe() {
 	const response = await axios.get(`${baseURL}/api/files?shares`, { headers: {Authorization: 'Bearer ' + store.state.jwt} });
-	const data = { items: response.data, isDir: true };
+
+	const data = { items: response.data, isDir: true, role: Roles.read };
 	
 	return parseData(data);
 }

@@ -255,6 +255,7 @@
   "role": {
     "input": "Role",
     "read": "Read",
+    "write": "Write",
     "owner": "Owner",
     "permission": "user {user} has {role} permission"
   },

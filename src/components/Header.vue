@@ -69,7 +69,7 @@ import ShareButton from './buttons/Share'
 import UserButton from './buttons/User';
 import SelectButton from './buttons/Select';
 import {mapGetters, mapState} from 'vuex'
-import { logoURL } from '@/utils/constants'
+import { logoURL, UploadRole } from '@/utils/constants'
 import * as api from '@/api'
 import buttons from '@/utils/buttons'
 
@@ -129,7 +129,7 @@ export default {
       return this.width <= 736
     },
     showUpload () {
-      return this.isListing && !this.shares && this.selectedCount === 0
+      return this.isListing && UploadRole(this.req.role) && this.selectedCount === 0
     },
     showSaveButton () {
       return this.isEditor
@@ -189,7 +189,6 @@ export default {
     },
     redirectToMain() {
       this.$router.push({path: '/files'});
-      this.$store.commit("setShares", false);
       this.$store.commit('changeFolder', '');
       this.$store.commit('setReload', true);
     }

@@ -28,6 +28,44 @@ const config = {
 	supportLink: ''
 };
 
+export const Roles = {
+	owner: "OWNER",
+	write: "WRITE",
+	read: "READ"
+};
+
+export function DownloadRole(role) {
+	return role == Roles.read;
+}
+
+export function PreviewRole(role) {
+	return role == Roles.read;
+}
+
+export function InfoRole(role) {
+	return role == Roles.read;
+}
+
+export function UploadRole(role) {
+	return role == Roles.write || role == Roles.owner;
+}
+
+export function DeleteRole(role) {
+	return role == Roles.write || role == Roles.owner;
+}
+
+export function ShareRole(role) {
+	return role == Roles.write || role == Roles.owner;
+}
+
+export function RenameRole(role) {
+	return role == Roles.write || role == Roles.owner;
+}
+
+export function MoveRole(role) {
+	return role == Roles.write || role == Roles.owner;
+}
+
 export function checkMimeType(type) {
 	for (let k = 0; k < mediaTypes.length; k++) {
 		if (type.startsWith(mediaTypes[k])) {

@@ -255,6 +255,7 @@
   "role": {
     "input": "הרשאה",
     "read": "קריאה",
+    "write": "כתיבה",
     "owner": "בעלים",
     "permission": "למשתמש {user} יש הרשאות {role}"
   },
