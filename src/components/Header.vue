@@ -189,6 +189,7 @@ export default {
     },
     redirectToMain() {
       this.$router.push({path: '/files'});
+      this.$store.commit("setShares", false);
       this.$store.commit('changeFolder', '');
       this.$store.commit('setReload', true);
     }
