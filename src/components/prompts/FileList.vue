@@ -88,7 +88,7 @@ export default {
       }
 
       // If this folder is empty, finish here.
-      if (req.items === null) return
+      if (!req.items) return
 
       // Otherwise we add every directory to the
       // move options.

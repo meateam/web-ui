@@ -47,9 +47,14 @@ export default {
       buttons.loading('move')
       let items = []
 
-      for (let item of this.selected) {
-        items.push(this.req.items[item].id)
+      if (this.selected.length > 0) {
+        for (let item of this.selected) {
+          items.push(this.req.items[item].id)
+        }
+      } else {
+        items.push(this.req.id);
       }
+
 
       try {
         let failed = await api.move(items, this.dest.dest.id);

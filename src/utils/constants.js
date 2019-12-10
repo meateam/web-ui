@@ -35,15 +35,15 @@ export const Roles = {
 };
 
 export function DownloadRole(role) {
-	return role == Roles.read;
+	return Object.values(Roles).findIndex(r => r === role) >= 0;
 }
 
 export function PreviewRole(role) {
-	return role == Roles.read;
+	return Object.values(Roles).findIndex(r => r === role) >= 0;
 }
 
 export function InfoRole(role) {
-	return role == Roles.read;
+	return Object.values(Roles).findIndex(r => r === role) >= 0;
 }
 
 export function UploadRole(role) {
