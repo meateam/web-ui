@@ -10,7 +10,7 @@
         <i class="material-icons">folder_shared</i>
         <span>{{ $t('sidebar.sharedFiles') }}</span>
       </div>
-      <div v-if="!shares">
+      <div v-if="showCreateUpload">
         <button @click="$store.commit('showHover', 'newDir')" class="action" :aria-label="$t('sidebar.newFolder')" :title="$t('sidebar.newFolder')">
           <i class="material-icons">create_new_folder</i>
           <span>{{ $t('sidebar.newFolder') }}</span>
@@ -36,7 +36,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import * as auth from '@/utils/auth'
-import { signup, disableExternal, noAuth, config } from '@/utils/constants'
+import { signup, disableExternal, noAuth, config, UploadRole } from '@/utils/constants'
 import Quota from './quota/Quota'
 
 export default {
@@ -45,7 +45,7 @@ export default {
     Quota
   },
   computed: {
-    ...mapState([ 'user', 'quota' ]),
+    ...mapState([ 'req', 'user', 'quota' ]),
     ...mapGetters([ 'isLogged', 'shares' ]),
     active () {
       return this.$store.state.show === 'sidebar'
@@ -56,6 +56,9 @@ export default {
     noAuth: () => noAuth,
     nameExists: function () {
        return this.user.firstName && this.user.lastName
+    },
+    showCreateUpload() {
+      return UploadRole(this.req.role);
     }
   },
   methods: {

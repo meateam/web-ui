@@ -32,7 +32,7 @@ import filesize from 'filesize';
 import {mapGetters, mapMutations} from 'vuex';
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import { search, files as filesApi } from "@/api";
-import { checkMimeType, checkDocumentPreview, folderContentType } from '@/utils/constants';
+import { folderContentType } from '@/utils/constants';
 
 import "@trevoreyre/autocomplete-vue/dist/style.css";
 
@@ -47,7 +47,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['direction'])
+    ...mapGetters(['direction', 'userID'])
   },
   methods: {
     ...mapMutations(['setLoading']),
@@ -61,6 +61,7 @@ export default {
 
       this.$store.commit('pushFolder', { id: file.id, name: file.name });
       this.$store.commit('setReload', true);
+      this.$store.commit('setShares', file.shared);
       
       return;
     },

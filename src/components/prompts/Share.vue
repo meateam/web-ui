@@ -80,7 +80,7 @@ export default {
     ...mapState([ 'req', 'selected', 'selectedCount' ]),
     ...mapGetters([ 'isListing', 'direction' ]),
     selectedItem() {
-      return this.req.items[this.selected[0]];
+      return this.req.items ? this.req.items[this.selected[0]] : this.req;
     }
   },
   async beforeMount () {
@@ -99,7 +99,7 @@ export default {
       
       try {
         await shareApi.create(this.selectedItem.id, this.user.id, this.role);
-        this.$showSuccess(`successfully shared with ${this.getResultValue(this.user)}`);
+        this.$showSuccess(this.$t('success.shared', {user: this.getResultValue(this.user)}));
         this.$refs.editPermissionList.addUser(this.user);
       } catch (e) {
         this.$showError(e)

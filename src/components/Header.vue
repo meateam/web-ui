@@ -69,7 +69,7 @@ import ShareButton from './buttons/Share'
 import UserButton from './buttons/User';
 import SelectButton from './buttons/Select';
 import {mapGetters, mapState} from 'vuex'
-import { logoURL, UploadRole } from '@/utils/constants'
+import { logoURL, UploadRole, DownloadRole, DeleteRole, RenameRole, ShareRole, MoveRole } from '@/utils/constants'
 import * as api from '@/api'
 import buttons from '@/utils/buttons'
 
@@ -136,27 +136,27 @@ export default {
     },
     showDownloadButton () {
       // Show only if one file selected and the selected file is not a folder.
-      return this.isFiles && this.selectedCount === 1 && ! this.req.items[this.selected[0]].isDir;
+      return this.isFiles && this.selectedCount === 1 && ! this.req.items[this.selected[0]].isDir && DownloadRole(this.req.items[this.selected[0]].role);
     },
     showDeleteButton () {
       return this.isFiles && (this.isListing
-        ? (this.selectedCount !== 0)
-        : true) && ((this.shares && this.currentFolder.id == '') || !this.shares)
+        ? (this.selectedCount !== 0 && DeleteRole(this.req.items[this.selected[0]].role))
+        : this.req.items && DeleteRole(this.req.items[this.selected[0]].role))
     },
     showRenameButton () {
       return this.isFiles && (this.isListing
-        ? (this.selectedCount === 1)
-        : true) && !this.shares
+        ? (this.selectedCount === 1 && RenameRole(this.req.items[this.selected[0]].role))
+        : this.req.items && RenameRole(this.req.items[this.selected[0]].role))
     },
     showShareButton () {
       return this.isFiles && (this.isListing
-        ? (this.selectedCount === 1)
-        : true) && !this.shares
+        ? (this.selectedCount === 1 && ShareRole(this.req.items[this.selected[0]].role))
+        : this.req.items && ShareRole(this.req.items[this.selected[0]].role))
     },
     showMoveButton () {
       return this.isFiles && (this.isListing
-        ? (this.selectedCount > 0)
-        : true) && !this.shares
+        ? (this.selectedCount > 0 && MoveRole(this.req.items[this.selected[0]].role))
+        : this.req.items && MoveRole(this.req.items[this.selected[0]].role))
     },
     showCopyButton () {
       return this.isFiles && (this.isListing
