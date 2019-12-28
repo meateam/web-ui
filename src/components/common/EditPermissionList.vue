@@ -15,7 +15,7 @@
         </span>
       </template>
       <span
-        v-else
+        v-else-if="isDirectPermission(user)"
         class="delete-permission"
         @click="deletePermission(user)"
         :aria-label="$t('buttons.deletePermission')"
@@ -36,7 +36,8 @@ export default {
     data: function() {
     return {
       users: [],
-      owner: {}
+      owner: {},
+      userPermissions: {},
     };
   },
   async mounted() {
@@ -80,17 +81,26 @@ export default {
 
             return true;
           });
-          // eslint-disable-next-line
+        this.users.forEach(user => {
+          const isDirectPermission = permissions.find(e => e.userID == user.id).fileID == this.id;
+          this.userPermissions[user.id] = isDirectPermission;
+        });
+        // eslint-disable-next-line
       } catch (err) {}
     },
     addUser: function(user) {
       if (!user) return;
+      
       if (!this.users.find(currUser => currUser.id === user.id)) {
         this.users.push(user);
+        this.userPermissions[user.id] = true;
       }
     },
     isUserFileOwner(user) {
       return (this.req.items ? this.req.items[this.selected[0]].ownerId : this.req.ownerId) == user.id;
+    },
+    isDirectPermission(user) {
+      return this.userPermissions[user.id];
     }
   }
 }
