@@ -47,18 +47,25 @@ export default {
           return
         }
 
+        let promises = [];
         if (this.selectedCount === 0) {
-          return
+          promises.push(api.remove(this.req.id));
+        } else {
+          for (let index of this.selected) {
+            promises.push(api.remove(this.req.items[index].id));
+          }
         }
 
-        let promises = []
-        for (let index of this.selected) {
-          promises.push(api.remove(this.req.items[index].id));
+        await Promise.all(promises);
+        buttons.success('delete');
+        if (this.selectedCount === 0) {
+          const currentIndex = this.path.findIndex(path => path.id === this.req.id);
+          this.$store.commit(
+            'changeFolder',
+            this.path[currentIndex > 0 ? currentIndex - 1 : 0].id
+          );
         }
-
-        await Promise.all(promises)
-        buttons.success('delete')
-        this.$store.commit('setReload', true)
+        this.$store.commit('setReload', true);
       } catch (e) {
         buttons.done('delete')
         this.$showError(e)

@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { files } from '@/api'
 
 const backwards = '..';
@@ -39,6 +39,7 @@ export default {
   },
   computed: {
     ...mapState([ 'req', 'path' ]),
+    ...mapGetters(['isListing', 'selectedCount']),
     nav () {
       return decodeURIComponent(this.current.name || '/')
     }
@@ -51,8 +52,11 @@ export default {
     // If we're showing this on a listing,
     // we can use the current request object
     // to fill the move options.
-    if (this.req.kind === 'listing') {
-      this.fillOptions(this.req)
+    if (!this.isListing || this.selectedCount === 0) {
+      this.parents.pop();
+      files.fetch(this.req.parent || '')
+      .then(this.fillOptions)
+      .catch(e => this.$showError(e))
       return
     }
 
@@ -102,6 +106,15 @@ export default {
       }
     },
     next: function (event) {
+      if (!this.isListing || this.selectedCount === 0) {
+        if (this.req.id == event.currentTarget.dataset.id) {
+          return;
+        }
+      } else {
+        if (this.$store.getters.currentFolder.id === event.currentTarget.dataset.id) {
+          return;
+        }
+      }
       // Retrieves the URL of the directory the user
       // just clicked in and fill the options with its
       // content.

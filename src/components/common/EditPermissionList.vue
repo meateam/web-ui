@@ -97,7 +97,7 @@ export default {
       }
     },
     isUserFileOwner(user) {
-      return (this.req.items ? this.req.items[this.selected[0]].ownerId : this.req.ownerId) == user.id;
+      return (this.req.items && this.selectedCount !== 0 ? this.req.items[this.selected[0]].ownerId : this.req.ownerId) == user.id;
     },
     isDirectPermission(user) {
       return this.userPermissions[user.id];

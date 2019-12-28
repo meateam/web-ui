@@ -77,10 +77,10 @@ export default {
     }
   },
   computed: {
-    ...mapState([ 'req', 'selected', 'selectedCount' ]),
-    ...mapGetters([ 'isListing', 'direction' ]),
+    ...mapState([ 'req', 'selected' ]),
+    ...mapGetters([ 'isListing', 'selectedCount', 'direction' ]),
     selectedItem() {
-      return this.req.items ? this.req.items[this.selected[0]] : this.req;
+      return this.req.items && this.selectedCount !== 0 ? this.req.items[this.selected[0]] : this.req;
     }
   },
   async beforeMount () {

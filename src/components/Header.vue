@@ -139,24 +139,64 @@ export default {
       return this.isFiles && this.selectedCount === 1 && ! this.req.items[this.selected[0]].isDir && DownloadRole(this.req.items[this.selected[0]].role);
     },
     showDeleteButton () {
-      return this.isFiles && (this.isListing
-        ? (this.selectedCount !== 0 && DeleteRole(this.req.items[this.selected[0]].role))
-        : this.req.items && DeleteRole(this.req.items[this.selected[0]].role))
+      if (this.isFiles) {
+        if (this.isListing) {
+          if (this.selectedCount === 0) {
+            return this.req.id && DeleteRole(this.req.role);
+          } else {
+            return DeleteRole(this.req.items[this.selected[0]].role);
+          }
+        } else {
+          return this.req.items && DeleteRole(this.req.items[this.selected[0]].role);
+        }
+      }
+
+      return false;
     },
     showRenameButton () {
-      return this.isFiles && (this.isListing
-        ? (this.selectedCount === 1 && RenameRole(this.req.items[this.selected[0]].role))
-        : this.req.items && RenameRole(this.req.items[this.selected[0]].role))
+      if (this.isFiles) {
+        if (this.isListing) {
+          if (this.selectedCount === 0) {
+            return this.req.id && RenameRole(this.req.role);
+          } else {
+            return this.selectedCount === 1 && RenameRole(this.req.items[this.selected[0]].role);
+          }
+        } else {
+          return this.req.items && RenameRole(this.req.items[this.selected[0]].role);
+        }
+      }
+
+      return false;
     },
     showShareButton () {
-      return this.isFiles && (this.isListing
-        ? (this.selectedCount === 1 && ShareRole(this.req.items[this.selected[0]].role))
-        : this.req.items && ShareRole(this.req.items[this.selected[0]].role))
+      if (this.isFiles) {
+        if (this.isListing) {
+         if (this.selectedCount === 0) {
+            return this.req.id && ShareRole(this.req.role);
+          } else {
+            return this.selectedCount === 1 && RenameRole(this.req.items[this.selected[0]].role);
+          }
+        } else {
+          return this.req.items && ShareRole(this.req.items[this.selected[0]].role);
+        }
+      }
+
+      return false;
     },
     showMoveButton () {
-      return this.isFiles && (this.isListing
-        ? (this.selectedCount > 0 && MoveRole(this.req.items[this.selected[0]].role))
-        : this.req.items && MoveRole(this.req.items[this.selected[0]].role))
+      if (this.isFiles) {
+        if (this.isListing) {
+         if (this.selectedCount === 0) {
+            return this.req.id && MoveRole(this.req.role);
+          } else {
+            return this.selectedCount > 0 && MoveRole(this.req.items[this.selected[0]].role);
+          }
+        } else {
+          return this.req.items && MoveRole(this.req.items[this.selected[0]].role);
+        }
+      }
+
+      return false;
     },
     showCopyButton () {
       return this.isFiles && (this.isListing
