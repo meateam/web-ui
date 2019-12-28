@@ -20,6 +20,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { files } from '@/api'
+import { UploadRole } from '@/utils/constants';
 
 const backwards = '..';
 
@@ -97,7 +98,7 @@ export default {
       // Otherwise we add every directory to the
       // move options.
       for (let item of req.items) {
-        if (!item.isDir) continue
+        if (!item.isDir || !UploadRole(item.role)) continue;
 
         this.items.push({
           name: item.name,
@@ -111,7 +112,7 @@ export default {
           return;
         }
       } else {
-        if (this.$store.getters.currentFolder.id === event.currentTarget.dataset.id) {
+        if (this.$store.state.selected[0].id === event.currentTarget.dataset.id) {
           return;
         }
       }

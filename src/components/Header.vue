@@ -174,7 +174,7 @@ export default {
          if (this.selectedCount === 0) {
             return this.req.id && ShareRole(this.req.role);
           } else {
-            return this.selectedCount === 1 && RenameRole(this.req.items[this.selected[0]].role);
+            return this.selectedCount === 1 && ShareRole(this.req.items[this.selected[0]].role);
           }
         } else {
           return this.req.items && ShareRole(this.req.items[this.selected[0]].role);
