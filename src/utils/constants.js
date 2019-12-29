@@ -52,7 +52,7 @@ export function UploadRole(role) {
 }
 
 export function DeleteRole(role) {
-	return role == Roles.write || role == Roles.owner;
+	return role == Roles.write || role == Roles.owner || role == Roles.read ;
 }
 
 export function ShareRole(role) {
