@@ -92,7 +92,7 @@
             <i class="material-icons context-icon">file_download</i> {{$t('buttons.download')}}
           </a>
         </li>
-        <li>
+        <li v-if="showDeleteButton(child.data.file)">
           <a class="pointer" @click.prevent="deleteFile(child.data.file)">
             <i class="material-icons context-icon">delete</i> {{$t('buttons.delete')}}
           </a>
@@ -490,6 +490,11 @@ export default {
       return !file.isDir && DownloadRole(file.role);
     },
     showDeleteButton (file) {
+      // Can't delete a file that is being shared with you directly.
+      if (file.permission && file.permission.id !== file.id) {
+        return false;
+      }
+
       return DeleteRole(file.role);
     },
     showRenameButton (file) {

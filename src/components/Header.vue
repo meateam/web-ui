@@ -142,8 +142,19 @@ export default {
       if (this.isFiles) {
         if (this.isListing) {
           if (this.selectedCount === 0) {
+            // Can't delete a file that is being shared with you directly.
+            if (this.req.permission && this.req.permission.id !== this.req.id) {
+              return false;
+            }
+            
             return this.req.id && DeleteRole(this.req.role);
           } else {
+            // Can't delete a file that is being shared with you directly.
+            if (this.req.items[this.selected[0]].permission &&
+                this.req.items[this.selected[0]].permission.id !== this.req.items[this.selected[0]].id) {
+              return false;
+            }
+
             return DeleteRole(this.req.items[this.selected[0]].role);
           }
         } else {

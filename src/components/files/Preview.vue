@@ -129,6 +129,11 @@ export default {
       return !this.req.isDir && DownloadRole(this.req.role);
     },
     showDeleteButton () {
+      // Can't delete a file that is being shared with you directly.
+      if (this.req.permission && this.req.permission.id !== this.req.id) {
+        return false;
+      }
+      
       return DeleteRole(this.req.role);
     },
     showRenameButton () {
