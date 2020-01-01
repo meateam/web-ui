@@ -87,27 +87,27 @@
             <i class="material-icons context-icon">picture_as_pdf</i> {{$t('buttons.preview')}}
           </a>
         </li>
-        <li v-if="!child.data.file.isDir">
+        <li v-if="showDownloadButton(child.data.file)">
           <a class="pointer" @click.prevent="download(child.data.file)">
             <i class="material-icons context-icon">file_download</i> {{$t('buttons.download')}}
           </a>
         </li>
-        <li>
+        <li v-if="showDeleteButton(child.data.file)">
           <a class="pointer" @click.prevent="deleteFile(child.data.file)">
-            <i class="material-icons context-icon">delete</i> {{$t(deleteButtonTitle)}}
+            <i class="material-icons context-icon">delete</i> {{$t('buttons.delete')}}
           </a>
         </li>
-        <li v-if="!shares">
+        <li v-if="showShareButton(child.data.file)">
           <a class="pointer" @click.prevent="showShare(child.data.file)">
             <i class="material-icons context-icon">share</i> {{$t('buttons.share')}}
           </a>
         </li>
-        <li v-if="!shares">
+        <li v-if="showMoveButton(child.data.file)">
           <a class="pointer" @click.prevent="showMove(child.data.file)">
             <i class="material-icons rtl context-icon">forward</i> {{$t('buttons.move')}}
           </a>
         </li>
-        <li v-if="!shares">
+        <li v-if="showRenameButton(child.data.file)">
           <a class="pointer" @click.prevent="showRename(child.data.file)">
             <i class="material-icons context-icon">mode_edit</i> {{$t('buttons.rename')}}
           </a>
@@ -135,14 +135,22 @@ import Item from './ListingItem'
 import css from '@/utils/css'
 import { files as api } from '@/api'
 import buttons from '@/utils/buttons'
-import { checkMimeType, checkDocumentPreview } from '@/utils/constants';
 import { checkConflict } from '@/utils/files'
+import {
+  checkMimeType,
+  checkDocumentPreview,
+  DownloadRole,
+  DeleteRole,
+  RenameRole,
+  ShareRole,
+  MoveRole
+} from '@/utils/constants';
 
 export default {
   name: 'listing',
   components: { Item, VueContext },
   watch: {
-    req: function(val, oldVal) {
+    req: function() {
       this.refreshItems();
     }
   },
@@ -156,10 +164,7 @@ export default {
   },
   computed: {
     ...mapGetters(['direction', 'shares']),
-    ...mapState(['req', 'selected', 'user']),
-    deleteButtonTitle() {
-      return this.shares ? 'buttons.removeShare' : 'buttons.delete';
-    }
+    ...mapState(['req', 'selected', 'user'])
   },
   mounted: function () {
     this.refreshItems()
@@ -481,6 +486,26 @@ export default {
       this.addSelected(file.index);
       this.$store.commit('showHover', 'info');
     },
+    showDownloadButton (file) {
+      return !file.isDir && DownloadRole(file.role);
+    },
+    showDeleteButton (file) {
+      // Can't delete a file that is being shared with you directly.
+      if (file.permission && file.permission.id !== file.id) {
+        return false;
+      }
+
+      return DeleteRole(file.role);
+    },
+    showRenameButton (file) {
+      return RenameRole(file.role);
+    },
+    showShareButton (file) {
+      return ShareRole(file.role);
+    },
+    showMoveButton (file) {
+      return MoveRole(file.role);
+    },
     download: function (file) {
       api.download([file.id]);
     },
@@ -508,16 +533,10 @@ export default {
       return checkMimeType(file.type) || checkDocumentPreview(file.type);
     },
     preview: function (file) {
-      if (checkMimeType(file.type)) {
-        this.$store.commit('pushFolder', { id: file.id, name: file.name });
-        this.$store.commit('setReload', true);
+      this.$store.commit('pushFolder', { id: file.id, name: file.name });
+      this.$store.commit('setReload', true);
 
-        return;
-      }
-
-      if (checkDocumentPreview(file.type)) {
-        api.preview(file.id);
-      }
+      return;
     }
   }
 }

@@ -1,20 +1,21 @@
 <template>
   <div class="list">
-    <div class="item" v-if="owner.id">
-      <span class="user-info">
-        <span>{{owner.fullName}} </span>
-        <p>{{owner.hierarchyFlat}}</p>
-      </span>
-      <span class="owner-label">
-        {{$t('role.owner')}}
-      </span>
-    </div>
     <div v-for="user in users" :key="user.userID" class="item">
       <span class="user-info">
         <span>{{user.fullName}} </span>
         <p>{{user.hierarchyFlat}}</p>
       </span>
+      <template v-if="isUserFileOwner(user)">
+        <span class="user-info">
+          <span>{{owner.fullName}} </span>
+          <p>{{owner.hierarchyFlat}}</p>
+        </span>
+        <span class="owner-label">
+          {{$t('role.owner')}}
+        </span>
+      </template>
       <span
+        v-else-if="isDirectPermission(user)"
         class="delete-permission"
         @click="deletePermission(user)"
         :aria-label="$t('buttons.deletePermission')"
@@ -25,9 +26,9 @@
   </div>
 </template>
 <script>
+import {mapState, mapGetters} from 'vuex'
 import { files, users } from "@/api";
-
-const ownerRole = 1;
+import { Roles } from '@/utils/constants';
 
 export default {
     name: "edit-permission-list",
@@ -35,23 +36,32 @@ export default {
     data: function() {
     return {
       users: [],
-      owner: {}
+      owner: {},
+      userPermissions: {},
     };
   },
   async mounted() {
     await this.onMount();
   },
+  computed: {
+    ...mapState(['req', 'selected']),
+    ...mapGetters(['selectedCount', 'userID'])
+  },
   methods: {
     deletePermission: async function(user) {
       await files.unShare(this.id, user.id);
-      await this.onMount();
+      if (this.userID != user.id) {
+        await this.onMount();
+      } else {
+        this.users.splice(this.users.findIndex(u => u.id == user.id), 1);
+      }
     },
     onMount: async function() {
       const permissions = await files.getPermissions(this.id);
       let ownerID = '';
       let promises = [];
       for (let i = 0; i < permissions.length; i++) {
-        if (permissions[i].role === ownerRole) {
+        if (permissions[i].role === Roles.owner) {
           ownerID = permissions[i].userID;
         }
 
@@ -71,14 +81,26 @@ export default {
 
             return true;
           });
-          // eslint-disable-next-line
+        this.users.forEach(user => {
+          const isDirectPermission = permissions.find(e => e.userID == user.id).fileID == this.id;
+          this.userPermissions[user.id] = isDirectPermission;
+        });
+        // eslint-disable-next-line
       } catch (err) {}
     },
     addUser: function(user) {
       if (!user) return;
+      
       if (!this.users.find(currUser => currUser.id === user.id)) {
         this.users.push(user);
+        this.userPermissions[user.id] = true;
       }
+    },
+    isUserFileOwner(user) {
+      return (this.req.items && this.selectedCount !== 0 ? this.req.items[this.selected[0]].ownerId : this.req.ownerId) == user.id;
+    },
+    isDirectPermission(user) {
+      return this.userPermissions[user.id];
     }
   }
 }

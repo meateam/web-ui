@@ -15,7 +15,7 @@
         :title="$t('buttons.cancel')">{{ $t('buttons.cancel') }}</button>
       <button class="button button--flat"
         @click="move"
-        :disabled="$store.getters.currentFolder.id === dest.dest"
+        :disabled="disableMove()"
         :aria-label="$t('buttons.move')"
         :title="$t('buttons.move')">{{ $t('buttons.move') }}</button>
     </div>
@@ -38,7 +38,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['direction']),
+    ...mapGetters(['direction', 'isListing']),
     ...mapState(['req', 'selected', 'path']),
   },
   methods: {
@@ -47,8 +47,12 @@ export default {
       buttons.loading('move')
       let items = []
 
-      for (let item of this.selected) {
-        items.push(this.req.items[item].id)
+      if (this.selected.length > 0) {
+        for (let item of this.selected) {
+          items.push(this.req.items[item].id)
+        }
+      } else {
+        items.push(this.req.id);
       }
 
       try {
@@ -74,6 +78,13 @@ export default {
       }
 
       event.preventDefault();
+    },
+    disableMove() {
+      if ((!this.isListing || this.selected.length === 0) && this.dest.dest) {
+        return this.req.id == this.dest.dest.id;
+      } else {
+        return this.$store.getters.currentFolder.id === this.dest.dest;
+      }
     }
   }
 }

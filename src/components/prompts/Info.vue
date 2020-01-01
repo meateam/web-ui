@@ -13,11 +13,13 @@
       </p>
 			<p v-if="!dir || selected.length == 1"><strong>{{ $t('prompts.type') }}:</strong> {{ type }}</p>
       <p v-if="selected.length < 2"><strong>{{ $t('prompts.lastModified') }}:</strong> {{ humanTime }}</p>
-
+  
       <template v-if="dir && selected.length === 0">
         <p><strong>{{ $t('prompts.numberFiles') }}:</strong> {{ req.numFiles }}</p>
         <p><strong>{{ $t('prompts.numberDirs') }}:</strong> {{ req.numDirs }}</p>
       </template>
+
+      <p v-if="selected.length < 2"><strong>{{ $t('role.owner') }}:</strong> {{ ownerName }}</p>
 
       <div class="permission-list" v-if="showPermissionList">
         <strong>{{$t('prompts.permissions')}}:</strong>
@@ -39,13 +41,22 @@
 import {mapState, mapGetters} from 'vuex'
 import filesize from 'filesize'
 import moment from 'moment'
-import { files as api } from '@/api'
+import { files as api, users } from '@/api'
 import PermissionList from '../common/PermissionList'
 
 export default {
   name: 'info',
   components: {
     PermissionList
+  },
+  data: function() {
+    return {
+      ownerName: ''
+    };
+  },
+  async mounted() {
+    const res = await users.get(this.selectedItem.ownerId);
+    this.ownerName = res.user.fullName;
   },
   computed: {
     ...mapState(['req', 'selected']),
@@ -88,7 +99,7 @@ export default {
     },
     defaultDisplayName: function() {
       return this.shares ? 'sidebar.myFiles.titleShared' : 'sidebar.myFiles.title'; 
-    },
+    }
   },
   methods: {
     checksum: async function (event, algo) {

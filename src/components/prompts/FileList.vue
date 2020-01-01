@@ -18,8 +18,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { files } from '@/api'
+import { UploadRole } from '@/utils/constants';
 
 const backwards = '..';
 
@@ -39,6 +40,7 @@ export default {
   },
   computed: {
     ...mapState([ 'req', 'path' ]),
+    ...mapGetters(['isListing', 'selectedCount']),
     nav () {
       return decodeURIComponent(this.current.name || '/')
     }
@@ -51,8 +53,11 @@ export default {
     // If we're showing this on a listing,
     // we can use the current request object
     // to fill the move options.
-    if (this.req.kind === 'listing') {
-      this.fillOptions(this.req)
+    if (!this.isListing || this.selectedCount === 0) {
+      this.parents.pop();
+      files.fetch(this.req.parent || '')
+      .then(this.fillOptions)
+      .catch(e => this.$showError(e))
       return
     }
 
@@ -88,12 +93,12 @@ export default {
       }
 
       // If this folder is empty, finish here.
-      if (req.items === null) return
+      if (!req.items) return
 
       // Otherwise we add every directory to the
       // move options.
       for (let item of req.items) {
-        if (!item.isDir) continue
+        if (!item.isDir || !UploadRole(item.role)) continue;
 
         this.items.push({
           name: item.name,
@@ -102,6 +107,15 @@ export default {
       }
     },
     next: function (event) {
+      if (!this.isListing || this.selectedCount === 0) {
+        if (this.req.id == event.currentTarget.dataset.id) {
+          return;
+        }
+      } else {
+        if (this.$store.state.selected[0].id === event.currentTarget.dataset.id) {
+          return;
+        }
+      }
       // Retrieves the URL of the directory the user
       // just clicked in and fill the options with its
       // content.

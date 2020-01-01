@@ -26,8 +26,9 @@
               </template>
             </autocomplete>
 
-            <select style="display:none;" v-model="role" :aria-label="$t('role.input')">
+            <select v-model="role" :aria-label="$t('role.input')">
               <option value="READ" >{{ $t('role.read') }}</option>
+              <option value="WRITE" >{{ $t('role.write') }}</option>
             </select>
             <button class="action"
               @click="submit"
@@ -53,6 +54,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import { Roles } from '@/utils/constants';
 import { share as shareApi, users as usersApi } from '@/api'
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import { minAutoComplete } from '@/utils/constants'
@@ -69,16 +71,16 @@ export default {
   },
   data: function () {
     return {
-      role: 'READ',
+      role: Roles.read,
       searchText: '',
       user:''
     }
   },
   computed: {
-    ...mapState([ 'req', 'selected', 'selectedCount' ]),
-    ...mapGetters([ 'isListing', 'direction' ]),
+    ...mapState([ 'req', 'selected' ]),
+    ...mapGetters([ 'isListing', 'selectedCount', 'direction' ]),
     selectedItem() {
-      return this.req.items[this.selected[0]];
+      return this.req.items && this.selectedCount !== 0 ? this.req.items[this.selected[0]] : this.req;
     }
   },
   async beforeMount () {
@@ -97,7 +99,7 @@ export default {
       
       try {
         await shareApi.create(this.selectedItem.id, this.user.id, this.role);
-        this.$showSuccess(`successfully shared with ${this.getResultValue(this.user)}`);
+        this.$showSuccess(this.$t('success.shared', {user: this.getResultValue(this.user)}));
         this.$refs.editPermissionList.addUser(this.user);
       } catch (e) {
         this.$showError(e)

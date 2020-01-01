@@ -10,7 +10,6 @@
     "create": "יצירה",
     "delete": "מחיקה",
     "deletePermission": "מחיקת הרשאה",
-    "removeShare": "הסרת שיתוף",
     "download": "הורדה",
     "info": "פרטים",
     "more": "עוד",
@@ -40,7 +39,8 @@
     "preview": "תצוגה"
   },
   "success": {
-    "linkCopied": "Link copied!"
+    "linkCopied": "Link copied!",
+    "shared": "שותף בהצלחה עם {user}"
   },
   "errors": {
     "general": "משהו השתשבש.",
@@ -99,8 +99,6 @@
     "currentlyNavigating": "מנווט כעת ב:",
     "deleteMessageMultiple": "את/ה בטוח/ה שתרצה/י למחוק {count} פריטים?",
     "deleteMessageSingle": "את/ה בטוח/ה שתרצה/י למחוק פריט זה?",
-    "removeShareMessageSingle": "אתה בטוח שתרצה להסיר שיתוף של פריט זה?",
-    "removeShareMessageMultiple": "אתה בטוח שתרצה להסיר שיתוף של {count} פריטים?",
     "deleteTitle": "Delete files",
     "displayName": "שם:",
     "download": "Download files",
@@ -117,7 +115,7 @@
     "newFileMessage": "Write the name of the new file.",
     "numberDirs": "מספר תיקיות",
     "numberFiles": "מספר קבצים",
-    "replace": "קונפליקט",
+    "replace": "שגיאה",
     "replaceMessage": "קיים קובץ עם אותו שם של אחד מהקבצים שניסית להעלות.",
     "rename": "שנוי שם",
     "renameMessage": "הזן שם עבור",
@@ -255,6 +253,7 @@
   "role": {
     "input": "הרשאה",
     "read": "קריאה",
+    "write": "כתיבה",
     "owner": "בעלים",
     "permission": "למשתמש {user} יש הרשאות {role}"
   },
