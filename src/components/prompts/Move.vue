@@ -134,11 +134,29 @@ export default {
       event.preventDefault();
     },
     disableMove() {
-      if ((!this.isListing || this.selected.length === 0) && this.dest.dest) {
-        return this.req.id == this.dest.dest.id;
+      let items = []
+
+      if (this.selected.length > 0) {
+        for (let item of this.selected) {
+          items.push(this.req.items[item].id)
+        }
       } else {
-        return this.$store.getters.currentFolder.id === this.dest.dest;
+        items.push(this.req.id);
       }
+
+      if (this.dest.dest) {
+        if (this.isSharesIndex() && this.dest.dest.id === '') {
+          return true;
+        }
+
+        for (let i = 0; i < items.length; i++) {
+          if (items[i] === this.dest.dest.id) {
+            return true;
+          }
+        }
+      }
+
+      return false;
     },
     async onTabSelect(_, index) {
       const path = [...this.dest.path];
@@ -177,5 +195,13 @@ export default {
 .vue-tablist {
   padding-right: 0;
   padding-left: 0;
+}
+</style>
+<style scoped>
+.card-content {
+  padding-top: 0 !important;
+}
+.card>div:first-child {
+  padding-bottom: 0 !important;
 }
 </style>

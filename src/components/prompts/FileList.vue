@@ -117,12 +117,22 @@ export default {
       }
     },
     next: function (event) {
-      if (!this.isListing || this.selectedCount === 0) {
-        if (this.req.id == event.currentTarget.dataset.id) {
-          return;
+      let items = []
+
+      if (this.$store.state.selected.length > 0) {
+        for (let item of this.$store.state.selected) {
+          items.push(this.req.items[item].id)
         }
       } else {
-        if (this.$store.state.selected[0].id === event.currentTarget.dataset.id) {
+        items.push(this.req.id);
+      }
+
+      for (let i = 0; i < items.length; i++) {
+        if (this.shares && items[i] === '') {
+          return;
+        }
+
+        if (items[i] === event.currentTarget.dataset.id) {
           return;
         }
       }
