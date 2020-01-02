@@ -5,7 +5,16 @@
     </div>
 
     <div class="card-content">
-      <file-list @update:selected="val => dest = val"></file-list>
+      <tabs :onSelect="onTabSelect" :defaultIndex="initialIndex">
+        <tab :title="$t('sidebar.myFiles.title')"></tab>
+        <tab :title="$t('sidebar.sharedFiles')"></tab>
+      </tabs>
+      <file-list
+        ref="fileList"
+        :path="fileListPath"
+        :id="currentFileListID"
+        :shares="isSharesIndex()"
+        @update:selected="val => dest = val"></file-list>
     </div>
 
     <div :class="direction" class="card-action">
@@ -23,25 +32,70 @@
 </template>
 
 <script>
+const myFilesTabIndex = 0;
+const sharedFilesTabIndex = 1;
+const initialRootPath = [{id: '', name: ''}];
+
 import { mapGetters, mapState } from 'vuex'
+import { Tabs, Tab } from 'vue-slim-tabs';
 import FileList from './FileList'
 import { files as api } from '@/api'
 import buttons from '@/utils/buttons'
 
 export default {
   name: 'move',
-  components: { FileList },
+  components: { FileList, Tabs, Tab },
   data: function () {
     return {
       current: window.location.pathname,
-      dest: {}
+      dest: {},
+      myFilesPath: initialRootPath,
+      sharesFilesPath: initialRootPath,
+      fileListPath: initialRootPath,
+      currentTabIndex: myFilesTabIndex,
+      currentFileListID: '',
+      myFilesFileListID: '',
+      sharesFilesFileListID: '',
     }
   },
   computed: {
-    ...mapGetters(['direction', 'isListing']),
+    ...mapGetters(['direction', 'isListing', 'shares', 'selectedCount']),
     ...mapState(['req', 'selected', 'path']),
+    initialIndex() {
+      return this.shares ? sharedFilesTabIndex : myFilesTabIndex;
+    }
+  },
+  mounted: function () {
+    this.fileListPath = [...this.path];
+    const isPopPath = !this.isListing || this.selectedCount === 0;
+    if (isPopPath) {
+      this.fileListPath.pop();
+    }
+
+    if (this.shares) {
+      this.currentTabIndex = sharedFilesTabIndex;
+      if (isPopPath) {
+        this.sharesFilesFileListID = this.req.parent || '';
+      } else {
+        this.sharesFilesFileListID = this.$store.getters.currentFolder.id;
+      }
+      this.sharesFilesPath = this.fileListPath;
+      this.currentFileListID = this.sharesFilesFileListID;
+    } else {
+      this.currentTabIndex = myFilesTabIndex;
+      if (isPopPath) {
+        this.myFilesFileListID = this.req.parent || '';
+      } else {
+        this.myFilesFileListID = this.$store.getters.currentFolder.id;
+      }
+      this.myFilesPath = this.fileListPath;
+      this.currentFileListID = this.myFilesFileListID;
+    }
   },
   methods: {
+    isSharesIndex() {
+      return this.currentTabIndex === sharedFilesTabIndex;
+    },
     move: async function (event) {
       event.preventDefault()
       buttons.loading('move')
@@ -80,12 +134,74 @@ export default {
       event.preventDefault();
     },
     disableMove() {
-      if ((!this.isListing || this.selected.length === 0) && this.dest.dest) {
-        return this.req.id == this.dest.dest.id;
+      let items = []
+
+      if (this.selected.length > 0) {
+        for (let item of this.selected) {
+          items.push(this.req.items[item].id)
+        }
       } else {
-        return this.$store.getters.currentFolder.id === this.dest.dest;
+        items.push(this.req.id);
       }
+
+      if (this.dest.dest) {
+        if (this.isSharesIndex() && this.dest.dest.id === '') {
+          return true;
+        }
+
+        for (let i = 0; i < items.length; i++) {
+          if (items[i] === this.dest.dest.id) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    },
+    async onTabSelect(_, index) {
+      const path = [...this.dest.path];
+      const id = this.$refs.fileList.current.id
+      
+      if (this.$refs.fileList.selected == null) {
+        path.push({...this.dest.dest});
+      }
+
+      if (this.currentTabIndex === myFilesTabIndex) {
+        this.myFilesPath = path;
+        this.myFilesFileListID = id;
+      } else if (this.currentTabIndex === sharedFilesTabIndex) {
+        this.sharesFilesPath = path;
+        this.sharesFilesFileListID = id;
+      }
+
+      if (this.currentTabIndex != index) {
+
+        if (index === myFilesTabIndex) {
+          this.fileListPath = this.myFilesPath;
+          this.currentFileListID = this.myFilesFileListID;
+        } else if (index === sharedFilesTabIndex) {
+          this.fileListPath = this.sharesFilesPath;
+          this.currentFileListID = this.sharesFilesFileListID;
+        }
+      }
+
+      this.currentTabIndex = index;
     }
   }
 }
 </script>
+<style src="vue-slim-tabs/themes/default.css"></style>
+<style>
+.vue-tablist {
+  padding-right: 0;
+  padding-left: 0;
+}
+</style>
+<style scoped>
+.card-content {
+  padding-top: 0 !important;
+}
+.card>div:first-child {
+  padding-bottom: 0 !important;
+}
+</style>

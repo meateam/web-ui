@@ -1,14 +1,25 @@
 <template>
   <nav :class="{active}">
     <template v-if="isLogged">
-      <div @click="onMyFilesClick" class="action" to="/files" :aria-label="$t('sidebar.myFiles.title')" :title="$t('sidebar.myFiles.title')">
-        <i class="material-icons">folder</i>
-        <span v-if="nameExists">{{ $t('sidebar.myFiles.personalized', {person: user.firstName}) }}</span>
-        <span v-else>{{ $t('sidebar.myFiles.title') }}</span>
+      <div
+        @click="onMyFilesClick"
+        class="action"
+        :class="{ selected: !shares && !isSearch}"
+        to="/files"
+        :aria-label="$t('sidebar.myFiles.title')"
+        :title="$t('sidebar.myFiles.title')">
+          <i class="material-icons">folder</i>
+          <span v-if="nameExists">{{ $t('sidebar.myFiles.personalized', {person: user.firstName}) }}</span>
+          <span v-else>{{ $t('sidebar.myFiles.title') }}</span>
       </div>
-      <div @click="onSharedWithMeClick" class="action" to="/shares" :aria-label="$t('sidebar.sharedFiles')" :title="$t('sidebar.sharedFiles')">
-        <i class="material-icons">folder_shared</i>
-        <span>{{ $t('sidebar.sharedFiles') }}</span>
+      <div
+        @click="onSharedWithMeClick"
+        :class="{ selected: shares && !isSearch}"
+        class="action" to="/shares"
+        :aria-label="$t('sidebar.sharedFiles')"
+        :title="$t('sidebar.sharedFiles')">
+          <i class="material-icons">folder_shared</i>
+          <span>{{ $t('sidebar.sharedFiles') }}</span>
       </div>
       <div v-if="showCreateUpload">
         <button @click="$store.commit('showHover', 'newDir')" class="action" :aria-label="$t('sidebar.newFolder')" :title="$t('sidebar.newFolder')">
@@ -46,7 +57,7 @@ export default {
   },
   computed: {
     ...mapState([ 'req', 'user', 'quota' ]),
-    ...mapGetters([ 'isLogged', 'shares' ]),
+    ...mapGetters([ 'isLogged', 'shares', 'isSearch' ]),
     active () {
       return this.$store.state.show === 'sidebar'
     },
@@ -79,3 +90,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.selected {
+  background-color: rgba(0, 0, 0, .1);
+}
+</style>

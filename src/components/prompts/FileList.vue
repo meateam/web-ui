@@ -26,6 +26,18 @@ const backwards = '..';
 
 export default {
   name: 'file-list',
+  props: ['path', 'id', 'shares'],
+  watch: {
+    path: function() {
+      this.onMount();
+    },
+    id: function() {
+      this.onMount();
+    },
+    watch: function() {
+      this.onMount();
+    }
+  },
   data: function () {
     return {
       items: [],
@@ -39,35 +51,33 @@ export default {
     }
   },
   computed: {
-    ...mapState([ 'req', 'path' ]),
+    ...mapState([ 'req' ]),
     ...mapGetters(['isListing', 'selectedCount']),
     nav () {
       return decodeURIComponent(this.current.name || '/')
     }
   },
   mounted () {
-    for (let i = 0; i < this.path.length - 1; i++) {
-      this.parents.push({id: this.path[i].id, name: this.path[i].name});
-    }
-
-    // If we're showing this on a listing,
-    // we can use the current request object
-    // to fill the move options.
-    if (!this.isListing || this.selectedCount === 0) {
-      this.parents.pop();
-      files.fetch(this.req.parent || '')
-      .then(this.fillOptions)
-      .catch(e => this.$showError(e))
-      return
-    }
-
-    // Otherwise, we must be on a preview or editor
-    // so we fetch the data from the previous directory.
-    files.fetch(this.current.id)
-      .then(this.fillOptions)
-      .catch(e => this.$showError(e))
+    this.onMount();
   },
   methods: {
+    onMount() {
+      this.parents = [];
+      for (let i = 0; i < this.path.length - 1; i++) {
+        this.parents.push({id: this.path[i].id, name: this.path[i].name});
+      }
+
+      if (this.id == '' && this.shares) {
+        files.getSharedWithMe()
+          .then(this.fillOptions)
+          .catch(e => this.$showError(e));
+        return;
+      }
+
+      files.fetch(this.id)
+        .then(this.fillOptions)
+        .catch(e => this.$showError(e))
+    },
     fillOptions (req) {
       // Sets the current path and resets
       // the current items.
@@ -107,12 +117,22 @@ export default {
       }
     },
     next: function (event) {
-      if (!this.isListing || this.selectedCount === 0) {
-        if (this.req.id == event.currentTarget.dataset.id) {
-          return;
+      let items = []
+
+      if (this.$store.state.selected.length > 0) {
+        for (let item of this.$store.state.selected) {
+          items.push(this.req.items[item].id)
         }
       } else {
-        if (this.$store.state.selected[0].id === event.currentTarget.dataset.id) {
+        items.push(this.req.id);
+      }
+
+      for (let i = 0; i < items.length; i++) {
+        if (this.shares && items[i] === '') {
+          return;
+        }
+
+        if (items[i] === event.currentTarget.dataset.id) {
           return;
         }
       }
@@ -127,6 +147,12 @@ export default {
 
       let id = event.currentTarget.dataset.id
 
+      if (id == '' && this.shares) {
+        files.getSharedWithMe()
+          .then(this.fillOptions)
+          .catch(e => this.$showError(e));
+        return;
+      }
       files.fetch(id)
         .then(this.fillOptions)
         .catch(e => this.$showError(e))
