@@ -30,12 +30,6 @@ export default {
   watch: {
     path: function() {
       this.onMount();
-    },
-    id: function() {
-      this.onMount();
-    },
-    watch: function() {
-      this.onMount();
     }
   },
   data: function () {
@@ -57,24 +51,24 @@ export default {
       return decodeURIComponent(this.current.name || '/')
     }
   },
-  mounted () {
-    this.onMount();
+  async mounted () {
+    await this.onMount();
   },
   methods: {
-    onMount() {
+    async onMount() {
       this.parents = [];
       for (let i = 0; i < this.path.length - 1; i++) {
         this.parents.push({id: this.path[i].id, name: this.path[i].name});
       }
 
       if (this.id == '' && this.shares) {
-        files.getSharedWithMe()
+        await files.getSharedWithMe()
           .then(this.fillOptions)
           .catch(e => this.$showError(e));
         return;
       }
 
-      files.fetch(this.id)
+      await files.fetch(this.id)
         .then(this.fillOptions)
         .catch(e => this.$showError(e))
     },
@@ -116,8 +110,8 @@ export default {
         })
       }
     },
-    next: function (event) {
-      let items = []
+    next: async function (event) {
+      let items = [];
 
       if (this.$store.state.selected.length > 0) {
         for (let item of this.$store.state.selected) {
@@ -148,16 +142,17 @@ export default {
       let id = event.currentTarget.dataset.id
 
       if (id == '' && this.shares) {
-        files.getSharedWithMe()
+        await files.getSharedWithMe()
           .then(this.fillOptions)
           .catch(e => this.$showError(e));
         return;
       }
-      files.fetch(id)
+
+      await files.fetch(id)
         .then(this.fillOptions)
         .catch(e => this.$showError(e))
     },
-    touchstart (event) {
+    async touchstart (event) {
       let url = event.currentTarget.dataset.id
 
       // In 300 milliseconds, we shall reset the count.
@@ -179,7 +174,7 @@ export default {
       // If there is more than one touch already,
       // open the next screen.
       if (this.touches.count > 1) {
-        this.next(event)
+        await this.next(event)
       }
     },
     select: function (event) {
@@ -190,7 +185,7 @@ export default {
 
       // If the element is already selected, unselect it.
       if (this.selected === event.currentTarget.dataset.id) {
-        this.selected = null
+        this.selected = null;
         this.$emit('update:selected', {
           dest: {
             id: this.current.id,

@@ -6,15 +6,25 @@
 
     <div class="card-content">
       <tabs :onSelect="onTabSelect" :defaultIndex="initialIndex">
-        <tab :title="$t('sidebar.myFiles.title')"></tab>
-        <tab :title="$t('sidebar.sharedFiles')"></tab>
+        <tab :title="$t('sidebar.myFiles.title')">
+          <file-list
+            ref="myFilesList"
+            :path="myFilesPath"
+            :id="myFilesFileListID"
+            :shares="false"
+            @update:selected="val => myFilesDest = val">
+            </file-list>
+        </tab>
+        <tab :title="$t('sidebar.sharedFiles')">
+          <file-list
+            ref="sharesFileList"
+            :path="sharesFilesPath"
+            :id="sharesFilesFileListID"
+            :shares="true"
+            @update:selected="val => sharesFilesDest = val">
+            </file-list>
+        </tab>
       </tabs>
-      <file-list
-        ref="fileList"
-        :path="fileListPath"
-        :id="currentFileListID"
-        :shares="isSharesIndex()"
-        @update:selected="val => dest = val"></file-list>
     </div>
 
     <div :class="direction" class="card-action">
@@ -48,12 +58,11 @@ export default {
   data: function () {
     return {
       current: window.location.pathname,
-      dest: {},
+      myFilesDest: {},
+      sharesFilesDest: {},
       myFilesPath: initialRootPath,
       sharesFilesPath: initialRootPath,
-      fileListPath: initialRootPath,
       currentTabIndex: myFilesTabIndex,
-      currentFileListID: '',
       myFilesFileListID: '',
       sharesFilesFileListID: '',
     }
@@ -66,11 +75,7 @@ export default {
     }
   },
   mounted: function () {
-    this.fileListPath = [...this.path];
     const isPopPath = !this.isListing || this.selectedCount === 0;
-    if (isPopPath) {
-      this.fileListPath.pop();
-    }
 
     if (this.shares) {
       this.currentTabIndex = sharedFilesTabIndex;
@@ -79,8 +84,10 @@ export default {
       } else {
         this.sharesFilesFileListID = this.$store.getters.currentFolder.id;
       }
-      this.sharesFilesPath = this.fileListPath;
-      this.currentFileListID = this.sharesFilesFileListID;
+      this.sharesFilesPath = [...this.path];
+      if (isPopPath) {
+        this.sharesFilesPath.pop();
+      }
     } else {
       this.currentTabIndex = myFilesTabIndex;
       if (isPopPath) {
@@ -88,29 +95,37 @@ export default {
       } else {
         this.myFilesFileListID = this.$store.getters.currentFolder.id;
       }
-      this.myFilesPath = this.fileListPath;
-      this.currentFileListID = this.myFilesFileListID;
+      this.myFilesPath = [...this.path];
+      if (isPopPath) {
+        this.myFilesPath.pop();
+      }
     }
   },
   methods: {
     isSharesIndex() {
       return this.currentTabIndex === sharedFilesTabIndex;
     },
+    currentFileList() {
+      return this.isSharesIndex() ? this.$refs.sharesFileList : this.$refs.myFilesList;
+    },
+    currentDest() {
+      return this.isSharesIndex() ? this.sharesFilesDest : this.myFilesDest;
+    },
     move: async function (event) {
-      event.preventDefault()
-      buttons.loading('move')
-      let items = []
+      event.preventDefault();
+      buttons.loading('move');
+      let items = [];
 
       if (this.selected.length > 0) {
         for (let item of this.selected) {
-          items.push(this.req.items[item].id)
+          items.push(this.req.items[item].id);
         }
       } else {
         items.push(this.req.id);
       }
 
       try {
-        let failed = await api.move(items, this.dest.dest.id);
+        let failed = await api.move(items, this.currentDest().dest.id);
         failed = JSON.parse(failed);
         const successfulUpdateCount = items.length - ((failed && failed.length) || 0);
         if (successfulUpdateCount !== items.length) {
@@ -119,38 +134,37 @@ export default {
         }
 
         buttons.success('move');
-        if (this.dest.path.findIndex(path => path.id === this.dest.dest.id) < 0) {
-          this.$store.commit('setPath', this.dest.path.concat([this.dest.dest]));
+        if (this.currentDest().path.findIndex(path => path.id === this.currentDest().dest.id) < 0) {
+          this.$store.commit('setPath', this.currentDest().path.concat([this.currentDest().dest]));
         } else {
-          this.$store.commit('setPath', this.dest.path);
+          this.$store.commit('setPath', this.currentDest().path);
         }
 
+        this.$store.commit('setShares', this.isSharesIndex());
         this.$store.commit('setReload', true);
       } catch (e) {
         buttons.done('move');
         this.$showError(e);
       }
-
-      event.preventDefault();
     },
     disableMove() {
-      let items = []
+      let items = [];
 
       if (this.selected.length > 0) {
         for (let item of this.selected) {
-          items.push(this.req.items[item].id)
+          items.push(this.req.items[item].id);
         }
       } else {
         items.push(this.req.id);
       }
 
-      if (this.dest.dest) {
-        if (this.isSharesIndex() && this.dest.dest.id === '') {
+      if (this.currentDest().dest) {
+        if (this.isSharesIndex() && this.currentDest().dest.id === '') {
           return true;
         }
 
         for (let i = 0; i < items.length; i++) {
-          if (items[i] === this.dest.dest.id) {
+          if (items[i] === this.currentDest().dest.id) {
             return true;
           }
         }
@@ -158,13 +172,12 @@ export default {
 
       return false;
     },
-    async onTabSelect(_, index) {
-      const path = [...this.dest.path];
-      const id = this.$refs.fileList.current.id
+    onTabSelect(_, index) {
+      const currentFileList = this.currentFileList();
+      const path = [...currentFileList.parents];
+      const id = currentFileList.current.id;
       
-      if (this.$refs.fileList.selected == null) {
-        path.push({...this.dest.dest});
-      }
+      path.push({...currentFileList.current});
 
       if (this.currentTabIndex === myFilesTabIndex) {
         this.myFilesPath = path;
@@ -172,17 +185,6 @@ export default {
       } else if (this.currentTabIndex === sharedFilesTabIndex) {
         this.sharesFilesPath = path;
         this.sharesFilesFileListID = id;
-      }
-
-      if (this.currentTabIndex != index) {
-
-        if (index === myFilesTabIndex) {
-          this.fileListPath = this.myFilesPath;
-          this.currentFileListID = this.myFilesFileListID;
-        } else if (index === sharedFilesTabIndex) {
-          this.fileListPath = this.sharesFilesPath;
-          this.currentFileListID = this.sharesFilesFileListID;
-        }
       }
 
       this.currentTabIndex = index;
