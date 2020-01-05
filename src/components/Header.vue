@@ -143,22 +143,38 @@ export default {
         if (this.isListing) {
           if (this.selectedCount === 0) {
             // Can't delete a file that is being shared with you directly.
-            if (this.req.permission && this.req.permission.id !== this.req.id) {
+            if (this.req.permission && this.req.permission.fileID !== this.req.id) {
               return false;
             }
             
             return this.req.id && DeleteRole(this.req.role);
           } else {
-            // Can't delete a file that is being shared with you directly.
-            if (this.req.items[this.selected[0]].permission &&
-                this.req.items[this.selected[0]].permission.id !== this.req.items[this.selected[0]].id) {
-              return false;
+            for (let i = 0; i < this.selected.length; i++) {
+              // Can't delete a file that is being shared with you directly.
+              if (this.req.items[this.selected[i]].permission &&
+                  this.req.items[this.selected[i]].permission.id !== this.req.items[this.selected[i]].id) {
+                return false;
+              }
+
+              if (!DeleteRole(this.req.items[this.selected[i]].role)) {
+                return false;
+              }
             }
 
-            return DeleteRole(this.req.items[this.selected[0]].role);
+            return true;
           }
         } else {
-          return this.req.items && DeleteRole(this.req.items[this.selected[0]].role);
+          if (!this.req.items) {
+            return false;
+          }
+
+          for (let i = 0; i < this.selected.length; i++) {
+            if (!DeleteRole(this.req.items[this.selected[i]].role)) {
+              return false;
+            }
+          }
+
+          return true;
         }
       }
 
