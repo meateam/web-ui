@@ -491,7 +491,7 @@ export default {
     },
     showDeleteButton (file) {
       // Can't delete a file that is being shared with you directly.
-      if (file.permission && file.permission.id !== file.id) {
+      if (file.permission && file.permission.fileID !== file.id) {
         return false;
       }
 

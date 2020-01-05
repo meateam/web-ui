@@ -130,7 +130,7 @@ export default {
     },
     showDeleteButton () {
       // Can't delete a file that is being shared with you directly.
-      if (this.req.permission && this.req.permission.id !== this.req.id) {
+      if (this.req.permission && this.req.permission.fileID !== this.req.id) {
         return false;
       }
       
