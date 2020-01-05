@@ -1,5 +1,5 @@
 # Stage 1 - build application
-FROM node:10.16.0-alpine as node
+FROM node:12.14.0-alpine as node
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
