@@ -56,6 +56,7 @@ export default {
   },
   methods: {
     async onMount() {
+      this.selected = null;
       this.parents = [];
       for (let i = 0; i < this.path.length - 1; i++) {
         this.parents.push({id: this.path[i].id, name: this.path[i].name});
