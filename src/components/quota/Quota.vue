@@ -18,7 +18,8 @@ export default {
   },
   computed: {
     quotaPercentage() {
-      const percent = this.quota.used / this.quota.limit * 100;
+      let percent = (this.quota.used / this.quota.limit) * 100;
+      percent = isNaN(percent) ? 0 : percent;
       return Number(percent.toFixed(2));
     }
   }

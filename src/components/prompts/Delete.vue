@@ -1,10 +1,10 @@
 <template>
   <div class="card floating">
     <div class="card-content">
-      <p v-if="req.kind !== 'listing'">{{ $t('prompts.deleteMessageSingle') }}</p>
+      <p v-if="req.kind !== 'listing' && selectedCount < 2">{{ $t('prompts.deleteMessageSingle') }}</p>
       <p v-else>{{ $t('prompts.deleteMessageMultiple', { count: selectedCount}) }}</p>
     </div>
-    <div class="card-action">
+    <div :class="direction" class="card-action">
       <button @click="$store.commit('closeHovers')"
         class="button button--flat button--grey"
         :aria-label="$t('buttons.cancel')"
@@ -25,8 +25,8 @@ import buttons from '@/utils/buttons'
 export default {
   name: 'delete',
   computed: {
-    ...mapGetters(['isListing', 'selectedCount']),
-    ...mapState(['req', 'selected', 'path'])
+    ...mapGetters(['isListing', 'selectedCount', 'shares', 'direction']),
+    ...mapState(['req', 'selected', 'path', 'user'])
   },
   methods: {
     ...mapMutations(['closeHovers']),
@@ -47,18 +47,25 @@ export default {
           return
         }
 
+        let promises = [];
         if (this.selectedCount === 0) {
-          return
+          promises.push(api.remove(this.req.id));
+        } else {
+          for (let index of this.selected) {
+            promises.push(api.remove(this.req.items[index].id));
+          }
         }
 
-        let promises = []
-        for (let index of this.selected) {
-          promises.push(api.remove(this.req.items[index].id))
+        await Promise.all(promises);
+        buttons.success('delete');
+        if (this.selectedCount === 0) {
+          const currentIndex = this.path.findIndex(path => path.id === this.req.id);
+          this.$store.commit(
+            'changeFolder',
+            this.path[currentIndex > 0 ? currentIndex - 1 : 0].id
+          );
         }
-
-        await Promise.all(promises)
-        buttons.success('delete')
-        this.$store.commit('setReload', true)
+        this.$store.commit('setReload', true);
       } catch (e) {
         buttons.done('delete')
         this.$showError(e)

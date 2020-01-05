@@ -38,9 +38,9 @@ export function parseToken () {
 
   const user = {
     ...data,
-    locale:"en",
+    locale:"he",
     lockPassword:"false",
-    viewMode:"mosaic",
+    viewMode:"list",
     perm:{
       "admin": false,
       "execute": true,

@@ -54,6 +54,12 @@ export default {
       }
     }
   },
+  mounted() {
+    window.addEventListener("keydown", this.keyEvent);
+  },
+  beforeDestroy() {
+    window.removeEventListener("keydown", this.keyEvent);
+  },
   computed: {
     ...mapState(['show', 'plugins']),
     showInfo: function () { return this.show === 'info' },
@@ -72,7 +78,11 @@ export default {
   },
   methods: {
     resetPrompts () {
-      this.$store.commit('closeHovers')
+      this.$store.commit('closeHovers');
+    },
+    keyEvent(event) {
+      event.stopPropagation();
+      if(event.key === "Escape") this.resetPrompts();
     }
   }
 }

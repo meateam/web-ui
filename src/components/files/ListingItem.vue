@@ -14,6 +14,7 @@
     :data-id="id"
     :aria-label="name"
     :aria-selected="isSelected"
+    @contextmenu="emitContextMenu"
   >
     <div>
       <i class="material-icons" v-bind:class="activeClass">{{ icon }}</i>
@@ -23,7 +24,7 @@
       <p class="name">{{ name }}</p>
 
       <p v-if="isDir" class="size" data-order="-1">&mdash;</p>
-      <p v-else class="size" :data-order="humanSize()">{{ humanSize() }}</p>
+      <p v-else :class="direction" class="size" :data-order="humanSize()">{{ humanSize() }}</p>
 
       <p class="modified">
         <time :datetime="modified">{{ humanTime() }}</time>
@@ -34,7 +35,6 @@
 
 <script>
 import { mapMutations, mapGetters, mapState } from 'vuex';
-import { checkMimeType } from '@/utils/constants';
 import filesize from 'filesize';
 import moment from 'moment';
 import { files as api } from '@/api';
@@ -49,7 +49,7 @@ export default {
   props: ['name', 'id', 'isDir', 'type', 'size', 'modified', 'index'],
   computed: {
     ...mapState(['selected', 'req']),
-    ...mapGetters(['selectedCount']),
+    ...mapGetters(['selectedCount', 'direction']),
     isSelected() {
       return this.selected.indexOf(this.index) !== -1;
     },
@@ -83,7 +83,7 @@ export default {
       'pushFolder'
     ]),
     humanSize: function() {
-      return filesize(this.size);
+      return filesize(parseInt(this.size));
     },
     humanTime: function() {
       return moment(this.modified).fromNow();
@@ -130,7 +130,7 @@ export default {
         .then(() => {
           this.$store.commit('setReload', true);
         })
-        .catch(this.$showError);
+        .catch(e => this.$showError(e));
     },
     click: function(event) {
       if (this.selectedCount !== 0) event.preventDefault();
@@ -172,10 +172,13 @@ export default {
       }
     },
     open: function() {
-      if (this.isDir || checkMimeType(this.type)) {
-        this.$store.commit('pushFolder', { id: this.id, name: this.name });
-        this.$store.commit('setReload', true);
-      }
+      this.$store.commit('pushFolder', { id: this.id, name: this.name });
+      this.$store.commit('setReload', true);
+      
+      return;
+    },
+    emitContextMenu: function(event) {
+      this.$emit("contextmenu", event);
     }
   }
 };

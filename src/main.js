@@ -1,4 +1,6 @@
 import { sync } from 'vuex-router-sync';
+import VTooltip from 'v-tooltip';
+
 import store from '@/store';
 import router from '@/router';
 import i18n from '@/i18n';
@@ -9,16 +11,19 @@ import { fetchConfig } from '@/utils/constants';
 import { initApm } from '@/utils/apm';
 import { config } from '@/utils/constants';
 
+Vue.use(VTooltip, {
+	defaultBoundariesElement: 'window',
+});
 sync(store, router);
 
-async function start () {
+async function start() {
 	await fetchConfig();
 	await initApm(config);
 
 	if (!validateLogin()) {
 		return
 	}
-	
+
 	new Vue({
 		el: '#app',
 		store,

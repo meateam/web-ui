@@ -4,14 +4,14 @@
       <button @click="openSidebar" :aria-label="$t('buttons.toggleSidebar')" :title="$t('buttons.toggleSidebar')" class="action">
         <i class="material-icons">menu</i>
       </button>
-      <img @click="redirectToMain" :src="logoURL" alt="File Browser">
-      <!-- <search v-if="isLogged"></search> -->
+      <img @click="redirectToMain" :src="logoURL" :class="direction" alt="File Browser">
+      <search class="search" :class="direction" v-if="isLogged"></search>
     </div>
     <div>
       <template v-if="isLogged">
-        <!-- <button @click="openSearch" :aria-label="$t('buttons.search')" :title="$t('buttons.search')" class="search-button action">
+        <button @click="openSearch" :aria-label="$t('buttons.search')" :title="$t('buttons.search')" class="search-button action">
           <i class="material-icons">search</i>
-        </button> -->
+        </button>
 
         <button v-show="showSaveButton" :aria-label="$t('buttons.save')" :title="$t('buttons.save')" class="action" id="save-button">
           <i class="material-icons">save</i>
@@ -24,7 +24,7 @@
         <!-- Menu that shows on listing AND mobile when there are files selected -->
         <div id="file-selection" v-if="isMobile && isListing">
           <span v-if="selectedCount > 0">{{ selectedCount }} selected</span>
-          <!-- <share-button v-show="showShareButton"></share-button> -->
+          <share-button v-show="showShareButton"></share-button>
           <rename-button v-show="showRenameButton"></rename-button>
           <!-- <copy-button v-show="showCopyButton"></copy-button> -->
           <move-button v-show="showMoveButton"></move-button>
@@ -34,7 +34,7 @@
         <!-- This buttons are shown on a dropdown on mobile phones -->
         <div id="dropdown" :class="{ active: showMore }">
           <div v-if="!isListing || !isMobile">
-            <!-- <share-button v-show="showShareButton"></share-button> -->
+            <share-button v-show="showShareButton"></share-button>
             <rename-button v-show="showRenameButton"></rename-button>
             <!-- <copy-button v-show="showCopyButton"></copy-button> -->
             <move-button v-show="showMoveButton"></move-button>
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-// import Search from './Search'
+import Search from './Search'
 import InfoButton from './buttons/Info'
 import DeleteButton from './buttons/Delete'
 import RenameButton from './buttons/Rename'
@@ -65,21 +65,21 @@ import DownloadButton from './buttons/Download'
 import SwitchButton from './buttons/SwitchView'
 import MoveButton from './buttons/Move'
 // import CopyButton from './buttons/Copy'
-// import ShareButton from './buttons/Share'
+import ShareButton from './buttons/Share'
 import UserButton from './buttons/User';
 import SelectButton from './buttons/Select';
 import {mapGetters, mapState} from 'vuex'
-import { logoURL } from '@/utils/constants'
+import { logoURL, UploadRole, DownloadRole, DeleteRole, RenameRole, ShareRole, MoveRole } from '@/utils/constants'
 import * as api from '@/api'
 import buttons from '@/utils/buttons'
 
 export default {
   name: 'header-layout',
   components: {
-    // Search,
+    Search,
     InfoButton,
     DeleteButton,
-    // ShareButton,
+    ShareButton,
     RenameButton,
     DownloadButton,
     // CopyButton,
@@ -111,7 +111,10 @@ export default {
       'isFiles',
       'isEditor',
       'isListing',
-      'isLogged'
+      'isLogged',
+      'shares',
+      'currentFolder',
+      'direction'
     ]),
     ...mapState([
       'req',
@@ -126,34 +129,101 @@ export default {
       return this.width <= 736
     },
     showUpload () {
-      return this.isListing
+      return this.isListing && UploadRole(this.req.role) && this.selectedCount === 0
     },
     showSaveButton () {
       return this.isEditor
     },
     showDownloadButton () {
       // Show only if one file selected and the selected file is not a folder.
-      return this.isFiles && this.selectedCount === 1 && ! this.req.items[this.selected[0]].isDir;
+      return this.isFiles && this.selectedCount === 1 && ! this.req.items[this.selected[0]].isDir && DownloadRole(this.req.items[this.selected[0]].role);
     },
     showDeleteButton () {
-      return this.isFiles && (this.isListing
-        ? (this.selectedCount !== 0)
-        : true)
+      if (this.isFiles) {
+        if (this.isListing) {
+          if (this.selectedCount === 0) {
+            // Can't delete a file that is being shared with you directly.
+            if (this.req.permission && this.req.permission.fileID !== this.req.id) {
+              return false;
+            }
+            
+            return this.req.id && DeleteRole(this.req.role);
+          } else {
+            for (let i = 0; i < this.selected.length; i++) {
+              // Can't delete a file that is being shared with you directly.
+              if (this.req.items[this.selected[i]].permission &&
+                  this.req.items[this.selected[i]].permission.id !== this.req.items[this.selected[i]].id) {
+                return false;
+              }
+
+              if (!DeleteRole(this.req.items[this.selected[i]].role)) {
+                return false;
+              }
+            }
+
+            return true;
+          }
+        } else {
+          if (!this.req.items) {
+            return false;
+          }
+
+          for (let i = 0; i < this.selected.length; i++) {
+            if (!DeleteRole(this.req.items[this.selected[i]].role)) {
+              return false;
+            }
+          }
+
+          return true;
+        }
+      }
+
+      return false;
     },
     showRenameButton () {
-      return this.isFiles && (this.isListing
-        ? (this.selectedCount === 1)
-        : true)
+      if (this.isFiles) {
+        if (this.isListing) {
+          if (this.selectedCount === 0) {
+            return this.req.id && RenameRole(this.req.role);
+          } else {
+            return this.selectedCount === 1 && RenameRole(this.req.items[this.selected[0]].role);
+          }
+        } else {
+          return this.req.items && RenameRole(this.req.items[this.selected[0]].role);
+        }
+      }
+
+      return false;
     },
     showShareButton () {
-      return this.isFiles && (this.isListing
-        ? (this.selectedCount === 1)
-        : true)
+      if (this.isFiles) {
+        if (this.isListing) {
+         if (this.selectedCount === 0) {
+            return this.req.id && ShareRole(this.req.role);
+          } else {
+            return this.selectedCount === 1 && ShareRole(this.req.items[this.selected[0]].role);
+          }
+        } else {
+          return this.req.items && ShareRole(this.req.items[this.selected[0]].role);
+        }
+      }
+
+      return false;
     },
     showMoveButton () {
-      return this.isFiles && (this.isListing
-        ? (this.selectedCount > 0)
-        : true)
+      if (this.isFiles) {
+        if (this.isListing) {
+         if (this.selectedCount === 0) {
+            return this.req.id && MoveRole(this.req.role);
+          } else {
+            return this.selectedCount > 0 && MoveRole(this.req.items[this.selected[0]].role);
+          }
+        } else {
+          return this.req.items && MoveRole(this.req.items[this.selected[0]].role);
+        }
+      }
+
+      return false;
     },
     showCopyButton () {
       return this.isFiles && (this.isListing
@@ -192,3 +262,14 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .search.ltr {
+    margin-left: 13em;
+    width: 75%;
+  }
+
+  .search.rtl {
+    margin-right: 13em;
+    width: 75%;
+  }
+</style>

@@ -11,9 +11,11 @@
         <i class="material-icons">close</i>
       </button>
 
-      <rename-button></rename-button>
-      <delete-button></delete-button>
-      <download-button></download-button>
+      <rename-button v-show="showRenameButton"></rename-button>
+      <share-button v-show="showShareButton"></share-button>
+      <move-button v-show="showMoveButton"></move-button>
+      <delete-button v-show="showDeleteButton"></delete-button>
+      <download-button v-show="showDownloadButton"></download-button>
       <info-button></info-button>
     </div>
 
@@ -54,9 +56,10 @@
         >download it</a>
         and watch it with your favorite video player!
       </video>
-      <object v-else-if="req.extension == '.pdf'" class="pdf" :data="raw"></object>
-      <a v-else-if="req.type == 'blob'" :href="download">
+      <iframe v-else-if="isIframe" class="pdf" :src="iframe"></iframe>
+      <a v-else :href="download">
         <h2 class="message">
+          {{$t('files.cannotPreview')}}<br/><br/>
           {{ $t('buttons.download') }}
           <i class="material-icons">file_download</i>
         </h2>
@@ -67,12 +70,22 @@
 
 <script>
 import { mapState } from 'vuex';
-import { baseURL, checkMimeType } from '@/utils/constants';
+import {
+  baseURL,
+  checkDocumentPreview,
+  DownloadRole,
+  DeleteRole,
+  RenameRole,
+  ShareRole,
+  MoveRole
+} from '@/utils/constants';
 import { files as api } from '@/api';
 import InfoButton from '@/components/buttons/Info';
 import DeleteButton from '@/components/buttons/Delete';
 import RenameButton from '@/components/buttons/Rename';
 import DownloadButton from '@/components/buttons/Download';
+import MoveButton from '@/components/buttons/Move'
+import ShareButton from '@/components/buttons/Share'
 
 export default {
   name: 'preview',
@@ -80,7 +93,9 @@ export default {
     InfoButton,
     DeleteButton,
     RenameButton,
-    DownloadButton
+    DownloadButton,
+    MoveButton,
+    ShareButton
   },
   data: function() {
     return {
@@ -103,7 +118,33 @@ export default {
     },
     raw() {
       return `${this.download}&inline=true`;
-    }
+    },
+    iframe() {
+      return api.preview(this.req.id);
+    },
+    isIframe() {
+      return checkDocumentPreview(this.req.type);
+    },
+    showDownloadButton () {
+      return !this.req.isDir && DownloadRole(this.req.role);
+    },
+    showDeleteButton () {
+      // Can't delete a file that is being shared with you directly.
+      if (this.req.permission && this.req.permission.fileID !== this.req.id) {
+        return false;
+      }
+      
+      return DeleteRole(this.req.role);
+    },
+    showRenameButton () {
+      return RenameRole(this.req.role);
+    },
+    showShareButton () {
+      return ShareRole(this.req.role);
+    },
+    showMoveButton () {
+      return MoveRole(this.req.role);
+    },
   },
   async mounted() {
     window.addEventListener('keyup', this.key);
@@ -158,7 +199,7 @@ export default {
     },
     key(event) {
       event.preventDefault();
-
+      if(event.key === "Escape") this.back();
       if (event.which === 13 || event.which === 39) {
         // right arrow
         if (this.hasNext) this.next();
@@ -174,14 +215,14 @@ export default {
         }
 
         for (let j = i - 1; j >= 0; j--) {
-          if (checkMimeType(items[j].type)) {
+          if (!items[j].isDir) {
             this.previousLink = { id: items[j].id, name: items[j].name };
             break;
           }
         }
 
         for (let j = i + 1; j < items.length; j++) {
-          if (checkMimeType(items[j].type)) {
+          if (!items[j].isDir) {
             this.nextLink = { id: items[j].id, name: items[j].name };
             break;
           }

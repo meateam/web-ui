@@ -14,52 +14,38 @@
       <div class="item header">
         <div></div>
         <div>
-<!-- Previous Item Header -->
-          <!-- <p :class="{ active: nameSorted }" class="name"
+          <p :class="{ active: nameSorted() }" class="name"
             role="button"
             tabindex="0"
             @click="sort('name')"
             :title="$t('files.sortByName')"
             :aria-label="$t('files.sortByName')">
             <span>{{ $t('files.name') }}</span>
-            <i class="material-icons">{{ nameIcon }}</i>
+            <i class="material-icons">{{ nameIcon() }}</i>
           </p>
-          <p :class="{ active: sizeSorted }" class="size"
+          <p :class="{ active: sizeSorted() }" class="size"
             role="button"
             tabindex="0"
             @click="sort('size')"
             :title="$t('files.sortBySize')"
             :aria-label="$t('files.sortBySize')">
             <span>{{ $t('files.size') }}</span>
-            <i class="material-icons">{{ sizeIcon }}</i>
+            <i class="material-icons">{{ sizeIcon() }}</i>
           </p>
-          <p :class="{ active: modifiedSorted }" class="modified"
+          <p :class="{ active: modifiedSorted() }" class="modified"
             role="button"
             tabindex="0"
             @click="sort('modified')"
             :title="$t('files.sortByLastModified')"
             :aria-label="$t('files.sortByLastModified')">
             <span>{{ $t('files.lastModified') }}</span>
-            <i class="material-icons">{{ modifiedIcon }}</i>
-          </p> -->
-
-<!-- New Item Header -->
-          <p class="name">
-            <span>{{ $t('files.name') }}</span>
+            <i class="material-icons">{{ modifiedIcon() }}</i>
           </p>
-          <p class="size">
-            <span>{{ $t('files.size') }}</span>
-          </p>
-          <p class="modified">
-            <span>{{ $t('files.lastModified') }}</span>
-          </p>
-
-
         </div>
       </div>
     </div>
 
-    <h2 v-if="req.numDirs > 0">{{ $t('files.folders') }}</h2>
+    <h2 :class="direction" v-if="req.numDirs > 0">{{ $t('files.folders') }}</h2>
     <div v-if="req.numDirs > 0">
       <item v-for="(item) in dirs"
         :key="base64(item.name)"
@@ -70,11 +56,12 @@
         v-bind:url="item.url"
         v-bind:modified="item.modified"
         v-bind:type="item.type"
-        v-bind:size="item.size">
+        v-bind:size="item.size"
+        @contextmenu.prevent="$refs.menu.open($event, {file: item})">
       </item>
     </div>
 
-    <h2 v-if="req.numFiles > 0">{{ $t('files.files') }}</h2>
+    <h2 :class="direction" v-if="req.numFiles > 0">{{ $t('files.files') }}</h2>
     <div v-if="req.numFiles > 0">
       <item v-for="(item) in files"
         :key="base64(item.name)"
@@ -84,9 +71,49 @@
         v-bind:id="item.id"
         v-bind:modified="item.modified"
         v-bind:type="item.type"
-        v-bind:size="item.size">
+        v-bind:size="item.size"
+        @contextmenu.prevent="$refs.menu.open($event, {file: item})">
       </item>
     </div>
+    <vue-context ref="menu">
+      <template slot-scope="child" v-if="child.data">
+        <li>
+          <a class="pointer" @click.prevent="showInfo(child.data.file)">
+            <i class="material-icons context-icon">info</i> {{ $t('buttons.info') }}
+          </a>
+        </li>
+        <li v-if="canPreview(child.data.file)">
+          <a class="pointer" @click.prevent="preview(child.data.file)">
+            <i class="material-icons context-icon">picture_as_pdf</i> {{$t('buttons.preview')}}
+          </a>
+        </li>
+        <li v-if="showDownloadButton(child.data.file)">
+          <a class="pointer" @click.prevent="download(child.data.file)">
+            <i class="material-icons context-icon">file_download</i> {{$t('buttons.download')}}
+          </a>
+        </li>
+        <li v-if="showDeleteButton(child.data.file)">
+          <a class="pointer" @click.prevent="deleteFile(child.data.file)">
+            <i class="material-icons context-icon">delete</i> {{$t('buttons.delete')}}
+          </a>
+        </li>
+        <li v-if="showShareButton(child.data.file)">
+          <a class="pointer" @click.prevent="showShare(child.data.file)">
+            <i class="material-icons context-icon">share</i> {{$t('buttons.share')}}
+          </a>
+        </li>
+        <li v-if="showMoveButton(child.data.file)">
+          <a class="pointer" @click.prevent="showMove(child.data.file)">
+            <i class="material-icons rtl context-icon">forward</i> {{$t('buttons.move')}}
+          </a>
+        </li>
+        <li v-if="showRenameButton(child.data.file)">
+          <a class="pointer" @click.prevent="showRename(child.data.file)">
+            <i class="material-icons context-icon">mode_edit</i> {{$t('buttons.rename')}}
+          </a>
+        </li>
+      </template>
+    </vue-context>
 
     <input style="display:none" type="file" id="upload-input" @change="uploadInput($event)" multiple>
 
@@ -100,81 +127,47 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapGetters, mapState, mapMutations } from 'vuex';
+import VueContext from 'vue-context';
+import 'vue-context/dist/css/vue-context.css';
+
 import Item from './ListingItem'
 import css from '@/utils/css'
-import { users, files as api } from '@/api'
+import { files as api } from '@/api'
 import buttons from '@/utils/buttons'
+import { checkConflict } from '@/utils/files'
+import {
+  checkMimeType,
+  checkDocumentPreview,
+  DownloadRole,
+  DeleteRole,
+  RenameRole,
+  ShareRole,
+  MoveRole
+} from '@/utils/constants';
 
 export default {
   name: 'listing',
-  components: { Item },
+  components: { Item, VueContext },
+  watch: {
+    req: function() {
+      this.refreshItems();
+    }
+  },
   data: function () {
     return {
-      show: 50
+      show: 50,
+      dirs: [],
+      files: [],
+      sorting: {by: 'name', asc: true}
     }
   },
   computed: {
-    ...mapState(['req', 'selected', 'user']),
-    nameSorted () {
-      return true;
-    },
-    sizeSorted () {
-      return false;
-    },
-    modifiedSorted () {
-      return false;
-    },
-    ascOrdered () {
-      return true;
-    },
-    items () {
-      const dirs = []
-      const files = []
-
-      this.req.items.forEach((item) => {
-        if (item.isDir) {
-          dirs.push(item)
-        } else {
-          files.push(item)
-        }
-      })
-
-      return { dirs, files }
-    },
-    dirs () {
-      return this.items.dirs.slice(0, this.show)
-    },
-    files () {
-      let show = this.show - this.items.dirs.length
-
-      if (show < 0) show = 0
-
-      return this.items.files.slice(0, show)
-    },
-    nameIcon () {
-      if (this.nameSorted && !this.ascOrdered) {
-        return 'arrow_upward'
-      }
-
-      return 'arrow_downward'
-    },
-    sizeIcon () {
-      if (this.sizeSorted && this.ascOrdered) {
-        return 'arrow_downward'
-      }
-
-      return 'arrow_upward'
-    },
-    modifiedIcon () {
-      if (this.modifiedSorted && this.ascOrdered) {
-        return 'arrow_downward'
-      }
-
-      return 'arrow_upward'
-    }
+    ...mapGetters(['direction', 'shares']),
+    ...mapState(['req', 'selected', 'user'])
   },
   mounted: function () {
+    this.refreshItems()
     // Check the columns size for the first time.
     this.resizeEvent()
 
@@ -194,7 +187,52 @@ export default {
     document.removeEventListener('drop', this.drop)
   },
   methods: {
-    ...mapMutations([ 'updateUser' ]),
+    ...mapMutations([ 'updateUser', 'addSelected', 'resetSelected' ]),
+    refreshItems: function() {
+      this.dirs = [];
+      this.files = [];
+      
+      this.req.items.forEach((item) => {
+        if (item.isDir) {
+          this.dirs.push(item)
+        } else {
+          this.files.push(item)
+        }
+      });
+    },
+    nameSorted: function() {
+      return (this.sorting.by === 'name')
+    },
+    sizeSorted: function() {
+      return (this.sorting.by === 'size')
+    },
+    modifiedSorted: function() {
+      return (this.sorting.by === 'modified')
+    },
+    ascOrdered: function() {
+      return this.sorting.asc
+    },
+    nameIcon: function() {
+      if (this.nameSorted() && this.ascOrdered()) {
+        return 'arrow_downward'
+      }
+
+      return 'arrow_upward'
+    },
+    sizeIcon () {
+      if (this.sizeSorted() && this.ascOrdered()) {
+        return 'arrow_downward'
+      }
+
+      return 'arrow_upward'
+    },
+    modifiedIcon () {
+      if (this.modifiedSorted() && this.ascOrdered()) {
+        return 'arrow_downward'
+      }
+
+      return 'arrow_upward'
+    },
     base64: function (name) {
       return window.btoa(unescape(encodeURIComponent(name)))
     },
@@ -266,13 +304,13 @@ export default {
       if (this.$store.state.clipboard.key === 'x') {
         api.move(items).then(() => {
           this.$store.commit('setReload', true)
-        }).catch(this.$showError)
+        }).catch(e => this.$showError(e))
         return
       }
 
       api.copy(items).then(() => {
         this.$store.commit('setReload', true)
-      }).catch(this.$showError)
+      }).catch(e => this.$showError(e))
     },
     resizeEvent () {
       // Update the columns size based on the window width.
@@ -287,6 +325,7 @@ export default {
       }
     },
     dragEnter () {
+      if (this.shares) return;
       // When the user starts dragging an item, put every
       // file on the listing with 50% opacity.
       let items = document.getElementsByClassName('item')
@@ -296,9 +335,11 @@ export default {
       })
     },
     dragEnd () {
+      if (this.shares) return;
       this.resetOpacity()
     },
     drop: function (event) {
+      if (this.shares) return;
       event.preventDefault()
       this.resetOpacity()
 
@@ -324,30 +365,14 @@ export default {
           .then(req => {
             this.checkConflict(files, req.items, base)
           })
-          .catch(this.$showError)
-
+          .catch(e => this.$showError(e))
         return
       }
 
       this.checkConflict(files, this.req.items, this.$store.getters.currentFolder.id);
     },
     checkConflict (files, items, base) {
-      if (typeof items === 'undefined' || items === null) {
-        items = []
-      }
-
-      let conflict = false
-      for (let i = 0; i < files.length; i++) {
-        let res = items.findIndex(function hasConflict (element) {
-          return (element.name === this)
-        }, files[i].name)
-
-        if (res >= 0) {
-          conflict = true
-          break
-        }
-      }
-
+      const conflict = checkConflict(files, items, base);
       if (!conflict) {
         this.handleFiles(files, base)
         return
@@ -409,30 +434,109 @@ export default {
 
       return false
     },
-    async sort (by) {
-      let asc = false
+    sort (by) {
+      const sorting = {by, asc: false};
 
-      if (by === 'name') {
-        if (this.nameIcon === 'arrow_upward') {
-          asc = true
+      switch (by) {
+        case 'name': {
+          sorting.asc = this.nameIcon() === 'arrow_upward';
+          
+          if (sorting.asc) {
+            this.dirs.sort((dirA, dirB) => dirA.name.localeCompare(dirB.name));
+            this.files.sort((fileA, fileB) => fileA.name.localeCompare(fileB.name));
+          } else {
+            this.dirs.sort((dirA, dirB) => dirB.name.localeCompare(dirA.name));
+            this.files.sort((fileA, fileB) => fileB.name.localeCompare(fileA.name));
+          }
+
+          break;
         }
-      } else if (by === 'size') {
-        if (this.sizeIcon === 'arrow_upward') {
-          asc = true
+        case 'size': {
+          sorting.asc = this.sizeIcon() === 'arrow_upward';
+          
+          if (sorting.asc) {
+            this.dirs.sort((dirA, dirB) => dirA.size - dirB.size);
+            this.files.sort((fileA, fileB) => fileA.size - fileB.size);
+          } else {
+            this.dirs.sort((dirA, dirB) => dirB.size - dirA.size);
+            this.files.sort((fileA, fileB) => fileB.size - fileA.size);
+          }
+          
+          break;
         }
-      } else if (by === 'modified') {
-        if (this.modifiedIcon === 'arrow_upward') {
-          asc = true
+        case 'modified': {
+          sorting.asc = this.modifiedIcon() === 'arrow_upward';
+          
+          if (sorting.asc) {
+            this.dirs.sort((dirA, dirB) => dirA.modified - dirB.modified);
+            this.files.sort((fileA, fileB) => fileA.modified - fileB.modified);
+          } else {
+            this.dirs.sort((dirA, dirB) => dirB.modified - dirA.modified);
+            this.files.sort((fileA, fileB) => fileB.modified - fileA.modified);
+          }
+
+          break;
         }
       }
 
-      try {
-        await users.update({ id: this.user.id, sorting: { by, asc } }, ['sorting'])
-      } catch (e) {
-        this.$showError(e)
+      this.sorting = sorting;
+    },
+    showInfo: function (file) {
+      this.resetSelected();
+      this.addSelected(file.index);
+      this.$store.commit('showHover', 'info');
+    },
+    showDownloadButton (file) {
+      return !file.isDir && DownloadRole(file.role);
+    },
+    showDeleteButton (file) {
+      // Can't delete a file that is being shared with you directly.
+      if (file.permission && file.permission.fileID !== file.id) {
+        return false;
       }
 
-      this.$store.commit('setReload', true)
+      return DeleteRole(file.role);
+    },
+    showRenameButton (file) {
+      return RenameRole(file.role);
+    },
+    showShareButton (file) {
+      return ShareRole(file.role);
+    },
+    showMoveButton (file) {
+      return MoveRole(file.role);
+    },
+    download: function (file) {
+      api.download([file.id]);
+    },
+    deleteFile: async function (file) {
+      this.resetSelected();
+      this.addSelected(file.index);
+      this.$store.commit('showHover', 'delete');
+    },
+    showShare: function (file) {
+      this.resetSelected();
+      this.addSelected(file.index);
+      this.$store.commit('showHover', 'share');
+    },
+    showMove: function (file) {
+      this.resetSelected();
+      this.addSelected(file.index);
+      this.$store.commit('showHover', 'move');
+    },
+    showRename: function (file) {
+      this.resetSelected();
+      this.addSelected(file.index);
+      this.$store.commit('showHover', 'rename');
+    },
+    canPreview: function (file) {
+      return checkMimeType(file.type) || checkDocumentPreview(file.type);
+    },
+    preview: function (file) {
+      this.$store.commit('pushFolder', { id: file.id, name: file.name });
+      this.$store.commit('setReload', true);
+
+      return;
     }
   }
 }

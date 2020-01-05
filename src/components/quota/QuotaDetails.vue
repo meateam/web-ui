@@ -1,6 +1,6 @@
 <template>
   <div class="quota-usage-container">
-      {{`${$t('quota.usage')}: ${used} / ${limit}`}}
+      {{`${$t('quota.usage', {used, limit})}`}}
   </div>
 </template>
 
@@ -22,8 +22,10 @@ export default {
 
 <style scoped>
 .quota-usage-container {
+  direction: ltr;
+  margin: 0 auto;
   color: #333333d0;
-  font-size: 0.8em;
+  font-size: 0.75em;
   margin-top: 0.5em;
 }
 </style>

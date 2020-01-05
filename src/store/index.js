@@ -27,7 +27,9 @@ const state = {
   show: null,
   showShell: false,
   showMessage: null,
-  showConfirm: null
+  showConfirm: null,
+  shares: false,
+  search: false,
 }
 
 export default new Vuex.Store({

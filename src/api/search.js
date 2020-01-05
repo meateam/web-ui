@@ -1,8 +1,7 @@
-import { fetchJSON, removePrefix } from './utils'
+import { fetchJSON } from './utils'
 
-export default async function search (url, query) {
-  url = removePrefix(url)
+export default async function search (query) {
   query = encodeURIComponent(query)
 
-  return fetchJSON(`/api/search${url}?query=${query}`, {})
+  return fetchJSON(`/api/search?q=${query}`, {})
 }

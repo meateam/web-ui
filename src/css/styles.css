@@ -32,7 +32,7 @@
   padding: 0;
   box-shadow: none;
   vertical-align: middle;
-  text-align: left;
+  text-align: inherit;
   position: relative;
   user-select: none;
 }
@@ -113,7 +113,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 9999;
+  z-index: 3;
   overflow: hidden;
 }
 
@@ -163,6 +163,7 @@
 #previewer .pdf {
   width: 100%;
   height: 100%;
+  background: white;
 }
 
 #previewer h2.message {
@@ -197,6 +198,7 @@
 .noty_buttons button {
   background: rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 2px;
   box-shadow: 0 0 0 0;
   font-size: 14px;
 }
