@@ -1,111 +1,132 @@
 <template>
   <div class="card floating" id="share">
     <div class="card-title">
-      <h2>{{ $t('buttons.share') }}</h2>
+      <h2>{{ $t("buttons.share") }}</h2>
     </div>
+    <button @click="changeShare">Change Share</button>
+    <template v-if="!regularShare">
+      <shareEx></shareEx>
+    </template>
 
-    <div class="card-content">
-      <div class="user-role-select">
-        <ul id="user-role-list">
-          <li>
-            <autocomplete :search="search"
-              :autoSelect="true"
-              @submit="saveUser"
-              :get-result-value="getResultValue"
-             :placeholder="$t('prompts.searchUser')"
-            >
-              <template v-slot:result="{ result, props }">
-                <li v-bind="props" class="share-result">
-                <div>
-                    <div class="share-title">
-                      {{ getResultValue(result) }}
+    <template v-if="regularShare">
+      <div class="card-content">
+        <div class="user-role-select">
+          <ul id="user-role-list">
+            <li>
+              <autocomplete
+                :search="search"
+                :autoSelect="true"
+                @submit="saveUser"
+                :get-result-value="getResultValue"
+                :placeholder="$t('prompts.searchUser')"
+              >
+                <template v-slot:result="{ result, props }">
+                  <li v-bind="props" class="share-result">
+                    <div>
+                      <div class="share-title">
+                        {{ getResultValue(result) }}
+                      </div>
+                      <div class="share-snippet">
+                        {{ result.hierarchyFlat }}
+                      </div>
                     </div>
-                    <div class="share-snippet">{{result.hierarchyFlat}}</div>
-                    </div>
-                </li>
-              </template>
-            </autocomplete>
+                  </li>
+                </template>
+              </autocomplete>
 
-            <select style="display:none;" v-model="role" :aria-label="$t('role.input')">
-              <option value="READ" >{{ $t('role.read') }}</option>
-            </select>
-            <button class="action"
-              @click="submit"
-              :aria-label="$t('buttons.create')"
-              :title="$t('buttons.create')"><i class="material-icons">add</i></button>
-          </li>
-        </ul>
+              <select
+                style="display:none;"
+                v-model="role"
+                :aria-label="$t('role.input')"
+              >
+                <option value="READ">{{ $t("role.read") }}</option>
+              </select>
+              <button
+                class="action"
+                @click="submit"
+                :aria-label="$t('buttons.create')"
+                :title="$t('buttons.create')"
+              >
+                <i class="material-icons">add</i>
+              </button>
+            </li>
+          </ul>
+        </div>
+        <hr />
+        <edit-permission-list :id="selectedItem.id" ref="editPermissionList">
+        </edit-permission-list>
       </div>
-      <hr/>
-      <edit-permission-list
-        :id="selectedItem.id" ref="editPermissionList">
-      </edit-permission-list>
-    </div>
+    </template>
 
     <div :class="direction" class="card-action">
-      <button class="button button--flat"
+      <button
+        class="button button--flat"
         @click="$store.commit('closeHovers')"
         :aria-label="$t('buttons.close')"
-        :title="$t('buttons.close')">{{ $t('buttons.close') }}</button>
+        :title="$t('buttons.close')"
+      >
+        {{ $t("buttons.close") }}
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-import { share as shareApi, users as usersApi } from '@/api'
-import Autocomplete from '@trevoreyre/autocomplete-vue'
-import { minAutoComplete } from '@/utils/constants'
-import EditPermissionList from '../common/EditPermissionList'
-import moment from 'moment'
-import '@trevoreyre/autocomplete-vue/dist/style.css'
-
+import { mapState, mapGetters } from "vuex";
+import { share as shareApi, users as usersApi } from "@/api";
+import Autocomplete from "@trevoreyre/autocomplete-vue";
+import { minAutoComplete } from "@/utils/constants";
+import EditPermissionList from "../common/EditPermissionList";
+import moment from "moment";
+import "@trevoreyre/autocomplete-vue/dist/style.css";
+import ShareExternal from "./ShareExternal";
 
 export default {
-  name: 'share',
+  name: "share",
   components: {
     Autocomplete,
-    EditPermissionList
+    EditPermissionList,
+    shareEx: ShareExternal
   },
-  data: function () {
+  data: function() {
     return {
-      role: 'READ',
-      searchText: '',
-      user:''
-    }
+      role: "READ",
+      searchText: "",
+      user: "",
+      regularShare: true
+    };
   },
   computed: {
-    ...mapState([ 'req', 'selected', 'selectedCount' ]),
-    ...mapGetters([ 'isListing', 'direction' ]),
+    ...mapState(["req", "selected", "selectedCount"]),
+    ...mapGetters(["isListing", "direction"]),
     selectedItem() {
       return this.req.items[this.selected[0]];
     }
   },
-  async beforeMount () {
-  },
-  mounted () {
-  },
-  beforeDestroy () {
-  },
+  async beforeMount() {},
+  mounted() {},
+  beforeDestroy() {},
   methods: {
     saveUser(user) {
       this.user = user;
     },
-    submit: async function () {
-      if (!this.role) return
-      if (!this.user) return
-      
+    submit: async function() {
+      if (!this.role) return;
+      if (!this.user) return;
+
       try {
         await shareApi.create(this.selectedItem.id, this.user.id, this.role);
-        this.$showSuccess(`successfully shared with ${this.getResultValue(this.user)}`);
+        this.$showSuccess(
+          `successfully shared with ${this.getResultValue(this.user)}`
+        );
         this.$refs.editPermissionList.addUser(this.user);
       } catch (e) {
-        this.$showError(e)
+        this.$showError(e);
       }
     },
     async search(input) {
       if (input.length < minAutoComplete) {
-         return [];
+        return [];
       }
       const res = await usersApi.searchUserByName(input);
       const users = res.data.users;
@@ -114,41 +135,44 @@ export default {
       }
       return [];
     },
-    humanTime (time) {
-      return moment(time * 1000).fromNow()
+    humanTime(time) {
+      return moment(time * 1000).fromNow();
     },
     getResultValue(result) {
       return `${result.firstName} ${result.lastName}`;
+    },
+    changeShare() {
+      this.regularShare = !this.regularShare;
     }
   }
-}
+};
 </script>
 
 <style scoped>
-  #app {
-    min-width: 200px;
-    margin: 0 auto;
-  }
+#app {
+  min-width: 200px;
+  margin: 0 auto;
+}
 
-  .share-result {    
-    min-width: 100px;
-    padding: 5px;
-    background: transparent;
-  }
+.share-result {
+  min-width: 100px;
+  padding: 5px;
+  background: transparent;
+}
 
-  .share-result:hover {
-    background: #bdddf0;
-  }
+.share-result:hover {
+  background: #bdddf0;
+}
 
-  .share-title {
-    font-size: 20px;
-    margin-bottom: 1px;
-    margin-top: 1px;
-    margin-right: 10px;
-  }
+.share-title {
+  font-size: 20px;
+  margin-bottom: 1px;
+  margin-top: 1px;
+  margin-right: 10px;
+}
 
-  .share-snippet {
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.54);
-  }
+.share-snippet {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.54);
+}
 </style>
