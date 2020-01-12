@@ -6,7 +6,7 @@
       <template v-if="step === 1">
         <div dir="direction">
           <h3>First Step - choose approvers</h3>
-          <p>The approvers selected will have reading permission on the file</p>
+          <p :style="cssVars">The approvers selected will have reading permission on the file</p>
         </div>
         <div class="card-content">
           <div class="user-role-select">
@@ -51,15 +51,82 @@
               </li>
             </ul>
           </div>
-          <hr />
           <edit-permission-list :id="selectedItem.id" ref="editPermissionList">
           </edit-permission-list>
         </div>
       </template>
       <template v-if="step === 2">
-        <p>Second Step</p>
+        <div dir="direction">
+          <h3>Second Step - choose approvers</h3>
+        </div>
+        <div class="card-content">
+          <div class="user-role-select">
+            <ul id="user-role-list">
+              <li>
+                <autocomplete
+                  :search="search"
+                  :autoSelect="true"
+                  @submit="saveExUser"
+                  :get-result-value="getResultValue"
+                  :placeholder="$t('prompts.searchUser')"
+                >
+                  <template v-slot:result="{ result, props }">
+                    <li v-bind="props" class="share-result">
+                      <div>
+                        <div class="share-title">
+                          {{ getResultValue(result) }}
+                        </div>
+                        <div class="share-snippet">
+                          {{ result.hierarchyFlat }}
+                        </div>
+                      </div>
+                    </li>
+                  </template>
+                </autocomplete>
+
+                <select
+                  style="display:none;"
+                  v-model="role"
+                  :aria-label="$t('role.input')"
+                >
+                  <option value="READ">{{ $t("role.read") }}</option>
+                </select>
+                <button
+                  class="action"
+                  @click="submitExternal"
+                  :aria-label="$t('buttons.create')"
+                  :title="$t('buttons.create')"
+                >
+                  <i class="material-icons">add</i>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <ul id="example-1">
+            <li v-bind:key="exUser.id" v-for="exUser in externalUsers">
+              {{ exUser.fullName }}
+              <button @click="removeExUser(exUser.id)">remove</button>
+            </li>
+          </ul>
+        </div>
       </template>
-      <template v-if="step === 3"><p>Third Step</p></template>
+      <template v-if="step === 3">
+        <div dir="direction">
+          <h3>Third Step - add info</h3>
+        </div>
+        <div class="card-content">
+          <textarea id="infoText" class="textbox" rows="4" cols="50" v-model="textData"></textarea>
+        </div>
+      <form>
+        <p>Choose classification:</p>
+        <select id="mySelect">
+          <option v-bind:key="c"  v-for="c in classifications">{{ c }}</option>
+
+        </select>
+      </form>
+
+        <button class="final-button" @click="createShare">Request Share</button>
+      </template>
 
       <button type="button" @click="$refs.stepper.previous()">Previous</button>
       <button type="button" @click="$refs.stepper.next()">Next</button>
@@ -91,7 +158,11 @@ export default {
       step: undefined,
       role: "READ",
       searchText: "",
-      user: ""
+      user: "",
+      currExUser: "",
+      externalUsers: [],
+      textData: "",
+      classifications: ["S", "TS", "VVS", "NVS"]
     };
   },
   computed: {
@@ -108,6 +179,11 @@ export default {
     saveUser(user) {
       this.user = user;
     },
+    saveExUser(user) {
+      this.currExUser = user;
+      console.log('saving');
+      console.log(user);
+    },
     submit: async function() {
       if (!this.role) return;
       if (!this.user) return;
@@ -121,6 +197,32 @@ export default {
       } catch (e) {
         this.$showError(e);
       }
+    },
+    submitExternal: async function() {
+      let exists = false;
+      if(!this.currExUser.id){
+        return
+      }
+      console.log(this.externalUsers);
+      this.externalUsers.forEach(user => {
+        if(user.id === this.currExUser.id) {
+          exists = true;
+          console.log(user.firstName + ' already exists.')
+        }
+      })
+      if(!exists){
+        console.log('adding user');
+        console.log(this.currExUser)
+        // TODO: submit external user
+        this.externalUsers.push(this.currExUser);
+        console.log(this.externalUsers);
+      }
+
+    },
+    removeExUser(id) {
+      this.externalUsers = this.externalUsers.filter(exUser => {
+        return exUser.id != id
+      })
     },
     async search(input) {
       if (input.length < minAutoComplete) {
@@ -138,12 +240,75 @@ export default {
     },
     getResultValue(result) {
       return `${result.firstName} ${result.lastName}`;
+    },
+    createShare() {
+      console.log(this.textData);
+      this.textData = document.getElementById("infoText").value;
+      console.log(this.textData);
+    },
+    cssVars() {
+      return {
+        '--direction': 'ltr'
+      }
     }
   }
 };
 </script>
 
 <style scoped>
+h3 {
+  text-align: center;
+}
+
+p {
+  direction: var(--direction);
+}
+
+select {
+  margin-bottom: 10px;
+}
+option {
+  margin-top: 22px;
+}
+
+button, select {
+  color: #444444;
+    background: #F3F3F3;
+    border: 1px #DADADA solid;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-weight: bold;
+    font-size: 9pt;
+    outline: none;
+}
+
+button:hover {
+    border: 1px #C6C6C6 solid;
+    box-shadow: 1px 1px 1px #EAEAEA;
+    color: #333333;
+    background: #F7F7F7;
+}
+
+button:active {
+    box-shadow: inset 1px 1px 1px #DFDFDF;   
+}
+
+li {
+  margin: 5px;
+  color: red;
+}
+
+.textbox {
+  background-color: blanchedalmond;
+  height: 100px;
+  width: 370px;
+  border-radius: 5px;
+  padding: 5px;
+  margin-bottom: 5px;
+  max-width: 370px;
+  max-height: 600px;
+}
+
 #app {
   min-width: 200px;
   margin: 0 auto;
