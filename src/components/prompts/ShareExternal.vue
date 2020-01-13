@@ -1,12 +1,12 @@
 <template>
     <div>
-      <h2 align="center">Share external user</h2>
+      <h2 align="center">{{$t('exShare.header')}}</h2>
       <v-stepper ref="stepper" :steps="steps" v-model="step"></v-stepper>
 
       <template v-if="step === 1">
         <div dir="direction">
-          <h3>First Step - choose approvers</h3>
-          <p :style="cssVars">The approvers selected will have reading permission on the file</p>
+          <h3>{{$t('exShare.headerFS')}}</h3>
+          <p direction="direction">{{$t('exShare.fsInfo')}}</p>
         </div>
         <div class="card-content">
           <div class="user-role-select">
@@ -42,7 +42,7 @@
                 </select>
                 <button
                   class="action"
-                  @click="submit"
+                  @click="submitApprover"
                   :aria-label="$t('buttons.create')"
                   :title="$t('buttons.create')"
                 >
@@ -57,7 +57,7 @@
       </template>
       <template v-if="step === 2">
         <div dir="direction">
-          <h3>Second Step - choose approvers</h3>
+          <h3>{{$t('exShare.headerSS')}}</h3>
         </div>
         <div class="card-content">
           <div class="user-role-select">
@@ -105,32 +105,32 @@
           <ul id="example-1">
             <li v-bind:key="exUser.id" v-for="exUser in externalUsers">
               {{ exUser.fullName }}
-              <button @click="removeExUser(exUser.id)">remove</button>
+              <button @click="removeExUser(exUser.id)">{{$t('exShare.rmButton')}}</button>
             </li>
           </ul>
         </div>
       </template>
       <template v-if="step === 3">
-        <div dir="direction">
-          <h3>Third Step - add info</h3>
-        </div>
-        <div class="card-content">
-          <textarea id="infoText" class="textbox" rows="4" cols="50" v-model="textData"></textarea>
-        </div>
-      <form>
-        <p>Choose classification:</p>
-        <select id="mySelect">
-          <option v-bind:key="c"  v-for="c in classifications">{{ c }}</option>
+          <div dir="direction">
+            <h3>{{$t('exShare.headerTS')}}</h3>
+          </div>
+          <div class="card-content">
+            <textarea id="infoText" class="textbox" rows="4" cols="50" v-model="textData"></textarea>
+          </div>
+        <form>
+          <p>{{$t('exShare.chooseClass')}}</p>
+          <select id="classSelect">
+            <option v-bind:key="c"  v-for="c in classifications">{{ c }}</option>
 
-        </select>
-      </form>
+          </select>
+        </form>
 
-        <button class="final-button" @click="createShare">Request Share</button>
+        <button class="final-button" @click="createShare">{{$t('exShare.reqShare')}}</button>
       </template>
 
-      <button type="button" @click="$refs.stepper.previous()">Previous</button>
-      <button type="button" @click="$refs.stepper.next()">Next</button>
-      <button type="button" @click="$refs.stepper.reset()">Reset</button>
+      <button type="button" @click="$refs.stepper.previous()">{{$t('exShare.prevBtn')}}</button>
+      <button type="button" @click="$refs.stepper.next()">{{$t('exShare.nextBtn')}}</button>
+      <button type="button" @click="$refs.stepper.reset()">{{$t('exShare.resetBtn')}}</button>
     </div>
 </template>
 
@@ -139,6 +139,7 @@ import { VStepper } from "vue-stepper-component";
 
 import { mapState, mapGetters } from "vuex";
 import { share as shareApi, users as usersApi } from "@/api";
+import { createExShare } from '@/api/exShare';
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import { minAutoComplete } from "@/utils/constants";
 import EditPermissionList from "../common/EditPermissionList";
@@ -160,6 +161,7 @@ export default {
       searchText: "",
       user: "",
       currExUser: "",
+      approvers: [],
       externalUsers: [],
       textData: "",
       classifications: ["S", "TS", "VVS", "NVS"]
@@ -181,10 +183,8 @@ export default {
     },
     saveExUser(user) {
       this.currExUser = user;
-      console.log('saving');
-      console.log(user);
     },
-    submit: async function() {
+    submitApprover: async function() {
       if (!this.role) return;
       if (!this.user) return;
 
@@ -199,23 +199,18 @@ export default {
       }
     },
     submitExternal: async function() {
+      // TODO: change to external user with delegation service
       let exists = false;
       if(!this.currExUser.id){
         return
       }
-      console.log(this.externalUsers);
       this.externalUsers.forEach(user => {
         if(user.id === this.currExUser.id) {
           exists = true;
-          console.log(user.firstName + ' already exists.')
         }
       })
       if(!exists){
-        console.log('adding user');
-        console.log(this.currExUser)
-        // TODO: submit external user
         this.externalUsers.push(this.currExUser);
-        console.log(this.externalUsers);
       }
 
     },
@@ -241,16 +236,16 @@ export default {
     getResultValue(result) {
       return `${result.firstName} ${result.lastName}`;
     },
-    createShare() {
-      console.log(this.textData);
-      this.textData = document.getElementById("infoText").value;
-      console.log(this.textData);
+    async createShare() {
+      let info = document.getElementById("infoText").value;
+      let classification = document.getElementById("classSelect").value;
+      let users = [];
+      this.externalUsers.forEach(user => {
+        users.push({ id: user.id, full_name: user.fullName });
+      })
+      await createExShare(this.selectedItem.id, users, classification, info, )
+      
     },
-    cssVars() {
-      return {
-        '--direction': 'ltr'
-      }
-    }
   }
 };
 </script>
@@ -258,10 +253,6 @@ export default {
 <style scoped>
 h3 {
   text-align: center;
-}
-
-p {
-  direction: var(--direction);
 }
 
 select {
@@ -306,7 +297,7 @@ li {
   padding: 5px;
   margin-bottom: 5px;
   max-width: 370px;
-  max-height: 600px;
+  max-height: 400px;
 }
 
 #app {

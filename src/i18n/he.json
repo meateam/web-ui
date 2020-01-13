@@ -261,5 +261,19 @@
   "download": {
     "downloadFile": "Download File",
     "downloadFolder": "Download Folder"
+  },
+  "exShare": {
+    "changeShare": "שנה שיתוף",
+    "header": "שיתוף משתמש חיצוני",
+    "headerFS": "שלב ראשון - בחר מאשרים",
+    "fsInfo": "המאשרים שנבחרו יקבלו זכויות קריאה על הקובץ",
+    "headerSS": "שלב שני - בחר את המשתמשים לשיתוף",
+    "rmButton": "הסר",
+    "headerTS": "שלב שלישי - הוסף מידע על הקובץ",
+    "chooseClass": "בחר סיווג",
+    "reqShare": "שלח בקשה",
+    "prevBtn": "הקודם",
+    "nextBtn": "הבא",
+    "resetBtn": "אפס"
   }
 }

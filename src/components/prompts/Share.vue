@@ -3,7 +3,7 @@
     <div class="card-title">
       <h2>{{ $t("buttons.share") }}</h2>
     </div>
-    <button @click="changeShare">Change Share</button>
+    <button @click="changeShare">{{$t('exShare.changeShare')}}</button>
     <template v-if="!regularShare">
       <shareEx></shareEx>
     </template>
@@ -149,6 +149,10 @@ export default {
 </script>
 
 <style scoped>
+.title {
+  text-align: center;
+}
+
 #app {
   min-width: 200px;
   margin: 0 auto;

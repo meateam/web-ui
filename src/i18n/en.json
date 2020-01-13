@@ -261,5 +261,19 @@
   "download": {
     "downloadFile": "Download File",
     "downloadFolder": "Download Folder"
+  },
+  "exShare": {
+    "changeShare": "Change Share",
+    "header": "Share external user",
+    "headerFS": "First Step - choose approvers",
+    "fsInfo": "The approvers selected will have reading permission on the file",
+    "headerSS": "Second Step - choose approvers",
+    "rmButton": "remove",
+    "headerTS": "Third Step - add info",
+    "chooseClass": "Choose classification:",
+    "reqShare": "Request Share",
+    "prevBtn": "Previous",
+    "nextBtn": "Next",
+    "resetBtn": "Reset"
   }
 }
