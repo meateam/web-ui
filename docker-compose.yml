@@ -8,7 +8,7 @@ services:
     depends_on:
       - api-gateway
   api-gateway:
-    image: 'bluehub.azurecr.io/meateam/api-gateway:develop'
+    image: 'bluehub.azurecr.io/meateam/api-gateway:1.1'
     environment:
       GW_AUTH_URL: 'http://localhost:8084/auth/login'
       GW_PORT: 8080
@@ -56,7 +56,7 @@ services:
       MINIO_SECRET_KEY: 'BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR'
     command: server /data
   upload-service:
-    image: 'bluehub.azurecr.io/meateam/upload-service:develop'
+    image: 'bluehub.azurecr.io/meateam/upload-service:1.1'
     environment:
       S3_ACCESS_KEY: 'F6WUUG27HBUFSIXVZL59'
       S3_SECRET_KEY: 'BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR'
@@ -79,7 +79,7 @@ services:
     ports:
       - '8081:8080'
   download-service:
-    image: 'bluehub.azurecr.io/meateam/download-service:develop'
+    image: 'bluehub.azurecr.io/meateam/download-service:1.1'
     environment:
       S3_ACCESS_KEY: 'F6WUUG27HBUFSIXVZL59'
       S3_SECRET_KEY: 'BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR'
@@ -102,7 +102,7 @@ services:
     depends_on:
       - minio
   file-service:
-    image: 'bluehub.azurecr.io/meateam/file-service:develop'
+    image: 'bluehub.azurecr.io/meateam/file-service:1.1'
     environment:
       BIND_ADDRESS: '0.0.0.0:8080'
       ELASTICSEARCH_URL: 'http://localhost:9200'
@@ -132,7 +132,7 @@ services:
     depends_on:
       - minio
   authentication-service:
-    image: 'bluehub.azurecr.io/meateam/authentication-service:develop'
+    image: 'bluehub.azurecr.io/meateam/authentication-service:1.1'
     ports:
       - '8084:8080'
     environment:
@@ -155,7 +155,7 @@ services:
       SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: 'http://localhost:8084/auth/metadata.xml/callback'
       SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE: 'http://localhost:8084/auth/logout'
   user-service:
-    image: 'bluehub.azurecr.io/meateam/user-service:develop'
+    image: 'bluehub.azurecr.io/meateam/user-service:local'
     ports:
       - '8086:8080'
     environment:
@@ -166,15 +166,13 @@ services:
       REDIS_PORT: '6379'
       REDIS_HOST: 'redis'
       LOG_INDEX: 'kdrive'
-      SPIKE_CLIENT_ID: EPBpjCiczupCXZgBEq3ARZCinUt4LSXtOsVrI1Ub
-      SPIKE_CLIENT_SECRET: TODO_SPIKE_SECRET
+      SPIKE_CLIENT_ID: uMsljFEps0aKfAbZ1o7~iyZGVHHiT_KdRq2gsdtc
+      SPIKE_CLIENT_SECRET: 3VDM6Z3JgIEeu8lKV8x9gHP4Rks_GR~fxFjqrIrfShzVBCsQRqJwr4p~dYgzE3olMP~LqaYalBGq_mrDD9WUgm2ho0kgtreK3WIq
       SPIKE_REQUIRED: 'true'
       SPIKE_URL: 'https://spike.westeurope.cloudapp.azure.com'
       SPIKE_AUTH_SERVER_PORT: '1337'
       SPIKE_TOKEN_URL: 'https://spike.westeurope.cloudapp.azure.com:1337/oauth2/token'
-      TOKEN: >-
-        ENTER_TOKEN
-      DEBUG_MODE: 'false'
+      DEBUG_MODE: 'true'
       USR_MONGO_HOST: 'mongodb://mongo:27017/devDB'
     depends_on:
       - mongo
@@ -184,7 +182,7 @@ services:
     ports:
       - '6379:6379'
   permission-service:
-    image: 'bluehub.azurecr.io/meateam/permission-service:develop'
+    image: 'bluehub.azurecr.io/meateam/permission-service:1.1'
     ports:
       - '8087:8080'
     environment:
@@ -203,7 +201,7 @@ services:
     depends_on:
       - mongo
   search-service:
-    image: bluehub.azurecr.io/meateam/search-service:develop
+    image: bluehub.azurecr.io/meateam/search-service:1.1
     environment:
       SS_PORT: 8080
       SS_HOST_NAME: search-service
@@ -251,3 +249,44 @@ services:
     container_name: kibana
     ports: ['5601:5601']
     depends_on: ['elasticsearch']
+  permit-service:
+    image: bluehub.azurecr.io/meateam/permit-service:1.1
+    environment:
+      PMTS_PORT: 8080
+      HOST_NAME: permit-service
+      PMTS_MONGO_HOST: mongodb://mongo:27017/permit
+      PMTS_GRANT_TYPE: client_credentials
+      PMTS_AUDIENCE: "_LCF5avgIpoXSWhY5Jl8mMi0Q~4_~R"
+      PMTS_APPROVAL_URL: http://23.102.32.203/api/v1/request
+      PMTS_SPIKE_SERVICE: spike-service:8080
+      PMTS_ELASTIC_APM_IGNORE_URLS: '/grpc.health.v1.Health/Check'
+      ELASTICSEARCH_URL: http://13.69.137.179:9200
+      LOG_INDEX: kdrive
+      LOG_LEVEL: debug
+      HEALTH_CHECK_INTERVAL: 5
+      ELASTIC_APM_SERVER_URL: 'http://13.69.137.179:8200'
+      ELASTIC_APM_SERVICE_NAME: 'permit-service'
+      ELASTIC_APM_SERVICE_VERSION: '0.1'
+      ELASTIC_APM_ENVIRONMENT: 'development'
+      ELASTIC_APM_ACTIVE: 'true'
+      ELASTIC_APM_CAPTURE_BODY: 'all'
+      ELASTIC_APM_METRICS_INTERVAL: '10s'
+    ports:
+      - 8092:8080
+    depends_on:
+      - mongo
+      - spike-service
+  spike-service:
+    image: bluehub.azurecr.io/meateam/spike-service:1.1
+    environment:
+      AUDIENCE: "0mBMe5vYJyuFtvHpEWVDPumqaVl~xr"
+      SPIKE_CLIENT_ID: "uMsljFEps0aKfAbZ1o7~iyZGVHHiT_KdRq2gsdtc"
+      SPIKE_CLIENT_SECRET: "3VDM6Z3JgIEeu8lKV8x9gHP4Rks_GR~fxFjqrIrfShzVBCsQRqJwr4p~dYgzE3olMP~LqaYalBGq_mrDD9WUgm2ho0kgtreK3WIq"
+      REDIS_URL: 'redis://redis:6379'
+      SPIKE_TOKEN_URL: "https://spike.westeurope.cloudapp.azure.com:1337/oauth2/token"
+      SPIKE_PUBLIC_KEY_FULL_PATH: "/usr/src/app/utils/publickey.pem"
+      NODE_TLS_REJECT_UNAUTHORIZED: 0
+    depends_on:
+      - redis
+    ports:
+      - '8090:8080'
