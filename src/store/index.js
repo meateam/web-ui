@@ -30,6 +30,7 @@ const state = {
   showConfirm: null,
   shares: false,
   search: false,
+  approvers: [],
 }
 
 export default new Vuex.Store({

@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 import { share as shareApi, users as usersApi } from "@/api";
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import { minAutoComplete } from "@/utils/constants";
@@ -99,6 +99,7 @@ export default {
   computed: {
     ...mapState(["req", "selected", "selectedCount"]),
     ...mapGetters(["isListing", "direction"]),
+    ...mapMutations([ "emptyApprovers" ]),
     selectedItem() {
       return this.req.items[this.selected[0]];
     }
@@ -142,6 +143,7 @@ export default {
       return `${result.firstName} ${result.lastName}`;
     },
     changeShare() {
+      this.$store.commit("emptyApprovers");
       this.regularShare = !this.regularShare;
     }
   }

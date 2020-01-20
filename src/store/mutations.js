@@ -115,6 +115,19 @@ const mutations = {
   activateSearch: (state) => {
     state.search = true;
   },
+  addApprover: (state, approver) => {
+    if(!approver) return;
+    state.approvers.push(approver);
+  },
+  removeApprover: (state, approverID) => {
+    if(!approverID) return;
+    state.approvers = state.approvers.filter(approver => {
+      approver.id != approverID;
+    });
+  },
+  emptyApprovers: (state) => {
+    state.approvers = [];
+  }
 }
 
 export default mutations

@@ -51,8 +51,8 @@
               </li>
             </ul>
           </div>
-          <edit-permission-list :id="selectedItem.id" ref="editPermissionList">
-          </edit-permission-list>
+          <edit-approvers-list :id="selectedItem.id" ref="editApproversList">
+          </edit-approvers-list>
         </div>
       </template>
       <template v-if="step === 2">
@@ -130,7 +130,7 @@
 
       <button type="button" @click="$refs.stepper.previous()">{{$t('exShare.prevBtn')}}</button>
       <button type="button" @click="$refs.stepper.next()">{{$t('exShare.nextBtn')}}</button>
-      <button type="button" @click="$refs.stepper.reset()">{{$t('exShare.resetBtn')}}</button>
+      <button type="button" @click="resetExShare()">{{$t('exShare.resetBtn')}}</button>
     </div>
 </template>
 
@@ -142,7 +142,7 @@ import { share as shareApi, users as usersApi } from "@/api";
 import { createExShare } from '@/api/exShare';
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import { minAutoComplete } from "@/utils/constants";
-import EditPermissionList from "../common/EditPermissionList";
+import EditApproversList from "../common/EditApproversList";
 import moment from "moment";
 import "@trevoreyre/autocomplete-vue/dist/style.css";
 
@@ -151,7 +151,7 @@ export default {
   components: {
     VStepper,
     Autocomplete,
-    EditPermissionList
+    EditApproversList
   },
   data: function() {
     return {
@@ -161,14 +161,13 @@ export default {
       searchText: "",
       user: "",
       currExUser: "",
-      approvers: [],
       externalUsers: [],
       textData: "",
-      classifications: ["S", "TS", "VVS", "NVS"]
+      classifications: ["Secret", "TopSecret", "SuperSecret", "NonClassified"]
     };
   },
   computed: {
-    ...mapState(["req", "selected", "selectedCount"]),
+    ...mapState(["req", "selected", "selectedCount", "approvers"]),
     ...mapGetters(["isListing", "direction"]),
     selectedItem() {
       return this.req.items[this.selected[0]];
@@ -193,9 +192,9 @@ export default {
         this.$showSuccess(
           `successfully shared with ${this.getResultValue(this.user)}`
         );
-        this.$refs.editPermissionList.addUser(this.user);
-      } catch (e) {
-        this.$showError(e);
+        this.$refs.editApproversList.addUser(this.user);
+      } catch (err) {
+        this.$showError(err);
       }
     },
     submitExternal: async function() {
@@ -239,13 +238,18 @@ export default {
     async createShare() {
       let info = document.getElementById("infoText").value;
       let classification = document.getElementById("classSelect").value;
-      let users = [];
+      let exUsers = [];
       this.externalUsers.forEach(user => {
-        users.push({ id: user.id, full_name: user.fullName });
+        exUsers.push({ id: user.id, full_name: user.fullName });
       })
-      await createExShare(this.selectedItem.id, users, classification, info, )
+      await createExShare(this.selectedItem.id, exUsers, classification, info, this.approvers)
       
     },
+    resetExShare() {
+      this.$store.commit("emptyApprovers");
+      this.externalUsers = [];
+      this.$refs.stepper.reset();
+    }
   }
 };
 </script>
