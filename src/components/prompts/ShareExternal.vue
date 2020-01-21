@@ -64,25 +64,47 @@
             <ul id="user-role-list">
               <li>
                 <autocomplete
-                  :search="search"
+                  :search="searchExternal"
                   :autoSelect="true"
                   @submit="saveExUser"
-                  :get-result-value="getResultValue"
+                  :get-result-value="getExUserFullName"
                   :placeholder="$t('prompts.searchUser')"
                 >
                   <template v-slot:result="{ result, props }">
                     <li v-bind="props" class="share-result">
                       <div>
                         <div class="share-title">
-                          {{ getResultValue(result) }}
+                          {{ getExUserFullName(result) }}
                         </div>
                         <div class="share-snippet">
-                          {{ result.hierarchyFlat }}
+                          {{ result.hierarchy }}
                         </div>
                       </div>
                     </li>
                   </template>
                 </autocomplete>
+<template>
+  <div class="demo">
+    <div v-if="selected" style="padding-top:10px; width: 100%;">
+      You have selected <code>{{selected.name}}, the {{selected.race}}</code>
+    </div>
+    <div class="autosuggest-container">
+      <vue-autosuggest
+        v-model="query"
+        :suggestions="filteredOptions"
+        @click="clickHandler"
+        @input="onInputChange"
+        @selected="onSelected"
+        :get-suggestion-value="getSuggestionValue"
+        :input-props="{id:'autosuggest__input', placeholder:'Do you feel lucky, punk?'}">
+        <div slot-scope="{suggestion}" style="display: flex; align-items: center;">
+          <img :style="{ display: 'flex', width: '25px', height: '25px', borderRadius: '15px', marginRight: '10px'}" :src="suggestion.item.avatar" />
+          <div style="{ display: 'flex', color: 'navyblue'}">{{suggestion.item.name}}</div>
+        </div>
+      </vue-autosuggest>
+    </div>
+  </div>
+</template>
 
                 <select
                   style="display:none;"
@@ -138,7 +160,7 @@
 import { VStepper } from "vue-stepper-component";
 
 import { mapState, mapGetters } from "vuex";
-import { share as shareApi, users as usersApi } from "@/api";
+import { share as shareApi, users as usersApi, delegators as delegatorsApi } from "@/api";
 import { createExShare } from '@/api/exShare';
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import { minAutoComplete } from "@/utils/constants";
@@ -146,12 +168,15 @@ import EditApproversList from "../common/EditApproversList";
 import moment from "moment";
 import "@trevoreyre/autocomplete-vue/dist/style.css";
 
+import { VueAutosuggest } from 'vue-autosuggest';
+
 export default {
   name: "share-external",
   components: {
     VStepper,
     Autocomplete,
-    EditApproversList
+    EditApproversList,
+    VueAutosuggest
   },
   data: function() {
     return {
@@ -219,6 +244,7 @@ export default {
       })
     },
     async search(input) {
+      console.log('in regular Search');
       if (input.length < minAutoComplete) {
         return [];
       }
@@ -229,10 +255,27 @@ export default {
       }
       return [];
     },
+    async searchExternal(input) {
+      console.log('in external Search');
+      if (input.length < minAutoComplete) {
+        return [];
+      }
+      const res = await delegatorsApi.searchUserByName(input);
+      console.log(res)
+      const users = res.data.users;
+      return users ? users : [];
+    },
     humanTime(time) {
       return moment(time * 1000).fromNow();
     },
+    getExUserFullName(result) {
+      console.log('in getExUserFullName')
+      console.log(result);
+      return `${result.full_name}`;
+    },
     getResultValue(result) {
+      console.log('in getResultValue')
+      console.log(result);
       return `${result.firstName} ${result.lastName}`;
     },
     async createShare() {
