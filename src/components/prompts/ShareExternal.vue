@@ -83,28 +83,6 @@
                     </li>
                   </template>
                 </autocomplete>
-<template>
-  <div class="demo">
-    <div v-if="selected" style="padding-top:10px; width: 100%;">
-      You have selected <code>{{selected.name}}, the {{selected.race}}</code>
-    </div>
-    <div class="autosuggest-container">
-      <vue-autosuggest
-        v-model="query"
-        :suggestions="filteredOptions"
-        @click="clickHandler"
-        @input="onInputChange"
-        @selected="onSelected"
-        :get-suggestion-value="getSuggestionValue"
-        :input-props="{id:'autosuggest__input', placeholder:'Do you feel lucky, punk?'}">
-        <div slot-scope="{suggestion}" style="display: flex; align-items: center;">
-          <img :style="{ display: 'flex', width: '25px', height: '25px', borderRadius: '15px', marginRight: '10px'}" :src="suggestion.item.avatar" />
-          <div style="{ display: 'flex', color: 'navyblue'}">{{suggestion.item.name}}</div>
-        </div>
-      </vue-autosuggest>
-    </div>
-  </div>
-</template>
 
                 <select
                   style="display:none;"
@@ -168,15 +146,12 @@ import EditApproversList from "../common/EditApproversList";
 import moment from "moment";
 import "@trevoreyre/autocomplete-vue/dist/style.css";
 
-import { VueAutosuggest } from 'vue-autosuggest';
-
 export default {
   name: "share-external",
   components: {
     VStepper,
     Autocomplete,
     EditApproversList,
-    VueAutosuggest
   },
   data: function() {
     return {
@@ -281,11 +256,19 @@ export default {
     async createShare() {
       let info = document.getElementById("infoText").value;
       let classification = document.getElementById("classSelect").value;
-      let exUsers = [];
+      const exUsers = [];
+      const approvers = [];
       this.externalUsers.forEach(user => {
-        exUsers.push({ id: user.id, full_name: user.fullName });
+        exUsers.push({ id: user.id, full_name: user.full_name });
       })
-      await createExShare(this.selectedItem.id, exUsers, classification, info, this.approvers)
+      this.approvers.forEach(approver => {
+        approvers.push(approver.id);
+      })
+      try{
+        await createExShare(this.selectedItem.id, exUsers, classification, info, approvers)
+      } catch(err) {
+        console.log(err)
+      }
       
     },
     resetExShare() {
