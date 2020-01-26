@@ -1,14 +1,13 @@
 <template>
   <div class="card floating" id="share">
-    <div class="card-title">
-      <h2>{{ $t("buttons.share") }}</h2>
-    </div>
-    <button @click="changeShare">{{$t('exShare.changeShare')}}</button>
     <template v-if="!regularShare">
       <shareEx></shareEx>
     </template>
 
     <template v-if="regularShare">
+    <div class="card-title">
+      <h2>{{ $t("buttons.share") }}</h2>
+    </div>
       <div class="card-content">
         <div class="user-role-select">
           <ul id="user-role-list">
@@ -58,7 +57,7 @@
       </div>
     </template>
 
-    <div :class="direction" class="card-action">
+    <div class="card-action">
       <button
         class="button button--flat"
         @click="$store.commit('closeHovers')"
@@ -67,6 +66,7 @@
       >
         {{ $t("buttons.close") }}
       </button>
+    <button class = "button button--flat" @click="changeShare">{{$t('exShare.changeShare')}}</button>
     </div>
   </div>
 </template>
@@ -79,14 +79,15 @@ import { minAutoComplete } from "@/utils/constants";
 import EditPermissionList from "../common/EditPermissionList";
 import moment from "moment";
 import "@trevoreyre/autocomplete-vue/dist/style.css";
-import ShareExternal from "./ShareExternal";
+// import ShareExternal from "./ShareExternal";
+import NewExShare from './NewExShare';
 
 export default {
   name: "share",
   components: {
     Autocomplete,
     EditPermissionList,
-    shareEx: ShareExternal
+    shareEx: NewExShare
   },
   data: function() {
     return {
@@ -161,7 +162,7 @@ export default {
 }
 
 .share-result {
-  min-width: 100px;
+  min-width: 700px;
   padding: 5px;
   background: transparent;
 }

@@ -32,7 +32,7 @@ import filesize from 'filesize';
 import {mapGetters, mapMutations} from 'vuex';
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import { search, files as filesApi } from "@/api";
-import { checkMimeType, checkDocumentPreview, folderContentType } from '@/utils/constants';
+import { folderContentType } from '@/utils/constants';
 
 import "@trevoreyre/autocomplete-vue/dist/style.css";
 

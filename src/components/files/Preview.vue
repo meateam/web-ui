@@ -68,7 +68,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { baseURL, checkMimeType, checkDocumentPreview } from '@/utils/constants';
+import { baseURL, checkDocumentPreview } from '@/utils/constants';
 import { files as api } from '@/api';
 import InfoButton from '@/components/buttons/Info';
 import DeleteButton from '@/components/buttons/Delete';

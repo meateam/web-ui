@@ -35,7 +35,6 @@
 
 <script>
 import { mapMutations, mapGetters, mapState } from 'vuex';
-import { checkMimeType, checkDocumentPreview } from '@/utils/constants';
 import filesize from 'filesize';
 import moment from 'moment';
 import { files as api } from '@/api';
