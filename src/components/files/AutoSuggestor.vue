@@ -1,30 +1,40 @@
 <template>
-  <div class="demo">
-    <div v-if="selected" style="padding-top:10px; width: 100%;">
-      You have selected <code>{{selected.name}}, the {{selected.race}}</code>
-    </div>
+  <div class="select-approvers">
     <div class="autosuggest-container">
       <vue-autosuggest
         v-model="query"
-        :suggestions="filteredOptions"
+        :suggestions="suggestions"
         @focus="focusMe"
         @click="clickHandler"
-        @input="onInputChange"
+        @input="fetchResults"
         @selected="onSelected"
         :get-suggestion-value="getSuggestionValue"
-        :input-props="{id:'autosuggest__input', placeholder:'Do you feel lucky, punk?'}">
-        <div slot-scope="{suggestion}" style="display: flex; align-items: center;">
-          <img :style="{ display: 'flex', width: '25px', height: '25px', borderRadius: '15px', marginRight: '10px'}" :src="suggestion.item.avatar" />
-          <div style="{ display: 'flex', color: 'navyblue'}">{{suggestion.item.name}}</div>
-        </div>
+        :input-props="inputProps">
+
+        <template slot-scope="{suggestion}">
+          <span class="my-suggestion-item">{{suggestion.item.hierarchy}}</span>
+        </template>
+
       </vue-autosuggest>
+          <button 
+            class="action"
+            @click="submitSelected"
+            :aria-label="$t('buttons.create')"
+            :title="$t('buttons.create')">
+            <i class="material-icons">add</i>
+          </button>
     </div>
+        <div v-if="selected" style="padding-top:10px; width: 100%;">
+          {{selected.first_name}} 
+        </div>
   </div>
 </template>
  
 <script>
 import { VueAutosuggest } from "vue-autosuggest";
- 
+import { delegators as delegatorsApi } from "@/api";
+import { minAutoComplete } from "@/utils/constants";
+
 export default {
     name: 'my-autosuggestor',
   components: {
@@ -38,30 +48,20 @@ export default {
   },
   data() {
     return {
-      query: "",
-      selected: "",
-      suggestions: [
-        {
-          data: [
-            { id: 1, name: "Frodo", race: "Hobbit", avatar: "https://upload.wikimedia.org/wikipedia/en/thumb/4/4e/Elijah_Wood_as_Frodo_Baggins.png/220px-Elijah_Wood_as_Frodo_Baggins.png" },
-            { id: 2, name: "Samwise", race: "Hobbit", avatar: "https://upload.wikimedia.org/wikipedia/en/thumb/7/7b/Sean_Astin_as_Samwise_Gamgee.png/200px-Sean_Astin_as_Samwise_Gamgee.png" },
-            { id: 3, name: "Gandalf", race: "Maia", avatar: "https://upload.wikimedia.org/wikipedia/en/thumb/e/e9/Gandalf600ppx.jpg/220px-Gandalf600ppx.jpg" },
-            { id: 4, name: "Aragorn", race: "Human", avatar: "https://upload.wikimedia.org/wikipedia/en/thumb/3/35/Aragorn300ppx.png/150px-Aragorn300ppx.png" }
-          ]
-        }
-      ]
+        query: "",
+        selected: "",
+        selectedList: [],
+        suggestions: [],
+        timeout: null,
+        debounceMilliseconds: 500,
+        inputProps: {
+            id: "autosuggest__input",
+            onInputChange: this.fetchResults,
+            placeholder: "Do you feel lucky, punk?",
+            class: "form-control",
+            name: "hello"
+        },
     };
-  },
-  computed: {
-    filteredOptions() {
-      return [
-        { 
-          data: this.suggestions[0].data.filter(option => {
-            return option.name.toLowerCase().indexOf(this.query.toLowerCase()) > -1;
-          })
-        }
-      ];
-    }
   },
   methods: {
     clickHandler(item) {
@@ -70,22 +70,52 @@ export default {
     },
     onSelected(item) {
       this.selected = item.item;
-      this.$emit('select', {value: item})
+      // this.$emit('select', {value: item.item})
     },
     onInputChange(text) {
-        this.$emit('koo1', {value: text})
       // event fired when the input changes
-    //   console.log(text)
+        this.$emit('koo1', {value: text})
     },
     /**
      * This is what the <input/> value is set to when you are selecting a suggestion.
      */
     getSuggestionValue(suggestion) {
-      return suggestion.item.name;
+      return suggestion.item.hierarchy;
     },
     focusMe(e) {
         this.$emit('koo1', {value: e})
     //   console.log(e) // FocusEvent
+    },
+    async fetchResults(input) {
+      return this.fetchExternal(input);
+
+    },
+    submitSelected() {
+      if(!this.selected) return;
+
+      this.$emit('select', {value: this.selected});
+      if(this.isExternal) {
+        // TODO...
+      } else [
+        //TODO...
+      ]
+    },
+    async fetchExternal(input) {
+        if (input.length < minAutoComplete) {
+            this.suggestions = []
+            return [];
+        }
+        await delegatorsApi.searchUserByName(input)
+
+        const res = await delegatorsApi.searchUserByName(input);
+        const users = res.data.users;
+        if(users) {
+          this.suggestions.push({data: users})
+        }
+        return users ? users : [];
+    },
+    async fetchInternal() {
+
     }
   }
 }
@@ -129,4 +159,109 @@ li:hover {
 .autosuggest__results-item--highlighted {
   background-color: rgba(51, 217, 178,0.2);
 }
+
+.autosuggest__results-item {
+  margin:10px;
+}
+
+    body {
+      /* max-width: 800px; */
+      padding: 20px;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      font-family: monospace;
+    }
+    
+    #autosuggest__input {
+      outline: none;
+      position: relative;
+      display: block;
+      font-family: monospace;
+      /* font-size: 20px; */
+      border: 1px solid #616161;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+    }
+    
+    #autosuggest__input.autosuggest__input-open {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    
+    .autosuggest__results-container {
+      position: relative;
+      width: 100%;
+    }
+    
+    .autosuggest__results {
+      font-weight: 300;
+      margin: 0;
+      position: absolute;
+      z-index: 10000001;
+      width: 100%;
+      border: 1px solid #e0e0e0;
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      background: white;
+      padding: 0px;
+      overflow: scroll;
+      max-height: 200px;
+    }
+    
+    .autosuggest__results ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    
+    .autosuggest__results .autosuggest__results_item {
+      cursor: pointer;
+      padding: 15px;
+    }
+    
+    #autosuggest ul:nth-child(1) > .autosuggest__results_title {
+      border-top: none;
+    }
+    
+    .autosuggest__results .autosuggest__results_title {
+      color: gray;
+      /* font-size: 11px; */
+      margin-left: 0;
+      padding: 15px 13px 5px;
+      border-top: 1px solid lightgray;
+    }
+    
+    .autosuggest__results .autosuggest__results_item:active,
+    .autosuggest__results .autosuggest__results_item:hover,
+    .autosuggest__results .autosuggest__results_item:focus,
+    .autosuggest__results .autosuggest__results_item.autosuggest__results_item-highlighted {
+      background-color: #ddd;
+    }
+
+button, select {
+  color: #444444;
+    background: #F3F3F3;
+    border: 1px #DADADA solid;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-weight: bold;
+    font-size: 9pt;
+    outline: none;
+}
+
+button:hover {
+    border: 1px #C6C6C6 solid;
+    box-shadow: 1px 1px 1px #EAEAEA;
+    color: #333333;
+    background: #F7F7F7;
+}
+
+button:active {
+    box-shadow: inset 1px 1px 1px #DFDFDF;   
+}
+
+
 </style> 

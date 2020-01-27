@@ -78,8 +78,7 @@ import Autocomplete from "@trevoreyre/autocomplete-vue";
 import { minAutoComplete } from "@/utils/constants";
 import EditPermissionList from "../common/EditPermissionList";
 import moment from "moment";
-import "@trevoreyre/autocomplete-vue/dist/style.css";
-// import ShareExternal from "./ShareExternal";
+
 import NewExShare from './NewExShare';
 
 export default {
@@ -100,7 +99,7 @@ export default {
   computed: {
     ...mapState(["req", "selected", "selectedCount"]),
     ...mapGetters(["isListing", "direction"]),
-    ...mapMutations([ "emptyApprovers" ]),
+    ...mapMutations([ "emptyGlobalExternalUsers" ]),
     selectedItem() {
       return this.req.items[this.selected[0]];
     }
@@ -144,7 +143,8 @@ export default {
       return `${result.firstName} ${result.lastName}`;
     },
     changeShare() {
-      this.$store.commit("emptyApprovers");
+      console.log("emptyGlobalExternalUsers");
+      this.$store.commit("emptyGlobalExternalUsers");
       this.regularShare = !this.regularShare;
     }
   }
@@ -154,6 +154,10 @@ export default {
 <style scoped>
 .title {
   text-align: center;
+}
+
+.floating {
+  min-height: 50%;
 }
 
 #app {

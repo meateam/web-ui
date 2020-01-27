@@ -115,18 +115,18 @@ const mutations = {
   activateSearch: (state) => {
     state.search = true;
   },
-  addApprover: (state, approver) => {
-    if(!approver) return;
-    state.approvers.push(approver);
+  addGlobalExternalUser: (state, exUser) => {
+    if(!exUser) return;
+    state.globalExternalUsers.push(exUser);
   },
-  removeApprover: (state, approverID) => {
-    if(!approverID) return;
-    state.approvers = state.approvers.filter(approver => {
-      approver.id != approverID;
+  removeGlobalExternalUser: (state, exUserID) => {
+    if(!exUserID) return;
+    state.globalExternalUsers = state.globalExternalUsers.filter(exUser => {
+      exUser.id != exUserID;
     });
   },
-  emptyApprovers: (state) => {
-    state.approvers = [];
+  emptyGlobalExternalUsers: (state) => {
+    state.globalExternalUsers = [];
   }
 }
 

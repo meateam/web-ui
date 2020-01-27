@@ -9,7 +9,7 @@ const getters = {
   shares: state => state.shares,
   direction: state => state.user && state.user.locale === 'he' ? 'rtl' : 'ltr',
   isSearch: state => state.search,
-  getApprovers: state => state.approvers,
+  getGlobalExternalUsers: state => state.globalExternalUsers,
 }
 
 export default getters

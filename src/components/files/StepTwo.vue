@@ -1,37 +1,44 @@
 <template>
-    <div class="card" style="margin: 3rem">
-        <header class="card-header">
-            <p class="card-header-title">
-                Component
-            </p>
-            <a href="#" class="card-header-icon" aria-label="more options">
-              <span class="icon">
-                <i class="fa fa-angle-down" aria-hidden="true"></i>
-              </span>
-            </a>
-        </header>
-        <div class="card-content">
-            <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-                <a href="#">@bulmaio</a>. <a href="#">#css</a> <a href="#">#responsive</a>
-                <br>
-                <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-            </div>
-        </div>
-        <footer class="card-footer">
-            <a class="card-footer-item">Save</a>
-            <a class="card-footer-item">Edit</a>
-            <a class="card-footer-item" @click="canContinue">Can Continue</a>
-        </footer>
+    <div class="step1">
+        <p>Choose approvers:</p>
+        <my-autosuggestor :isExternal="external" @select="addApprover"></my-autosuggestor>
+
+        <edit-approvers-list :id="selectedItem.id" ref="editApproversList">
+        </edit-approvers-list>
     </div>
 </template>
 
 <script>
+    import { mapState } from "vuex";
+    import AutoSuggestor from './AutoSuggestor'
+    import EditApproversList from "../common/EditApproversList";
+
     export default {
+        components: {
+            'my-autosuggestor': AutoSuggestor,
+            EditApproversList,
+        },
         props: ['currentStep'],
+        data() {
+            return {
+                external: false,
+                approvers: [],
+            }
+        },
+        computed: {    
+            ...mapState(["req", "selected", "selectedCount"]),
+            selectedItem() {
+                console.log(this.req.items);
+                return this.req.items[this.selected[0]];
+            }
+        },
         methods: {
           canContinue() {
               this.$emit('can-continue', {value: true});
+          },
+          addApprover(approver) {
+              this.approvers.push(approver.value)
+              console.log(this.approvers);
           }
         },
         mounted() {
