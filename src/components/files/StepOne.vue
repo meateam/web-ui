@@ -27,7 +27,7 @@
             return {
                 selected: '',
                 externalUsers: [],
-                external: false,
+                external: true,
             }
         },
         computed: {

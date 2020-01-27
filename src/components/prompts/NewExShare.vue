@@ -14,6 +14,7 @@
 import HorizontalStepper from "vue-stepper";
 import StepOne from "../files/StepOne.vue";
 import StepTwo from "../files/StepTwo.vue";
+import StepThree from "../files/StepThree.vue";
 
 import { createExShare } from '@/api/exShare';
 
@@ -43,7 +44,7 @@ export default {
           icon: "announcement",
           name: "third",
           title: this.$t('exShare.headerTS'),
-          component: StepOne,
+          component: StepThree,
           completed: false
         }
       ],

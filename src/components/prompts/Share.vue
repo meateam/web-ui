@@ -99,7 +99,7 @@ export default {
   computed: {
     ...mapState(["req", "selected", "selectedCount"]),
     ...mapGetters(["isListing", "direction"]),
-    ...mapMutations([ "emptyGlobalExternalUsers" ]),
+    ...mapMutations([ "emptyGlobalExternalUsers", "emptyApprovers" ]),
     selectedItem() {
       return this.req.items[this.selected[0]];
     }
@@ -145,6 +145,7 @@ export default {
     changeShare() {
       console.log("emptyGlobalExternalUsers");
       this.$store.commit("emptyGlobalExternalUsers");
+      this.$store.commit("emptyApprovers");
       this.regularShare = !this.regularShare;
     }
   }

@@ -31,6 +31,7 @@ const state = {
   shares: false,
   search: false,
   globalExternalUsers: [],
+  approvers: [],
 }
 
 export default new Vuex.Store({

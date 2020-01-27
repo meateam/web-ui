@@ -12,7 +12,8 @@
         :input-props="inputProps">
 
         <template slot-scope="{suggestion}">
-          <span class="my-suggestion-item">{{suggestion.item.hierarchy}}</span>
+          <span v-if="isExternal" class="my-suggestion-item">{{suggestion.item.hierarchy}}</span>
+          <span v-if="!isExternal" class="my-suggestion-item">{{suggestion.item.hierarchyFlat}}</span>
         </template>
 
       </vue-autosuggest>
@@ -24,15 +25,12 @@
             <i class="material-icons">add</i>
           </button>
     </div>
-        <div v-if="selected" style="padding-top:10px; width: 100%;">
-          {{selected.first_name}} 
-        </div>
   </div>
 </template>
  
 <script>
 import { VueAutosuggest } from "vue-autosuggest";
-import { delegators as delegatorsApi } from "@/api";
+import { users as usersApi, delegators as delegatorsApi } from "@/api";
 import { minAutoComplete } from "@/utils/constants";
 
 export default {
@@ -80,18 +78,32 @@ export default {
      * This is what the <input/> value is set to when you are selecting a suggestion.
      */
     getSuggestionValue(suggestion) {
-      return suggestion.item.hierarchy;
+      if(this.isExternal) {
+        return suggestion.item.hierarchy;
+      }
+      return suggestion.item.hierarchyFlat;
+
     },
     focusMe(e) {
         this.$emit('koo1', {value: e})
     //   console.log(e) // FocusEvent
     },
     async fetchResults(input) {
-      return this.fetchExternal(input);
+      if(this.isExternal) {
+        console.log('fetching external');
+        return this.fetchExternal(input);
+      } else {
+        console.log('fetching internal');
+        const res = await this.fetchInternal(input);
+        console.log(res);
+        return res;
+      }
 
     },
     submitSelected() {
       if(!this.selected) return;
+      console.log('selecttt!!')
+      console.log({value: this.selected})
 
       this.$emit('select', {value: this.selected});
       if(this.isExternal) {
@@ -114,9 +126,18 @@ export default {
         }
         return users ? users : [];
     },
-    async fetchInternal() {
-
-    }
+    async fetchInternal(input) {
+      // console.log('in regular Search');
+      if (input.length < minAutoComplete) {
+        return [];
+      }
+      const res = await usersApi.searchUserByName(input);
+      const users = res.data.users;
+      if (users) {
+        this.suggestions.push({data: users})
+      }
+      return users ? users : [];
+    },
   }
 }
 </script> 
@@ -152,7 +173,7 @@ li:hover {
 .autosuggest-container {
   display: flex;
   justify-content: center;
-  width: 280px;
+  width: 480px;
 }
  
 #autosuggest { width: 100%; display: block;}
@@ -179,6 +200,7 @@ li:hover {
       font-family: monospace;
       /* font-size: 20px; */
       border: 1px solid #616161;
+      border-radius: 5px;
       padding: 10px;
       width: 100%;
       box-sizing: border-box;

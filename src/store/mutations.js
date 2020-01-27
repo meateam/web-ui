@@ -115,6 +115,7 @@ const mutations = {
   activateSearch: (state) => {
     state.search = true;
   },
+  // ************************** Global External Users ************************** //
   addGlobalExternalUser: (state, exUser) => {
     if(!exUser) return;
     state.globalExternalUsers.push(exUser);
@@ -127,7 +128,25 @@ const mutations = {
   },
   emptyGlobalExternalUsers: (state) => {
     state.globalExternalUsers = [];
-  }
+  },
+
+  // ************************** Global Approvers ************************** //
+  addApprover: (state, approver) => {
+    if(!approver) return;
+    state.approvers.push(approver);
+  },
+
+  removeApprover: (state, approverID) => {
+    if(!approverID) return;
+    state.approvers = state.approvers.filter(approver => {
+      approver.id != approverID;
+    });
+  },
+  emptyApprovers: (state) => {
+    state.approvers = [];
+  },
+
+
 }
 
 export default mutations
