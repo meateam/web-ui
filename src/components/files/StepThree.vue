@@ -5,6 +5,7 @@
         </div>
         <div class="card-content">
             <textarea
+                @input="onInput"
                 id="infoText"
                 class="textbox"
                 rows="4"
@@ -13,21 +14,20 @@
         </div>
         <form>
             <p>{{ $t("exShare.chooseClass") }}</p>
-            <select id="classSelect">
+            <select @change="onInput" id="classSelect">
                 <option v-bind:key="c" v-for="c in classifications">{{
                     c
                 }}</option>
             </select>
+            <p v-if="isSuperSecret === true" style="color: red"> You cannot share a super secret classified file! </p>
         </form>
 
-        <button class="final-button" @click="createShare">
-            {{ $t("exShare.reqShare") }}
-        </button>
     </div>
 </template>
 
 <script>
-import { createExShare } from "@/api/exShare";
+import { mapMutations, mapGetters } from 'vuex'
+
 
 export default {
     data() {
@@ -38,31 +38,27 @@ export default {
                 "TopSecret",
                 "SuperSecret",
                 "NonClassified"
-            ]
+            ],
+            isSuperSecret: false,
         };
     },
+    computed: {
+            ...mapGetters([ "getStepThreeRes" ]),
+            ...mapMutations([ "setStepThreeRes" ]),
+
+    },
     methods: {
-        onInput(val) {
-            console.log(val.srcElement.value);
+        onInput() {
+            const info = document.getElementById("infoText").value;
+            const classification = document.getElementById("classSelect").value;
+            this.$store.commit("setStepThreeRes", { info, classification });
+            this.isSuperSecret = (classification === "SuperSecret");
+            if(!this.isSuperSecret) {
+                this.$emit('can-continue', {value: true});
+            } else {
+                this.$emit('can-continue', {value: false});
+            }
         },
-        async createShare() {
-            this.$emit('can-continue', {value: true});
-            // const info = document.getElementById("infoText").value;
-            // const classification = document.getElementById("classSelect").value;
-            // const exUsers = [];
-            // const approvers = [];
-            // this.externalUsers.forEach(user => {
-            //     exUsers.push({ id: user.id, full_name: user.full_name });
-            // });
-            // this.approvers.forEach(approver => {
-            //     approvers.push(approver.id);
-            // });
-            // try {
-            //     await createExShare(this.selectedItem.id, exUsers, classification, info, approvers);
-            // } catch (err) {
-            //     // console.log(err)
-            // }
-        }
     }
 };
 </script>
@@ -72,11 +68,16 @@ export default {
     margin: 10px;
 }
 
+select {
+    background-color: #d1f9ff;
+}
 textarea {
     max-height: 500px;
     min-height: 50px;
+    min-width: 300px;
     max-width: 100%;
-    background-color: bisque;
+    padding: 5px;
+    background-color: #d1f9ff;
     border-radius: 5px;
 }
 </style>

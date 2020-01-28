@@ -46,16 +46,13 @@ export default {
   },
   methods: {
     deleteApprover: async function(user) {
-      console.log('delete approver ' + user.id)
       try{
         await files.unShare(this.id, user.id);
       } catch(err) {
         this.$showError(err)
       }
       this.$store.commit("removeApprover", user.id);
-      console.log(this.$store.getters.getApprovers);
       if(this.$store.getters.getApprovers <= 0) {
-        console.log('emmiting cant continue');
         this.$emit('list-empty', {value: true});
       }
       this.$store.commit("removeApprover", user.id);
@@ -64,7 +61,6 @@ export default {
     onMount: async function() {
     },
     addUser: function(user) {
-      console.log('adding the userr');
       if (!user) return;
       if (!this.approvers.find(currUser => currUser.id === user.id)) {
         this.$store.commit("addApprover", user);

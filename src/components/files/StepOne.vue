@@ -5,7 +5,7 @@
 
           <ul id="example-1">
             <li v-bind:key="exUser.id" v-for="exUser in externalUsers">
-              {{ exUser.hierarchy }}
+              {{ exUser.hierarchy }} : {{ exUser.full_name }}
               <button @click="removeExUser(exUser.id)">{{$t('exShare.rmButton')}}</button>
             </li>
           </ul>
@@ -14,7 +14,6 @@
 
 <script>
     import AutoSuggestor from './AutoSuggestor'
-    import {validationMixin} from 'vuelidate'
     import { mapState, mapMutations, mapGetters } from 'vuex'
 
     export default {
@@ -22,7 +21,6 @@
             'my-autosuggestor': AutoSuggestor,
         },
         props: ['clickedNext', 'currentStep'],
-        mixins: [validationMixin],
         data() {
             return {
                 selected: '',
@@ -36,7 +34,6 @@
             ...mapMutations([ "emptyGlobalExternalUsers", "addGlobalExternalUser", "removeGlobalExternalUser" ]),
         },
         activated: function() {
-            console.log('activated');
             if(this.$store.getters.getGlobalExternalUsers == 0) {
                 this.$emit('can-continue', {value: false});
             } else{
@@ -47,11 +44,9 @@
             addExUser(user) {
                 if(user.value && user.value.id) {
                     if(this.checkExists(user.value.id)) {
-                        console.log(user.value.hierarchy + ' exists')
                         return;
                     }
                 }
-                console.log(user.value.hierarchy + ' added')
                 this.$store.commit("addGlobalExternalUser", user.value);
                 this.externalUsers.push(user.value);
                 this.$emit('can-continue', {value: true});

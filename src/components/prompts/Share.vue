@@ -1,7 +1,9 @@
 <template>
   <div class="card floating" id="share">
     <template v-if="!regularShare">
-      <shareEx></shareEx>
+      <shareEx 
+        @close-share="$store.commit('closeHovers')">
+      </shareEx>
     </template>
 
     <template v-if="regularShare">
@@ -79,14 +81,14 @@ import { minAutoComplete } from "@/utils/constants";
 import EditPermissionList from "../common/EditPermissionList";
 import moment from "moment";
 
-import NewExShare from './NewExShare';
+import ShareExternal from './ShareExternal';
 
 export default {
   name: "share",
   components: {
     Autocomplete,
     EditPermissionList,
-    shareEx: NewExShare
+    shareEx: ShareExternal
   },
   data: function() {
     return {
@@ -99,7 +101,7 @@ export default {
   computed: {
     ...mapState(["req", "selected", "selectedCount"]),
     ...mapGetters(["isListing", "direction"]),
-    ...mapMutations([ "emptyGlobalExternalUsers", "emptyApprovers" ]),
+    ...mapMutations([ "emptyGlobalExternalUsers", "emptyApprovers", "resetStepsRes" ]),
     selectedItem() {
       return this.req.items[this.selected[0]];
     }
@@ -143,9 +145,9 @@ export default {
       return `${result.firstName} ${result.lastName}`;
     },
     changeShare() {
-      console.log("emptyGlobalExternalUsers");
       this.$store.commit("emptyGlobalExternalUsers");
       this.$store.commit("emptyApprovers");
+      this.$store.commit("resetStepsRes");
       this.regularShare = !this.regularShare;
     }
   }

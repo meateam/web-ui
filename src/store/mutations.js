@@ -146,6 +146,16 @@ const mutations = {
     state.approvers = [];
   },
 
+  // ************************** Steps Results ************************** //
+
+  setStepThreeRes: (state, stepThreeResx) => {
+    if(!stepThreeResx) return;
+    state.stepThreeRes = stepThreeResx;
+  },
+
+  resetStepsRes: (state) => {
+    state.stepThreeRes = {};
+  }
 
 }
 

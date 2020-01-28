@@ -11,6 +11,7 @@ const getters = {
   isSearch: state => state.search,
   getGlobalExternalUsers: state => state.globalExternalUsers,
   getApprovers: state => state.approvers,
+  getStepThreeRes: state => state.stepThreeRes,
 }
 
 export default getters

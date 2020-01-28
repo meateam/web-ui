@@ -131,6 +131,7 @@
     "searchUser": "Search user"
   },
   "settings": {
+    "langName": "en",
     "instanceName": "Instance name",
     "brandingDirectoryPath": "Branding directory path",
     "documentation": "documentation",

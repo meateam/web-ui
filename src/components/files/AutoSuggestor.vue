@@ -12,8 +12,8 @@
         :input-props="inputProps">
 
         <template slot-scope="{suggestion}">
-          <span v-if="isExternal" class="my-suggestion-item">{{suggestion.item.hierarchy}}</span>
-          <span v-if="!isExternal" class="my-suggestion-item">{{suggestion.item.hierarchyFlat}}</span>
+          <span v-if="isExternal" class="my-suggestion-item">{{suggestion.item.hierarchy}} : {{suggestion.item.full_name}}</span>
+          <span v-if="!isExternal" class="my-suggestion-item">{{suggestion.item.hierarchyFlat}} : {{suggestion.item.fullName}}</span>
         </template>
 
       </vue-autosuggest>
@@ -79,38 +79,26 @@ export default {
      */
     getSuggestionValue(suggestion) {
       if(this.isExternal) {
-        return suggestion.item.hierarchy;
+        return suggestion.item.hierarchy + ' : ' + suggestion.item.full_name;
       }
-      return suggestion.item.hierarchyFlat;
+      return suggestion.item.hierarchyFlat + ' : ' + suggestion.item.fullName;
 
     },
     focusMe(e) {
         this.$emit('koo1', {value: e})
-    //   console.log(e) // FocusEvent
     },
     async fetchResults(input) {
       if(this.isExternal) {
-        console.log('fetching external');
         return this.fetchExternal(input);
       } else {
-        console.log('fetching internal');
         const res = await this.fetchInternal(input);
-        console.log(res);
         return res;
       }
 
     },
     submitSelected() {
       if(!this.selected) return;
-      console.log('selecttt!!')
-      console.log({value: this.selected})
-
       this.$emit('select', {value: this.selected});
-      if(this.isExternal) {
-        // TODO...
-      } else [
-        //TODO...
-      ]
     },
     async fetchExternal(input) {
         if (input.length < minAutoComplete) {
@@ -122,19 +110,18 @@ export default {
         const res = await delegatorsApi.searchUserByName(input);
         const users = res.data.users;
         if(users) {
-          this.suggestions.push({data: users})
+          this.suggestions = [{data: users}];
         }
         return users ? users : [];
     },
     async fetchInternal(input) {
-      // console.log('in regular Search');
       if (input.length < minAutoComplete) {
         return [];
       }
       const res = await usersApi.searchUserByName(input);
       const users = res.data.users;
       if (users) {
-        this.suggestions.push({data: users})
+        this.suggestions = [{data: users}];
       }
       return users ? users : [];
     },

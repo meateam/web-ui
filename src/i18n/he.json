@@ -132,6 +132,7 @@
     "searchApprover": "חפש מאשר"
   },
   "settings": {
+    "langName": "he",
     "instanceName": "Instance name",
     "brandingDirectoryPath": "Branding directory path",
     "documentation": "documentation",

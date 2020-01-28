@@ -3,7 +3,7 @@
         <p>Choose approvers:</p>
         <my-autosuggestor :isExternal="external" @select="submitApprover"></my-autosuggestor>
 
-        <edit-approvers-list :id="selectedItem.id" @list-empty="xxx" ref="editApproversList">
+        <edit-approvers-list :id="selectedItem.id" @list-empty="listEmpty" ref="editApproversList">
         </edit-approvers-list>
     </div>
 </template>
@@ -28,29 +28,24 @@
         computed: {    
             ...mapState(["req", "selected", "selectedCount", "approvers"]),
             selectedItem() {
-                console.log(this.req.items);
                 return this.req.items[this.selected[0]];
             }
         },
         activated: function() {
-            console.log('activated2');
-            if(this.$store.getters.getApprovers <= 0) {
+            if(this.$store.getters.getApprovers.length <= 0) {
                 this.$emit('can-continue', {value: false});
             } else{
                 this.$emit('can-continue', {value: true});
             }
         },
         methods: {
-            xxx(val) {
-                console.log('xxx');
-                console.log(val)
+            listEmpty() {
                 this.$emit('can-continue', {value: false});
             },
             submitApprover: async function(approver) {
                 try {
                     this.$refs.editApproversList.addUser(approver.value);
-                    const res = await shareApi.create(this.selectedItem.id, approver.value.id, this.role);
-                    console.log(res);
+                    await shareApi.create(this.selectedItem.id, approver.value.id, this.role);
                     this.$showSuccess(
                         `successfully shared with ${this.getResultValue(approver.value)}`
                     );
