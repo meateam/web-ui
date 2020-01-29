@@ -264,17 +264,24 @@
     "downloadFolder": "Download Folder"
   },
   "exShare": {
+    "classifications": [ "None", "Limited", "Secret", "Top Secret" ],
+    "classTopSecret": "Top Secret",
     "changeShare": "Change Share",
     "header": "Share external user",
-    "headerFS": "First Step - choose approvers",
+    "STwoHeader": "Choose Approvers",
     "fsInfo": "The approvers selected will have reading permission on the file",
-    "headerSS": "Second Step - choose approvers",
+    "SOHeader": "Choose the external users you want to share with",
+    "classErrMessage": "You cannot share a super secret classified file!",
     "rmButton": "remove",
-    "headerTS": "Third Step - add info",
+    "headerTS": "Add info",
+    "TSInfo": "Last step - Add file info",
     "chooseClass": "Choose classification:",
+    "searchUser": "John Doe",
     "reqShare": "Request Share",
     "prevBtn": "Previous",
     "nextBtn": "Next",
-    "resetBtn": "Reset"
+    "resetBtn": "Reset",
+    "finalErrorMsg": "An error has occured. If the error repeats itself, please contact us",
+    "finalSuccessMsg": "Your request was sent for processing. You may view it on approval service."
   }
 }

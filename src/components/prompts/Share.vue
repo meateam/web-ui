@@ -1,15 +1,13 @@
 <template>
   <div class="card floating" id="share">
     <template v-if="!regularShare">
-      <shareEx 
-        @close-share="$store.commit('closeHovers')">
-      </shareEx>
+      <shareEx @close-share="$store.commit('closeHovers')"> </shareEx>
     </template>
 
     <template v-if="regularShare">
-    <div class="card-title">
-      <h2>{{ $t("buttons.share") }}</h2>
-    </div>
+      <div class="card-title">
+        <h2>{{ $t("buttons.share") }}</h2>
+      </div>
       <div class="card-content">
         <div class="user-role-select">
           <ul id="user-role-list">
@@ -68,7 +66,9 @@
       >
         {{ $t("buttons.close") }}
       </button>
-    <button class = "button button--flat" @click="changeShare">{{$t('exShare.changeShare')}}</button>
+      <button class="button button--flat" @click="changeShare">
+        {{ $t("exShare.changeShare") }}
+      </button>
     </div>
   </div>
 </template>
@@ -81,7 +81,7 @@ import { minAutoComplete } from "@/utils/constants";
 import EditPermissionList from "../common/EditPermissionList";
 import moment from "moment";
 
-import ShareExternal from './ShareExternal';
+import ShareExternal from "./ShareExternal";
 
 export default {
   name: "share",
@@ -101,7 +101,11 @@ export default {
   computed: {
     ...mapState(["req", "selected", "selectedCount"]),
     ...mapGetters(["isListing", "direction"]),
-    ...mapMutations([ "emptyGlobalExternalUsers", "emptyApprovers", "resetStepsRes" ]),
+    ...mapMutations([
+      "emptyGlobalExternalUsers",
+      "emptyApprovers",
+      "resetStepsRes"
+    ]),
     selectedItem() {
       return this.req.items[this.selected[0]];
     }

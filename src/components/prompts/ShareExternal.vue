@@ -1,6 +1,7 @@
 <template>
   <div class="stepper" id="stepper">
-    <horizontal-stepper class="stepper"
+    <horizontal-stepper
+      class="stepper"
       :steps="demoSteps"
       :locale="$t('settings.langName')"
       @completed-step="completeStep"
@@ -18,7 +19,7 @@ import StepTwo from "../files/StepTwo.vue";
 import StepThree from "../files/StepThree.vue";
 
 import { mapState } from "vuex";
-import { createExShare } from '@/api/exShare';
+import { createExShare } from "@/api/exShare";
 
 export default {
   name: "app",
@@ -31,21 +32,21 @@ export default {
         {
           icon: "mail",
           name: "first",
-          title: this.$t('prompts.searchUser'),
+          title: this.$t("prompts.searchUser"),
           component: StepOne,
           completed: false
         },
         {
           icon: "payment",
           name: "second",
-          title: this.$t('prompts.searchApprover'),
+          title: this.$t("prompts.searchApprover"),
           component: StepTwo,
           completed: false
         },
         {
           icon: "announcement",
           name: "third",
-          title: this.$t('exShare.headerTS'),
+          title: this.$t("exShare.headerTS"),
           component: StepThree,
           completed: false
         }
@@ -54,7 +55,7 @@ export default {
     };
   },
   computed: {
-    ...mapState([ "selected", "req" ]),
+    ...mapState(["selected", "req"]),
     selectedItem() {
       return this.req.items[this.selected[0]];
     }
@@ -84,31 +85,32 @@ export default {
       const reqApprovers = [];
       users.forEach(user => {
         reqUsers.push({ id: user.id, full_name: user.full_name });
-      })
+      });
       approvers.forEach(approver => {
         reqApprovers.push(approver.id);
-      })
+      });
 
       const step3Res = this.$store.getters.getStepThreeRes;
       const reqClassification = step3Res.classification;
       const reqInfo = step3Res.info;
 
-      try{
-        await createExShare(this.selectedItem.id, reqUsers, reqClassification, reqInfo, reqApprovers);
-      } catch(err) {
-        alert(err.toString());
+      try {
+        await createExShare(
+          this.selectedItem.id,
+          reqUsers,
+          reqClassification,
+          reqInfo,
+          reqApprovers
+        );
+      } catch (err) {
+        this.$showError({ message: this.$t("exShare.finalErrorMsg") });
         return;
-      } 
-      this.$showSuccess(
-          'Your request was sent for processing. You may view it on approval service.'
-      );
-      this.$emit('close-share');
-    },
-    
+      }
+      this.$showSuccess(this.$t("exShare.finalSuccessMsg"));
+      this.$emit("close-share");
+    }
   }
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
