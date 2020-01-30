@@ -18,6 +18,7 @@ services:
       GW_PERMISSION_SERVICE: 'permission-service:8080'
       GW_USER_SERVICE: 'user-service:8080'
       GW_SEARCH_SERVICE: 'search-service:8080'
+      GW_APPROVAL_URL: http://23.102.32.203/api/v1/request
       GW_GOTENBERG_SERVICE: 'http://gotenberg-service:8080'
       GW_ALLOW_ORIGINS: 'http://localhost*'
       GW_SUPPORT_LINK: 'https://open.rocket.chat/home'
@@ -264,7 +265,7 @@ services:
     ports:
       - '8090:8080'
   delegation-service:
-    image: bluehub.azurecr.io/meateam/delegation-service:master
+    image: bluehub.azurecr.io/meateam/delegation-service:local
     ports:
       - '8091:8080'
     environment:

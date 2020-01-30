@@ -25,7 +25,8 @@ const config = {
 	apmServerUrl: '',
 	authUrl: '',
 	environment: '',
-	supportLink: ''
+	supportLink: '',
+	approvalServiceUrl: ''
 };
 
 export function checkMimeType(type) {
@@ -55,6 +56,7 @@ export async function fetchConfig() {
 	config.authUrl = conf.authUrl;
 	config.environment = conf.environment;
 	config.supportLink = conf.supportLink;
+	config.approvalServiceUrl = conf.approvalServiceUrl || config.supportLink;
 }
 
 export {

@@ -16,6 +16,12 @@
           <span>{{ $t('sidebar.newFolder') }}</span>
         </button>
       </div>
+      <div @click="onMySharesClick">
+        <a v-bind:href="approvalServiceUrl" class="action" target="_blank" :aria-label="$t('sidebar.myShares')" :title="$t('sidebar.contactUs')">
+          <i class="material-icons">info</i>
+          <span>{{$t('sidebar.myShares')}}</span>
+        </a>
+      </div>
       <div>
         <a v-bind:href="supportLink" class="action" target="_blank" :aria-label="$t('sidebar.contactUs')" :title="$t('sidebar.contactUs')">
           <i class="material-icons">headset_mic</i>
@@ -52,6 +58,7 @@ export default {
     },
     signup: () => signup,
     supportLink: () => config.supportLink,
+    approvalServiceUrl: () => config.approvalServiceUrl,
     disableExternal: () => disableExternal,
     noAuth: () => noAuth,
     nameExists: function () {
@@ -71,6 +78,9 @@ export default {
       this.$store.commit("setShares", true);
       this.$store.commit("changeFolder", '');
       this.$store.commit("setReload", true);
+    },
+    onMySharesClick() {
+      console.log(config);
     },
     logout: auth.logout
   }
