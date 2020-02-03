@@ -267,6 +267,8 @@
     "classifications": [ "None", "Limited", "Secret", "Top Secret" ],
     "classTopSecret": "Top Secret",
     "changeShare": "Change Share",
+    "changeToExShare": "Share External",
+    "changeToRegShare": "Share Internal",
     "header": "Share external user",
     "STwoHeader": "Choose Approvers",
     "fsInfo": "The approvers selected will have reading permission on the file",

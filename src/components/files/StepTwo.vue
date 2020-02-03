@@ -51,12 +51,8 @@ export default {
     },
     submitApprover: async function(approver) {
       try {
+        await shareApi.create(this.selectedItem.id, approver.value.id, "READ", false);
         this.$refs.editApproversList.addUser(approver.value);
-        await shareApi.create(
-          this.selectedItem.id,
-          approver.value.id,
-          this.role
-        );
         this.$showSuccess(
           `successfully shared with ${this.getResultValue(approver.value)}`
         );

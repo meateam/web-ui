@@ -23,8 +23,8 @@ export async function remove(hash) {
   }
 }
 
-export async function create(id, userID, role) {
+export async function create(id, userID, role, override = true) {
   return axios.put(`${baseURL}/api/files/${id}/permissions`,
-    { userID, role },
+    { userID, role, override },
     { headers: { Authorization: 'Bearer ' + store.state.jwt } });
 }

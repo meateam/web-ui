@@ -58,8 +58,11 @@
       >
         {{ $t("buttons.close") }}
       </button>
-      <button class="button button--flat" @click="changeShare">
-        {{ $t("exShare.changeShare") }}
+      <button v-if="!regularShare" class="button button--flat" @click="changeShare">
+        {{ $t("exShare.changeToRegShare") }}
+      </button>
+      <button v-if="regularShare" class="button button--flat" @click="changeShare">
+        {{ $t("exShare.changeToExShare") }}
       </button>
     </div>
   </div>

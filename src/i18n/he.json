@@ -268,6 +268,8 @@
     "classifications": [ "ללא", "שמור", "סודי", "סודי ביותר" ],
     "classTopSecret": "סודי ביותר",
     "changeShare": "שנה שיתוף",
+    "changeToExShare": "שיתוף חיצוני",
+    "changeToRegShare": "שיתוף פנימי",
     "header": "שיתוף משתמש חיצוני",
     "STwoHeader": "בחר מאשרים",
     "fsInfo": "המאשרים שנבחרו יקבלו זכויות קריאה על הקובץ",
