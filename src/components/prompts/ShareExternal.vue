@@ -29,6 +29,7 @@ export default {
   data() {
     return {
       demoSteps: [
+        // StepOne - choose users to share to
         {
           icon: "mail",
           name: "first",
@@ -36,6 +37,7 @@ export default {
           component: StepOne,
           completed: false
         },
+        // StepTwo - choose approvers for the share
         {
           icon: "payment",
           name: "second",
@@ -43,6 +45,7 @@ export default {
           component: StepTwo,
           completed: false
         },
+        // StepThree - add information and classification
         {
           icon: "announcement",
           name: "third",

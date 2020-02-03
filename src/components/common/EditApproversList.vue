@@ -42,23 +42,19 @@ export default {
     ...mapGetters(["getApprovers"]),
     ...mapMutations(["addApprover", "removeApprover"])
   },
-  async mounted() {
-    await this.onMount();
-  },
   methods: {
     deleteApprover: async function(user) {
       try {
         await files.unShare(this.id, user.id);
       } catch (err) {
         this.$showError(err);
+        return;
       }
       this.$store.commit("removeApprover", user.id);
       if (this.$store.getters.getApprovers <= 0) {
         this.$emit("list-empty", { value: true });
       }
-      await this.onMount();
     },
-    onMount: async function() {},
     addUser: function(user) {
       if (!user) return;
       if (!this.approvers.find(currUser => currUser.id === user.id)) {
