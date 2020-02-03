@@ -12,6 +12,7 @@ const getters = {
   getGlobalExternalUsers: state => state.globalExternalUsers,
   getApprovers: state => state.approvers,
   getStepThreeRes: state => state.stepThreeRes,
+  userID: state => state.user && state.user.id,
 }
 
 export default getters

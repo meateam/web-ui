@@ -1,16 +1,27 @@
 <template>
   <nav :class="{active}">
     <template v-if="isLogged">
-      <div @click="onMyFilesClick" class="action" to="/files" :aria-label="$t('sidebar.myFiles.title')" :title="$t('sidebar.myFiles.title')">
-        <i class="material-icons">folder</i>
-        <span v-if="nameExists">{{ $t('sidebar.myFiles.personalized', {person: user.firstName}) }}</span>
-        <span v-else>{{ $t('sidebar.myFiles.title') }}</span>
+      <div
+        @click="onMyFilesClick"
+        class="action"
+        :class="{ selected: !shares && !isSearch}"
+        to="/files"
+        :aria-label="$t('sidebar.myFiles.title')"
+        :title="$t('sidebar.myFiles.title')">
+          <i class="material-icons">folder</i>
+          <span v-if="nameExists">{{ $t('sidebar.myFiles.personalized', {person: user.firstName}) }}</span>
+          <span v-else>{{ $t('sidebar.myFiles.title') }}</span>
       </div>
-      <div @click="onSharedWithMeClick" class="action" to="/shares" :aria-label="$t('sidebar.sharedFiles')" :title="$t('sidebar.sharedFiles')">
-        <i class="material-icons">folder_shared</i>
-        <span>{{ $t('sidebar.sharedFiles') }}</span>
+      <div
+        @click="onSharedWithMeClick"
+        :class="{ selected: shares && !isSearch}"
+        class="action" to="/shares"
+        :aria-label="$t('sidebar.sharedFiles')"
+        :title="$t('sidebar.sharedFiles')">
+          <i class="material-icons">folder_shared</i>
+          <span>{{ $t('sidebar.sharedFiles') }}</span>
       </div>
-      <div v-if="!shares">
+      <div v-if="showCreateUpload">
         <button @click="$store.commit('showHover', 'newDir')" class="action" :aria-label="$t('sidebar.newFolder')" :title="$t('sidebar.newFolder')">
           <i class="material-icons">create_new_folder</i>
           <span>{{ $t('sidebar.newFolder') }}</span>
@@ -42,7 +53,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import * as auth from '@/utils/auth'
-import { signup, disableExternal, noAuth, config } from '@/utils/constants'
+import { signup, disableExternal, noAuth, config, UploadRole } from '@/utils/constants'
 import Quota from './quota/Quota'
 
 export default {
@@ -51,8 +62,8 @@ export default {
     Quota
   },
   computed: {
-    ...mapState([ 'user', 'quota' ]),
-    ...mapGetters([ 'isLogged', 'shares' ]),
+    ...mapState([ 'req', 'user', 'quota' ]),
+    ...mapGetters([ 'isLogged', 'shares', 'isSearch' ]),
     active () {
       return this.$store.state.show === 'sidebar'
     },
@@ -63,6 +74,9 @@ export default {
     noAuth: () => noAuth,
     nameExists: function () {
        return this.user.firstName && this.user.lastName
+    },
+    showCreateUpload() {
+      return UploadRole(this.req.role);
     }
   },
   methods: {
@@ -86,3 +100,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.selected {
+  background-color: rgba(0, 0, 0, .1);
+}
+</style>

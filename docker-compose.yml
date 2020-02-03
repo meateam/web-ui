@@ -8,7 +8,7 @@ services:
     depends_on:
       - api-gateway
   api-gateway:
-    image: 'bluehub.azurecr.io/meateam/api-gateway:dropbox'
+    image: 'bluehub.azurecr.io/meateam/api-gateway:merges'
     environment:
       GW_AUTH_URL: 'http://localhost:8084/auth/login'
       GW_PORT: 8080
@@ -57,7 +57,7 @@ services:
       MINIO_SECRET_KEY: 'BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR'
     command: server /data
   upload-service:
-    image: 'bluehub.azurecr.io/meateam/upload-service:1.1'
+    image: 'bluehub.azurecr.io/meateam/upload-service:develop'
     environment:
       S3_ACCESS_KEY: 'F6WUUG27HBUFSIXVZL59'
       S3_SECRET_KEY: 'BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR'
@@ -80,7 +80,7 @@ services:
     ports:
       - '8081:8080'
   download-service:
-    image: 'bluehub.azurecr.io/meateam/download-service:1.1'
+    image: 'bluehub.azurecr.io/meateam/download-service:develop'
     environment:
       S3_ACCESS_KEY: 'F6WUUG27HBUFSIXVZL59'
       S3_SECRET_KEY: 'BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR'
@@ -103,7 +103,7 @@ services:
     depends_on:
       - minio
   file-service:
-    image: 'bluehub.azurecr.io/meateam/file-service:1.1'
+    image: 'bluehub.azurecr.io/meateam/file-service:develop'
     environment:
       BIND_ADDRESS: '0.0.0.0:8080'
       ELASTICSEARCH_URL: 'http://localhost:9200'
@@ -133,7 +133,7 @@ services:
     depends_on:
       - minio
   authentication-service:
-    image: 'bluehub.azurecr.io/meateam/authentication-service:1.1'
+    image: 'bluehub.azurecr.io/meateam/authentication-service:develop'
     ports:
       - '8084:8080'
     environment:
@@ -156,7 +156,7 @@ services:
       SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: 'http://localhost:8084/auth/metadata.xml/callback'
       SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE: 'http://localhost:8084/auth/logout'
   user-service:
-    image: 'bluehub.azurecr.io/meateam/user-service:1.1'
+    image: 'bluehub.azurecr.io/meateam/user-service:develop'
     ports:
       - '8086:8080'
     environment:
@@ -183,7 +183,7 @@ services:
     ports:
       - '6379:6379'
   permission-service:
-    image: 'bluehub.azurecr.io/meateam/permission-service:1.1'
+    image: 'bluehub.azurecr.io/meateam/permission-service:develop'
     ports:
       - '8087:8080'
     environment:
@@ -202,7 +202,7 @@ services:
     depends_on:
       - mongo
   search-service:
-    image: bluehub.azurecr.io/meateam/search-service:1.1
+    image: bluehub.azurecr.io/meateam/search-service:develop
     environment:
       SS_PORT: 8080
       SS_HOST_NAME: search-service
@@ -251,7 +251,7 @@ services:
     ports: ['5601:5601']
     depends_on: ['elasticsearch']
   spike-service:
-    image: bluehub.azurecr.io/meateam/spike-service:1.1
+    image: bluehub.azurecr.io/meateam/spike-service:develop
     environment:
       AUDIENCE: "0mBMe5vYJyuFtvHpEWVDPumqaVl~xr"
       SPIKE_CLIENT_ID: "uMsljFEps0aKfAbZ1o7~iyZGVHHiT_KdRq2gsdtc"
@@ -265,7 +265,7 @@ services:
     ports:
       - '8090:8080'
   delegation-service:
-    image: bluehub.azurecr.io/meateam/delegation-service:local
+    image: bluehub.azurecr.io/meateam/delegation-service:develop
     ports:
       - '8091:8080'
     environment:
@@ -274,7 +274,7 @@ services:
       PHONE_BOOK_URL: 'http://94.245.91.5'
       NODE_TLS_REJECT_UNAUTHORIZED: 0
   permit-service:
-    image: bluehub.azurecr.io/meateam/permit-service:1.1
+    image: bluehub.azurecr.io/meateam/permit-service:develop
     environment:
       PMTS_PORT: 8080
       HOST_NAME: permit-service

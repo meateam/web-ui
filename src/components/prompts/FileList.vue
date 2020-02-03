@@ -18,13 +18,20 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { files } from '@/api'
+import { UploadRole } from '@/utils/constants';
 
 const backwards = '..';
 
 export default {
   name: 'file-list',
+  props: ['path', 'id', 'shares'],
+  watch: {
+    path: function() {
+      this.onMount();
+    }
+  },
   data: function () {
     return {
       items: [],
@@ -38,31 +45,34 @@ export default {
     }
   },
   computed: {
-    ...mapState([ 'req', 'path' ]),
+    ...mapState([ 'req' ]),
+    ...mapGetters(['isListing', 'selectedCount']),
     nav () {
       return decodeURIComponent(this.current.name || '/')
     }
   },
-  mounted () {
-    for (let i = 0; i < this.path.length - 1; i++) {
-      this.parents.push({id: this.path[i].id, name: this.path[i].name});
-    }
-
-    // If we're showing this on a listing,
-    // we can use the current request object
-    // to fill the move options.
-    if (this.req.kind === 'listing') {
-      this.fillOptions(this.req)
-      return
-    }
-
-    // Otherwise, we must be on a preview or editor
-    // so we fetch the data from the previous directory.
-    files.fetch(this.current.id)
-      .then(this.fillOptions)
-      .catch(e => this.$showError(e))
+  async mounted () {
+    await this.onMount();
   },
   methods: {
+    async onMount() {
+      this.selected = null;
+      this.parents = [];
+      for (let i = 0; i < this.path.length - 1; i++) {
+        this.parents.push({id: this.path[i].id, name: this.path[i].name});
+      }
+
+      if (this.id == '' && this.shares) {
+        await files.getSharedWithMe()
+          .then(this.fillOptions)
+          .catch(e => this.$showError(e));
+        return;
+      }
+
+      await files.fetch(this.id)
+        .then(this.fillOptions)
+        .catch(e => this.$showError(e))
+    },
     fillOptions (req) {
       // Sets the current path and resets
       // the current items.
@@ -88,12 +98,12 @@ export default {
       }
 
       // If this folder is empty, finish here.
-      if (req.items === null) return
+      if (!req.items) return
 
       // Otherwise we add every directory to the
       // move options.
       for (let item of req.items) {
-        if (!item.isDir) continue
+        if (!item.isDir || !UploadRole(item.role)) continue;
 
         this.items.push({
           name: item.name,
@@ -101,7 +111,26 @@ export default {
         })
       }
     },
-    next: function (event) {
+    next: async function (event) {
+      let items = [];
+
+      if (this.$store.state.selected.length > 0) {
+        for (let item of this.$store.state.selected) {
+          items.push(this.req.items[item].id)
+        }
+      } else {
+        items.push(this.req.id);
+      }
+
+      for (let i = 0; i < items.length; i++) {
+        if (this.shares && items[i] === '') {
+          return;
+        }
+
+        if (items[i] === event.currentTarget.dataset.id) {
+          return;
+        }
+      }
       // Retrieves the URL of the directory the user
       // just clicked in and fill the options with its
       // content.
@@ -113,11 +142,18 @@ export default {
 
       let id = event.currentTarget.dataset.id
 
-      files.fetch(id)
+      if (id == '' && this.shares) {
+        await files.getSharedWithMe()
+          .then(this.fillOptions)
+          .catch(e => this.$showError(e));
+        return;
+      }
+
+      await files.fetch(id)
         .then(this.fillOptions)
         .catch(e => this.$showError(e))
     },
-    touchstart (event) {
+    async touchstart (event) {
       let url = event.currentTarget.dataset.id
 
       // In 300 milliseconds, we shall reset the count.
@@ -139,7 +175,7 @@ export default {
       // If there is more than one touch already,
       // open the next screen.
       if (this.touches.count > 1) {
-        this.next(event)
+        await this.next(event)
       }
     },
     select: function (event) {
@@ -150,7 +186,7 @@ export default {
 
       // If the element is already selected, unselect it.
       if (this.selected === event.currentTarget.dataset.id) {
-        this.selected = null
+        this.selected = null;
         this.$emit('update:selected', {
           dest: {
             id: this.current.id,

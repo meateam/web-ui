@@ -11,10 +11,6 @@
 <script>
 import { files, users } from "@/api";
 
-const roles = {
-  1: "owner",
-  3: "read"
-};
 export default {
   name: "permission-list",
   props: ["id"],
@@ -53,7 +49,7 @@ export default {
         .filter(res => !!res && !!res.user && res.user.firstName && res.user.lastName && res.user.fullName)
         .map(res => {
           res.user.letters = (res.user.firstName[0] + res.user.lastName[0]).toUpperCase();
-          res.user.role = roles[permissionsMap[res.user.id].role];
+          res.user.role = permissionsMap[res.user.id].role;
 
           return res.user;
         });
@@ -63,7 +59,7 @@ export default {
   },
   methods: {
     i18nuserRole(user) {
-      return this.$t(`role.${user.role}`);
+      return this.$t(`role.${user.role.toLowerCase()}`);
     }
   }
 };

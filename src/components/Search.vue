@@ -47,7 +47,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['direction'])
+    ...mapGetters(['direction', 'userID'])
   },
   methods: {
     ...mapMutations(['setLoading']),
@@ -61,6 +61,7 @@ export default {
 
       this.$store.commit('pushFolder', { id: file.id, name: file.name });
       this.$store.commit('setReload', true);
+      this.$store.commit('setShares', file.shared);
       
       return;
     },

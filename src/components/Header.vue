@@ -69,7 +69,7 @@ import ShareButton from './buttons/Share'
 import UserButton from './buttons/User';
 import SelectButton from './buttons/Select';
 import {mapGetters, mapState} from 'vuex'
-import { logoURL } from '@/utils/constants'
+import { logoURL, UploadRole, DownloadRole, DeleteRole, RenameRole, ShareRole, MoveRole } from '@/utils/constants'
 import * as api from '@/api'
 import buttons from '@/utils/buttons'
 
@@ -129,34 +129,101 @@ export default {
       return this.width <= 736
     },
     showUpload () {
-      return this.isListing && !this.shares && this.selectedCount === 0
+      return this.isListing && UploadRole(this.req.role) && this.selectedCount === 0
     },
     showSaveButton () {
       return this.isEditor
     },
     showDownloadButton () {
       // Show only if one file selected and the selected file is not a folder.
-      return this.isFiles && this.selectedCount === 1 && ! this.req.items[this.selected[0]].isDir;
+      return this.isFiles && this.selectedCount === 1 && ! this.req.items[this.selected[0]].isDir && DownloadRole(this.req.items[this.selected[0]].role);
     },
     showDeleteButton () {
-      return this.isFiles && (this.isListing
-        ? (this.selectedCount !== 0)
-        : true) && ((this.shares && this.currentFolder.id == '') || !this.shares)
+      if (this.isFiles) {
+        if (this.isListing) {
+          if (this.selectedCount === 0) {
+            // Can't delete a file that is being shared with you directly.
+            if (this.req.permission && this.req.permission.fileID !== this.req.id) {
+              return false;
+            }
+            
+            return this.req.id && DeleteRole(this.req.role);
+          } else {
+            for (let i = 0; i < this.selected.length; i++) {
+              // Can't delete a file that is being shared with you directly.
+              if (this.req.items[this.selected[i]].permission &&
+                  this.req.items[this.selected[i]].permission.id !== this.req.items[this.selected[i]].id) {
+                return false;
+              }
+
+              if (!DeleteRole(this.req.items[this.selected[i]].role)) {
+                return false;
+              }
+            }
+
+            return true;
+          }
+        } else {
+          if (!this.req.items) {
+            return false;
+          }
+
+          for (let i = 0; i < this.selected.length; i++) {
+            if (!DeleteRole(this.req.items[this.selected[i]].role)) {
+              return false;
+            }
+          }
+
+          return true;
+        }
+      }
+
+      return false;
     },
     showRenameButton () {
-      return this.isFiles && (this.isListing
-        ? (this.selectedCount === 1)
-        : true) && !this.shares
+      if (this.isFiles) {
+        if (this.isListing) {
+          if (this.selectedCount === 0) {
+            return this.req.id && RenameRole(this.req.role);
+          } else {
+            return this.selectedCount === 1 && RenameRole(this.req.items[this.selected[0]].role);
+          }
+        } else {
+          return this.req.items && RenameRole(this.req.items[this.selected[0]].role);
+        }
+      }
+
+      return false;
     },
     showShareButton () {
-      return this.isFiles && (this.isListing
-        ? (this.selectedCount === 1)
-        : true) && !this.shares
+      if (this.isFiles) {
+        if (this.isListing) {
+         if (this.selectedCount === 0) {
+            return this.req.id && ShareRole(this.req.role);
+          } else {
+            return this.selectedCount === 1 && ShareRole(this.req.items[this.selected[0]].role);
+          }
+        } else {
+          return this.req.items && ShareRole(this.req.items[this.selected[0]].role);
+        }
+      }
+
+      return false;
     },
     showMoveButton () {
-      return this.isFiles && (this.isListing
-        ? (this.selectedCount > 0)
-        : true) && !this.shares
+      if (this.isFiles) {
+        if (this.isListing) {
+         if (this.selectedCount === 0) {
+            return this.req.id && MoveRole(this.req.role);
+          } else {
+            return this.selectedCount > 0 && MoveRole(this.req.items[this.selected[0]].role);
+          }
+        } else {
+          return this.req.items && MoveRole(this.req.items[this.selected[0]].role);
+        }
+      }
+
+      return false;
     },
     showCopyButton () {
       return this.isFiles && (this.isListing
@@ -189,7 +256,6 @@ export default {
     },
     redirectToMain() {
       this.$router.push({path: '/files'});
-      this.$store.commit("setShares", false);
       this.$store.commit('changeFolder', '');
       this.$store.commit('setReload', true);
     }

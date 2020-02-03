@@ -33,25 +33,17 @@
                 </template>
               </autocomplete>
 
-              <select
-                style="display:none;"
-                v-model="role"
-                :aria-label="$t('role.input')"
-              >
-                <option value="READ">{{ $t("role.read") }}</option>
+              <select v-model="role" :aria-label="$t('role.input')">
+                <option value="READ" >{{ $t('role.read') }}</option>
+                <option value="WRITE" >{{ $t('role.write') }}</option>
               </select>
-              <button
-                class="action"
+              <button class="action"
                 @click="submit"
                 :aria-label="$t('buttons.create')"
-                :title="$t('buttons.create')"
-              >
-                <i class="material-icons">add</i>
-              </button>
+                :title="$t('buttons.create')"><i class="material-icons">add</i></button>
             </li>
           </ul>
         </div>
-        <hr />
         <edit-permission-list :id="selectedItem.id" ref="editPermissionList">
         </edit-permission-list>
       </div>
@@ -74,12 +66,13 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from "vuex";
-import { share as shareApi, users as usersApi } from "@/api";
-import Autocomplete from "@trevoreyre/autocomplete-vue";
-import { minAutoComplete } from "@/utils/constants";
-import EditPermissionList from "../common/EditPermissionList";
-import moment from "moment";
+import { mapState, mapGetters, mapMutations } from 'vuex'
+import { Roles, minAutoComplete } from '@/utils/constants';
+import { share as shareApi, users as usersApi } from '@/api'
+import Autocomplete from '@trevoreyre/autocomplete-vue'
+import EditPermissionList from '../common/EditPermissionList'
+import moment from 'moment'
+import '@trevoreyre/autocomplete-vue/dist/style.css'
 
 import ShareExternal from "./ShareExternal";
 
@@ -92,22 +85,22 @@ export default {
   },
   data: function() {
     return {
-      role: "READ",
-      searchText: "",
-      user: "",
+      role: Roles.read,
+      searchText: '',
+      user:'',
       regularShare: true
-    };
+    }
   },
   computed: {
-    ...mapState(["req", "selected", "selectedCount"]),
-    ...mapGetters(["isListing", "direction"]),
+    ...mapState([ 'req', 'selected', "selectedCount" ]),
+    ...mapGetters([ 'isListing', 'selectedCount', 'direction' ]),
     ...mapMutations([
       "emptyGlobalExternalUsers",
       "emptyApprovers",
       "resetStepsRes"
     ]),
     selectedItem() {
-      return this.req.items[this.selected[0]];
+      return this.req.items && this.selectedCount !== 0 ? this.req.items[this.selected[0]] : this.req;
     }
   },
   async beforeMount() {},
@@ -123,9 +116,7 @@ export default {
 
       try {
         await shareApi.create(this.selectedItem.id, this.user.id, this.role);
-        this.$showSuccess(
-          `successfully shared with ${this.getResultValue(this.user)}`
-        );
+        this.$showSuccess(this.$t('success.shared', {user: this.getResultValue(this.user)}));
         this.$refs.editPermissionList.addUser(this.user);
       } catch (e) {
         this.$showError(e);
