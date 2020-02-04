@@ -10,7 +10,7 @@
       </span>
     </div>
     <div v-for="user in getApprovers" :key="user.id" class="item">
-      <span class="user-info">
+      <span v-if="$store.state.user.id != user.id" class="user-info">
         <span>{{ user.fullName }} </span>
         <p>{{ user.hierarchyFlat }}</p>
       </span>
@@ -20,7 +20,7 @@
         :aria-label="$t('buttons.deletePermission')"
         :title="$t('buttons.deletePermission')"
       >
-        <i class="material-icons">delete</i>
+        <i v-if="$store.state.user.id != user.id" class="material-icons">delete</i>
       </span>
     </div>
   </div>
@@ -51,7 +51,7 @@ export default {
         return;
       }
       this.$store.commit("removeApprover", user.id);
-      if (this.$store.getters.getApprovers <= 0) {
+      if (this.$store.getters.getApprovers.length <= 1) {
         this.$emit("list-empty", { value: true });
       }
     },

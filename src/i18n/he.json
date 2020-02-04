@@ -268,6 +268,7 @@
     "classifications": [ "ללא", "שמור", "סודי", "סודי ביותר" ],
     "classTopSecret": "סודי ביותר",
     "changeShare": "שנה שיתוף",
+    "addMeAsApprover": "הוסף אותי כמאשר",
     "changeToExShare": "שיתוף חיצוני",
     "changeToRegShare": "שיתוף פנימי",
     "header": "שיתוף משתמש חיצוני",

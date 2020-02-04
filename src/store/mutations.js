@@ -138,9 +138,13 @@ const mutations = {
 
   removeApprover: (state, approverID) => {
     if(!approverID) return;
-    state.approvers = state.approvers.filter(approver => {
-      approver.id != approverID;
+    const newApprovers = [];
+    state.approvers.forEach(approver =>{
+      if(approver.id !=approverID){
+        newApprovers.push(approver);
+      }
     });
+    state.approvers = newApprovers;
   },
   emptyApprovers: (state) => {
     state.approvers = [];

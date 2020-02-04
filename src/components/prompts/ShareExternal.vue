@@ -24,7 +24,7 @@ import { createExShare } from "@/api/exShare";
 export default {
   name: "app",
   components: {
-    HorizontalStepper
+    HorizontalStepper,
   },
   data() {
     return {

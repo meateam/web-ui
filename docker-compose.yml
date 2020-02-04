@@ -8,7 +8,7 @@ services:
     depends_on:
       - api-gateway
   api-gateway:
-    image: 'bluehub.azurecr.io/meateam/api-gateway:merges'
+    image: 'api-gateway:override'
     environment:
       GW_AUTH_URL: 'http://localhost:8084/auth/login'
       GW_PORT: 8080
@@ -183,7 +183,7 @@ services:
     ports:
       - '6379:6379'
   permission-service:
-    image: 'bluehub.azurecr.io/meateam/permission-service:develop'
+    image: 'bluehub.azurecr.io/meateam/permission-service:override'
     ports:
       - '8087:8080'
     environment:

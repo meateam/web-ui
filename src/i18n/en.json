@@ -267,6 +267,7 @@
     "classifications": [ "None", "Limited", "Secret", "Top Secret" ],
     "classTopSecret": "Top Secret",
     "changeShare": "Change Share",
+    "addMeAsApprover": "Add me as an approver",
     "changeToExShare": "Share External",
     "changeToRegShare": "Share Internal",
     "header": "Share external user",
