@@ -51,7 +51,7 @@ export default {
         return;
       }
       this.$store.commit("removeApprover", user.id);
-      if (this.$store.getters.getApprovers.length <= 1) {
+      if (this.$store.getters.getApprovers.length <= 0) {
         this.$emit("list-empty", { value: true });
       }
     },

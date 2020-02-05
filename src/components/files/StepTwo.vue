@@ -49,15 +49,13 @@ export default {
     }
   },
   activated: function() {
-    const selfUser = this.extractSelfUser();
-    this.$refs.editApproversList.addUser(selfUser);
     this.emitCanContinue()
   },
   methods: {
     // check if user can continue to the next step, and emit accordingly.
     emitCanContinue() {
       const approversLength = this.$store.getters.getApprovers.length;
-      if ( (approversLength == 1 && this.checked) || (approversLength > 1) ) {
+      if ( this.checked || (approversLength >= 1) ) {
         this.$emit("can-continue", { value: true });
         return true;
       }
