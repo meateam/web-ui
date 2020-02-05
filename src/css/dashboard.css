@@ -104,8 +104,8 @@ table tr>*:last-child {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 3;
-  max-width: 40em;
-  width: 90%;
+  border-radius: 7px;
+  min-width: 15em;
   max-height: 95%;
   animation: .1s show forwards;
 }

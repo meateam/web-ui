@@ -270,6 +270,13 @@
     "addMeAsApprover": "Add me as an approver",
     "changeToExShare": "Share External",
     "changeToRegShare": "Share Internal",
+    "dangerAlert": {
+      "header": "Alet!",
+      "message": "You are sharing a file with a low-classification network. Please make sure the contents of the file are Secret at most.",
+      "finish": "By pressing 'Agree' I declare that I have read the above and that my request meets the requirements",
+      "agree": "I Agree",
+      "disagree": "Dismiss Request"
+    },
     "header": "Share external user",
     "STwoHeader": "Choose Approvers",
     "fsInfo": "The approvers selected will have reading permission on the file",

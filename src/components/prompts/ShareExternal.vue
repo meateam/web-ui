@@ -19,7 +19,7 @@ import StepTwo from "../files/StepTwo.vue";
 import StepThree from "../files/StepThree.vue";
 
 import { mapState } from "vuex";
-import { createExShare } from "@/api/exShare";
+
 
 export default {
   name: "app",
@@ -81,39 +81,8 @@ export default {
       });
     },
     async onStepperFinished() {
-      const users = this.$store.getters.getGlobalExternalUsers;
-      const approvers = this.$store.getters.getApprovers;
-
-      const reqUsers = [];
-      const reqApprovers = [];
-      users.forEach(user => {
-        reqUsers.push({ id: user.id, full_name: user.full_name });
-      });
-      approvers.forEach(approver => {
-        reqApprovers.push(approver.id);
-      });
-
-      const step3Res = this.$store.getters.getStepThreeRes;
-      const reqClassification = step3Res.classification;
-      const reqInfo = step3Res.info;
-
-      try {
-        await createExShare(
-          this.selectedItem.id,
-          reqUsers,
-          reqClassification,
-          reqInfo,
-          reqApprovers
-        );
-      } catch (err) {
-        this.$showError({ message: this.$t("exShare.finalErrorMsg") });
-        return;
-      }
-      this.$showSuccess(this.$t("exShare.finalSuccessMsg"));
-      this.$emit("close-share");
+      this.$emit("finished-exshare", { value: true });
     }
   }
 };
 </script>
-
-<style scoped></style>
