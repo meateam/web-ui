@@ -188,4 +188,7 @@ export default {
 .folder {
   color: #2979ff;
 }
+.external > div > .material-icons {
+  color: green;
+}
 </style>
