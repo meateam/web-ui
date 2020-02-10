@@ -117,7 +117,7 @@ export default {
   },
   computed: {
     ...mapState(["req", "selected", "selectedCount"]),
-    ...mapGetters(["isListing", "selectedCount", "direction"]),
+    ...mapGetters(["isListing", "selectedCount"]),
     ...mapMutations([
       "emptyGlobalExternalUsers",
       "emptyApprovers",

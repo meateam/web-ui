@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     ...mapGetters(["getGlobalExternalUsers"]),
-    ...mapState(["globalExternalUsers", "direction"]),
+    ...mapState(["globalExternalUsers"]),
     ...mapMutations([
       "emptyGlobalExternalUsers",
       "addGlobalExternalUser",

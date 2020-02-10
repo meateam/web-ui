@@ -106,7 +106,6 @@ table tr>*:last-child {
   z-index: 3;
   border-radius: 7px;
   min-width: 15em;
-  max-height: 95%;
   animation: .1s show forwards;
 }
 

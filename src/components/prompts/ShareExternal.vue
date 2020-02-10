@@ -5,7 +5,8 @@
       :steps="demoSteps"
       :locale="$t('settings.langName')"
       @completed-step="completeStep"
-      :top-buttons="true"
+      :top-buttons="false"
+      :isRTL="$t('settings.langName')==='he'"
       @active-step="isStepActive"
       @stepper-finished="onStepperFinished"
     ></horizontal-stepper>
@@ -13,7 +14,7 @@
 </template>
 
 <script>
-import HorizontalStepper from "vue-stepper";
+import HorizontalStepper from "vue-stepper-sh";
 import StepOne from "../files/StepOne.vue";
 import StepTwo from "../files/StepTwo.vue";
 import StepThree from "../files/StepThree.vue";

@@ -1,6 +1,6 @@
 <template>
   <div class="step3">
-    <div dir="direction">
+    <div>
       <h3>{{ $t("exShare.headerTS") }}</h3>
     </div>
     <div class="card-content">
