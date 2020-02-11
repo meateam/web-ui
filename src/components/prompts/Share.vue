@@ -74,7 +74,7 @@
           {{ $t("exShare.changeToRegShare") }}
         </button>
         <button
-          v-if="regularShare"
+          v-if="regularShare && !selectedItem.isDir"
           class="button button--flat"
           @click="changeShare"
         >
