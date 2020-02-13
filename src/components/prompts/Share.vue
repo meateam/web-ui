@@ -1,17 +1,9 @@
 <template>
   <div class="card floating" id="share">
-    <template v-if="finished">
-      <alertDialog @finish-agree="onStepperFinished"></alertDialog>
-    </template>
-    <template v-if="!finished">
-      <template v-if="!regularShare">
-        <shareEx @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"> </shareEx>
-      </template>
 
-      <template v-if="regularShare">
-        <div class="card-title">
-          <h2>{{ $t("buttons.share") }}</h2>
-        </div>
+    <tabs v-if="!finished" :options="{ useUrlFragment: false }" @clicked="tabClicked" @changed="tabChanged">
+      <tab :name="$t('exShare.changeToRegShare')">
+      <template>
         <div class="card-content">
           <div class="user-role-select">
             <ul id="user-role-list">
@@ -26,12 +18,8 @@
                   <template v-slot:result="{ result, props }">
                     <li v-bind="props" class="share-result">
                       <div>
-                        <div class="share-title">
-                          {{ getResultValue(result) }}
-                        </div>
-                        <div class="share-snippet">
-                          {{ result.hierarchyFlat }}
-                        </div>
+                        <div class="share-title">{{ getResultValue(result) }}</div>
+                        <div class="share-snippet">{{ result.hierarchyFlat }}</div>
                       </div>
                     </li>
                   </template>
@@ -52,41 +40,25 @@
               </li>
             </ul>
           </div>
-          <edit-permission-list :id="selectedItem.id" ref="editPermissionList">
-          </edit-permission-list>
+          <edit-permission-list :id="selectedItem.id" ref="editPermissionList"></edit-permission-list>
         </div>
       </template>
+      </tab>
+      <tab :name="$t('exShare.changeToExShare')">
+          <shareEx @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
+      </tab>
+    </tabs>
 
-      <div class="card-action">
-        <button
-          class="button button--flat"
-          @click="$store.commit('closeHovers')"
-          :aria-label="$t('buttons.close')"
-          :title="$t('buttons.close')"
-        >
-          {{ $t("buttons.close") }}
-        </button>
-        <button
-          v-if="!regularShare"
-          class="button button--flat"
-          @click="changeShare"
-        >
-          {{ $t("exShare.changeToRegShare") }}
-        </button>
-        <button
-          v-if="regularShare && !selectedItem.isDir"
-          class="button button--flat"
-          @click="changeShare"
-        >
-          {{ $t("exShare.changeToExShare") }}
-        </button>
-      </div>
+    <template v-if="finished">
+      <alertDialog @finish-agree="onStepperFinished"></alertDialog>
     </template>
+
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
+import {Tabs, Tab} from 'vue-tabs-component';
 import { Roles, minAutoComplete } from "@/utils/constants";
 import { share as shareApi, users as usersApi } from "@/api";
 import { createExShare } from "@/api/exShare";
@@ -104,7 +76,9 @@ export default {
     Autocomplete,
     EditPermissionList,
     shareEx: ShareExternal,
-    alertDialog: AlertDialog
+    alertDialog: AlertDialog,
+    tabs: Tabs,
+    tab: Tab
   },
   data: function() {
     return {
@@ -177,9 +151,9 @@ export default {
       this.regularShare = !this.regularShare;
     },
     async onStepperFinished(payload) {
-      if(!payload.value) {
+      if (!payload.value) {
         this.finished = false;
-        this.$store.commit('closeHovers');
+        this.$store.commit("closeHovers");
         return;
       }
       const users = this.$store.getters.getGlobalExternalUsers;
@@ -211,7 +185,7 @@ export default {
         return;
       }
       this.$showSuccess(this.$t("exShare.finalSuccessMsg"));
-      this.$store.commit('closeHovers');
+      this.$store.commit("closeHovers");
     }
   }
 };
@@ -219,7 +193,7 @@ export default {
 
 <style scoped>
 .space-div {
-  margin:10px;
+  margin: 10px;
 }
 .title {
   text-align: center;
