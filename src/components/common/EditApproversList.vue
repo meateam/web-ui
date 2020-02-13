@@ -1,5 +1,5 @@
 <template>
-  <div class="list">
+  <div class="list approvers-list">
     <div class="item" v-if="owner.id">
       <span class="user-info">
         <span>{{ owner.fullName }} </span>
@@ -65,10 +65,16 @@ export default {
 };
 </script>
 <style scoped>
+.material-icons:hover{
+  color: crimson;
+}
+
+.approvers-list {
+  margin-top: 20px;
+}
 .user-info {
   display: block;
   width: 90%;
-  margin: 0;
 }
 
 .user-info > p {
@@ -86,6 +92,7 @@ export default {
 }
 
 .item {
+    margin-top: 20px;
   margin-bottom: 10px;
   display: flex;
 }

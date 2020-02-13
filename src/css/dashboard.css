@@ -122,18 +122,6 @@ table tr>*:last-child {
   display: flex;
 }
 
-.card>div {
-  padding: 1em 1em;
-}
-
-.card>div:first-child {
-  padding-top: 1.5em;
-}
-
-.card>div:last-child {
-  padding-bottom: 1.5em;
-}
-
 .card .card-title * {
   margin: 0;
 }
