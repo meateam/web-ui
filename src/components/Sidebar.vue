@@ -28,7 +28,7 @@
         </button>
       </div>
       <div @click="onMySharesClick">
-        <a v-bind:href="approvalServiceUrl" class="action" target="_blank" :aria-label="$t('sidebar.myShares')" :title="$t('sidebar.contactUs')">
+        <a v-bind:href="approvalServiceUrl" class="action" target="_blank" :aria-label="myExternalSharesName" :title="myExternalSharesName">
           <i class="material-icons">info</i>
           <span>{{myExternalSharesName}}</span>
         </a>
