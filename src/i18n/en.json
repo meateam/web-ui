@@ -264,7 +264,7 @@
     "downloadFolder": "Download Folder"
   },
   "exShare": {
-    "classifications": [ "None", "Limited", "Secret", "Top Secret" ],
+    "classifications": ["Limited", "Secret", "Top Secret" ],
     "classTopSecret": "Top Secret",
     "changeShare": "Change Share",
     "addMeAsApprover": "Add me as an approver",

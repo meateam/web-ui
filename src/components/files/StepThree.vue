@@ -62,7 +62,7 @@ export default {
 }
 
 select {
-  background-color: #d1f9ff;
+  background-color: aliceblue;
 }
 textarea {
   max-height: 500px;
@@ -70,7 +70,7 @@ textarea {
   min-width: 300px;
   max-width: 100%;
   padding: 5px;
-  background-color: #d1f9ff;
+  background-color: aliceblue;
   border-radius: 5px;
 }
 </style>

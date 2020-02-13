@@ -30,7 +30,7 @@
       <div @click="onMySharesClick">
         <a v-bind:href="approvalServiceUrl" class="action" target="_blank" :aria-label="$t('sidebar.myShares')" :title="$t('sidebar.contactUs')">
           <i class="material-icons">info</i>
-          <span>{{$t('sidebar.myShares')}}</span>
+          <span>{{myExternalSharesName}}</span>
         </a>
       </div>
       <div>
@@ -60,6 +60,11 @@ export default {
   name: 'sidebar',
   components: {
     Quota
+  },
+  data: function () {
+    return {
+      myExternalSharesName: config.myExternalSharesName  
+    }
   },
   computed: {
     ...mapState([ 'req', 'user', 'quota' ]),

@@ -1,19 +1,25 @@
 <template>
   <div class="dialog">
-    <b style="color:white">{{ $t("exShare.dangerAlert.header") }}</b>
-    <br />
+    <div class="warning-header">
+      <i class="material-icons" id="warning-icon">warning</i>
+      <br />
+      <b style="font-size: 34px; color:white">{{ $t("exShare.dangerAlert.header") }}</b>
+    </div>
     <b style="color:white">{{ $t("exShare.dangerAlert.message") }}</b>
     <br />
     <br />
-    <b style="color:white">{{ $t("exShare.dangerAlert.finish") }}</b>
+    <div class="myCheckbox">
+      <input @click="onChecked($event)" type="checkbox" id="acceptTerms" class="actualCheckbox" v-model="acceptTerms">
+      <b style="color:white">{{ $t("exShare.dangerAlert.finish") }}</b>
+    </div>
     <br />
     <br />
     <b> </b>
     <div>
-      <button class="dialog-button right-button" @click="onAgreeClick">
+      <button class="dialog-button left-button" :disabled='!agreedToTerms' @click="onAgreeClick">
         {{ $t("exShare.dangerAlert.agree") }}
       </button>
-      <button class="dialog-button left-button" @click="onDisagreeClick">
+      <button class="dialog-button right-button" @click="onDisagreeClick">
         {{ $t("exShare.dangerAlert.disagree") }}
       </button>
     </div>
@@ -21,19 +27,36 @@
 </template>
 <script>
 export default {
+  data() {
+    return {
+      checked: false,
+      acceptTerms: false
+    };
+  },
   methods: {
     onAgreeClick() {
         this.$emit("finish-agree", { value: true });
     },
     onDisagreeClick() {
         this.$emit("finish-agree", { value: false });
+    },
+    onChecked(event) {
+      this.checked = event.target.checked;
+    }
+  },
+  computed: {
+    agreedToTerms() {
+      return this.acceptTerms;
     }
   }
 };
 </script>
 <style>
 .dialog {
-  background-color: red;
+  background-color: #ee4034;
+  max-width: 600px;
+  border-radius: 8px;
+  padding: 1.5em;
 }
 
 .right-button {
@@ -56,7 +79,7 @@ export default {
   border: 0;
   padding: 0.5em 1em;
   cursor: pointer;
-  background: #99ccff;
+  background: lightgray;
   color: black;
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
@@ -65,6 +88,22 @@ export default {
 }
 
 .dialog-button:hover {
-  background-color: var(--dark-blue);
+  background-color: darkgrey;
+}
+
+.dialog-button:disabled {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
+.warning-header {
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+#warning-icon {
+  font-size: 100px;
+  color: white;
 }
 </style>

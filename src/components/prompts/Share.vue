@@ -2,7 +2,7 @@
   <div class="card floating" id="share">
 
     <tabs v-if="!finished" :options="{ useUrlFragment: false }" @clicked="tabClicked" @changed="tabChanged">
-      <tab :name="$t('exShare.changeToRegShare')">
+      <tab :name="$t('exShare.changeToRegShare')" class="regular-share">
       <template>
         <div class="card-content">
           <div class="user-role-select">
@@ -44,12 +44,12 @@
         </div>
       </template>
       </tab>
-      <tab :name="$t('exShare.changeToExShare')">
+      <tab :name="externalShareName" v-if="regularShare && !selectedItem.isDir && allowedToexternalyShare">
           <shareEx @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
       </tab>
     </tabs>
 
-    <template v-if="finished">
+    <template v-if="finished" style="pading:0px">
       <alertDialog @finish-agree="onStepperFinished"></alertDialog>
     </template>
 
@@ -59,7 +59,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
 import {Tabs, Tab} from 'vue-tabs-component';
-import { Roles, minAutoComplete } from "@/utils/constants";
+import { Roles, minAutoComplete, config } from "@/utils/constants";
 import { share as shareApi, users as usersApi } from "@/api";
 import { createExShare } from "@/api/exShare";
 import Autocomplete from "@trevoreyre/autocomplete-vue";
@@ -86,7 +86,8 @@ export default {
       role: Roles.read,
       searchText: "",
       user: "",
-      regularShare: true
+      regularShare: true,
+      externalShareName: config.externalShareName
     };
   },
   computed: {
@@ -97,6 +98,9 @@ export default {
       "emptyApprovers",
       "resetStepsRes"
     ]),
+    allowedToexternalyShare() {
+      return this.$store.getters.user.currentUnit === config.externalExclusiveUnit;
+    },
     selectedItem() {
       return this.req.items && this.selectedCount !== 0
         ? this.req.items[this.selected[0]]
@@ -178,7 +182,8 @@ export default {
           reqUsers,
           reqClassification,
           reqInfo,
-          reqApprovers
+          reqApprovers,
+          this.selectedItem.name
         );
       } catch (err) {
         this.$showError({ message: this.$t("exShare.finalErrorMsg") });
@@ -224,5 +229,13 @@ export default {
 .share-snippet {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.54);
+}
+
+.regular-share{
+  padding: 1.5em;
+}
+
+#share {
+  padding: 0px;
 }
 </style>

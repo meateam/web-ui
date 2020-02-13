@@ -105,8 +105,9 @@ table tr>*:last-child {
   transform: translate(-50%, -50%);
   z-index: 3;
   border-radius: 7px;
-  min-width: 15em;
+  min-width: 400px;
   animation: .1s show forwards;
+  padding: 1.5em;	
 }
 
 .card>*>*:first-child {
@@ -346,3 +347,5 @@ table tr>*:last-child {
 .card .collapsible .collapse {
   padding: 0 1em;
 }
+
+

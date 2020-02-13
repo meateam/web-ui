@@ -1,6 +1,6 @@
 const name = 'KDrive';
 const disableExternal = false;
-const baseURL = '';
+const baseURL = 'http://localhost:8080';
 const signup = false;
 const version = '2';
 const logoURL = `/img/logo.svg`;
@@ -27,7 +27,10 @@ const config = {
 	authUrl: '',
 	environment: '',
 	supportLink: '',
-	approvalServiceUrl: ''
+	approvalServiceUrl: '',
+	externalShareName: 'שיתוף חיצוני',
+	myExternalSharesName: 'השיתופים החיצוניים שלי',
+	externalExclusiveUnit: 'יחידת ביג מאם',
 };
 
 export const Roles = {
@@ -96,6 +99,9 @@ export async function fetchConfig() {
 	config.environment = conf.environment;
 	config.supportLink = conf.supportLink;
 	config.approvalServiceUrl = conf.approvalServiceUrl || config.supportLink;
+	config.externalShareName = conf.externalShareName;
+	config.myExternalSharesName = conf.myExternalSharesName;
+	config.externalExclusiveUnit = conf.externalExclusiveUnit;
 }
 
 export {
