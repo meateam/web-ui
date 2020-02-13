@@ -1,8 +1,8 @@
 <template>
   <div class="card floating" id="share">
 
-    <tabs v-if="!finished" :options="{ useUrlFragment: false }" @clicked="tabClicked" @changed="tabChanged">
-      <tab :name="$t('exShare.changeToRegShare')" class="regular-share">
+    <tabs v-if="!finished" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}" @clicked="tabClicked" @changed="tabChanged">
+      <tab :name="$t('exShare.changeToRegShare')" id="firstTab" class="regular-share">
       <template>
         <div class="card-content">
           <div class="user-role-select">
@@ -44,7 +44,7 @@
         </div>
       </template>
       </tab>
-      <tab :name="externalShareName" v-if="regularShare && !selectedItem.isDir && allowedToexternalyShare">
+      <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir && allowedToexternalyShare">
           <shareEx @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
       </tab>
     </tabs>
@@ -110,6 +110,11 @@ export default {
   async beforeMount() {},
   mounted() {},
   beforeDestroy() {},
+  destroyed() {
+        this.$store.commit("emptyGlobalExternalUsers");
+        this.$store.commit("emptyApprovers");
+        this.$store.commit("resetStepsRes");
+  },
   methods: {
     finishExShare() {
       this.finished = true;
