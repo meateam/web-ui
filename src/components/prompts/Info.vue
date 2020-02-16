@@ -55,7 +55,8 @@ export default {
     };
   },
   async mounted() {
-    const res = await users.get(this.selectedItem.ownerId);
+    const getUser = this.selectedItem.isExternal?users.getExternal:users.get;
+    const res = await getUser(this.selectedItem.ownerId);
     this.ownerName = res.user.fullName;
   },
   computed: {
