@@ -126,6 +126,7 @@
     "scheduleMessage": "Pick a date and time to schedule the publication of this post.",
     "newArchetype": "Create a new post based on an archetype. Your file will be created on content folder.",
     "permissions": "Permissions",
+    "permits": "External Shares",
     "searchUser": "Search user"
   },
   "settings": {
@@ -258,6 +259,15 @@
     "write": "Write",
     "owner": "Owner",
     "permission": "user {user} has {role} permission"
+  },
+  "status": {
+    "pending": "Pending",
+    "waiting for approval": "waiting for approval",
+    "denied": "denied",
+    "failed": "failed",
+    "passed": "passed",
+    "sending": "sending",
+    "message": "user {user} has status {status}"
   },
   "download": {
     "downloadFile": "Download File",

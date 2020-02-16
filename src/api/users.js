@@ -14,6 +14,8 @@ export async function get (id) {
 
 export async function getExternal (id) {
   const res = await fetchJSON(`/api/delegators/${id}`, {})
+  res.user.firstName = res.user.first_name;
+  res.user.lastName = res.user.last_name;
   res.user.fullName = res.user.full_name;
   return res;
 }

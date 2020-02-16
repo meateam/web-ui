@@ -126,6 +126,7 @@
     "scheduleMessage": "Pick a date and time to schedule the publication of this post.",
     "newArchetype": "Create a new post based on an archetype. Your file will be created on content folder.",
     "permissions": "הרשאות",
+    "permits": "שיתופים חיצוניים",
     "searchUser": "חפש משתמש",
     "searchApprover": "חפש מאשר"
   },
@@ -259,6 +260,15 @@
     "write": "כתיבה",
     "owner": "בעלים",
     "permission": "למשתמש {user} יש הרשאות {role}"
+  },
+  "status": {
+    "pending": "בתהליך",
+    "waiting for approval": "ממתין לאישור",
+    "denied": "נדחה",
+    "failed": "נכשל",
+    "passed": "הועבר",
+    "sending": "מועבר",
+    "message": "{user} - {status}"
   },
   "download": {
     "downloadFile": "Download File",
