@@ -8,22 +8,24 @@
           <div class="user-role-select">
             <ul id="user-role-list">
               <li>
-                <autocomplete
-                  :search="search"
-                  :autoSelect="true"
-                  @submit="saveUser"
-                  :get-result-value="getResultValue"
-                  :placeholder="$t('prompts.searchUser')"
-                >
-                  <template v-slot:result="{ result, props }">
-                    <li v-bind="props" class="share-result">
-                      <div>
-                        <div class="share-title">{{ getResultValue(result) }}</div>
-                        <div class="share-snippet">{{ result.hierarchyFlat }}</div>
-                      </div>
-                    </li>
-                  </template>
-                </autocomplete>
+                <div class="autocomplete">
+                  <autocomplete
+                    :search="search"
+                    :autoSelect="true"
+                    @submit="saveUser"
+                    :get-result-value="getResultValue"
+                    :placeholder="$t('prompts.searchUser')"
+                  >
+                    <template v-slot:result="{ result, props }">
+                      <li v-bind="props" class="share-result">
+                        <div>
+                          <div class="share-title">{{ getResultValue(result) }}</div>
+                          <div class="share-snippet">{{ result.hierarchyFlat }}</div>
+                        </div>
+                      </li>
+                    </template>
+                  </autocomplete>
+                </div>
 
                 <select class="space-div" v-model="role" :aria-label="$t('role.input')">
                   <option value="READ">{{ $t("role.read") }}</option>
@@ -215,7 +217,6 @@ export default {
 }
 
 .share-result {
-  min-width: 700px;
   padding: 5px;
   background: transparent;
 }
@@ -242,5 +243,9 @@ export default {
 
 #share {
   padding: 0px;
+}
+
+.autocomplete {
+  flex-grow: 1;
 }
 </style>
