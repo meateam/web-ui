@@ -1,21 +1,25 @@
 <template>
   <div class="dialog">
-    <div class="warning-header">
-      <i class="material-icons" id="warning-icon">warning</i>
-      <br />
-      <b style="font-size: 34px; color:white">{{ $t("exShare.dangerAlert.header") }}</b>
+    <div class="warning-message">
+      <div class="warning-header">
+        <i class="material-icons" id="warning-icon">error</i>
+        <br />
+        <b style="font-size: 34px; color:white">{{ $t("exShare.dangerAlert.header") }}</b>
+      </div>
+      <div class="warning-header">
+        <b style="color:white">{{ $t("exShare.dangerAlert.message.line1") }}</b> <br>
+        <b style="color:white">{{ $t("exShare.dangerAlert.message.line2") }}</b> <br>
+        <b style="color:white">{{ $t("exShare.dangerAlert.message.line3") }}</b> <br>
+      </div>
     </div>
-    <b style="color:white">{{ $t("exShare.dangerAlert.message") }}</b>
-    <br />
-    <br />
     <div class="myCheckbox">
       <input @click="onChecked($event)" type="checkbox" id="acceptTerms" class="actualCheckbox" v-model="acceptTerms">
-      <b style="color:white">{{ $t("exShare.dangerAlert.finish") }}</b>
+      <b style="color:white">{{ $t("exShare.dangerAlert.terms") }}</b>
     </div>
     <br />
     <br />
     <b> </b>
-    <div>
+    <div class="alert-buttons">
       <button class="dialog-button left-button" :disabled='!agreedToTerms' @click="onAgreeClick">
         {{ $t("exShare.dangerAlert.agree") }}
       </button>
@@ -106,4 +110,14 @@ export default {
   font-size: 100px;
   color: white;
 }
+
+.warning-header b {
+  font-size: 21px;
+  text-align: center;
+}
+
+.alert-buttons .dialog-button {
+  width: 110px;
+}
+
 </style>

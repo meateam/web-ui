@@ -271,8 +271,13 @@
     "changeToExShare": "Share External",
     "changeToRegShare": "Share Internal",
     "dangerAlert": {
-      "header": "Alet!",
-      "message": "You are sharing a file with a low-classification network. Please make sure the contents of the file are Secret at most.",
+      "header": "Alert!",
+      "terms": "I agree to the terms above",
+      "message": {
+        "line1": "You are sharing a file with a low-classification network.",
+        "line2": "Please make sure the contents of the file ",
+        "line3": "are Secret at most."
+      },
       "finish": "By pressing 'Agree' I declare that I have read the above and that my request meets the requirements",
       "agree": "I Agree",
       "disagree": "Dismiss Request"
