@@ -26,11 +26,11 @@
                     </template>
                   </autocomplete>
                 </div>
-
                 <select class="space-div" v-model="role" :aria-label="$t('role.input')">
                   <option value="READ">{{ $t("role.read") }}</option>
                   <option value="WRITE">{{ $t("role.write") }}</option>
                 </select>
+                <i class='material-icons select-icon'>{{roleToIconName(role)}}</i>
                 <button
                   class="action"
                   @click="submit"
@@ -155,6 +155,16 @@ export default {
     getResultValue(result) {
       return `${result.firstName} ${result.lastName}`;
     },
+    roleToIconName(roleName) {
+      switch (roleName) {
+        case Roles.read:
+          return "remove_red_eye";
+        case Roles.write:
+          return "edit";
+        default:
+          return "remove_red_eye";
+      }
+    },
     changeShare() {
       this.$store.commit("emptyGlobalExternalUsers");
       this.$store.commit("emptyApprovers");
@@ -206,6 +216,9 @@ export default {
 <style scoped>
 .space-div {
   margin: 10px;
+  margin-left: 2px;
+  padding-left: 30px;
+  height: 35px;
 }
 .title {
   text-align: center;
@@ -247,5 +260,10 @@ export default {
 
 .autocomplete {
   flex-grow: 1;
+}
+
+.select-icon {
+  margin-right: -45px;
+  margin-left: 28px;
 }
 </style>
