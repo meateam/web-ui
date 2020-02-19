@@ -33,6 +33,8 @@ const config = {
 	externalExclusiveUnit: 'יחידת ביג מאם',
 };
 
+export const debounceTime = 200;
+
 export const Roles = {
 	owner: "OWNER",
 	write: "WRITE",

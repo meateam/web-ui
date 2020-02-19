@@ -36,6 +36,7 @@
 import { VueAutosuggest } from "vue-autosuggest";
 import { users as usersApi, delegators as delegatorsApi } from "@/api";
 import { minAutoComplete } from "@/utils/constants";
+import { debounceTime } from "@/utils/constants";
 
 export default {
   name: "my-autosuggestor",
@@ -50,12 +51,13 @@ export default {
   },
   data() {
     return {
+      debounce: asyncDebouncer(this.isExternal ? this.fetchExternal : this.fetchInternal, debounceTime),
       query: "",
       selected: "",
       selectedList: [],
       suggestions: [],
       timeout: null,
-      debounceMilliseconds: 500,
+      input: null,
       inputProps: {
         id: "autosuggest__input",
         onInputChange: this.fetchResults,
@@ -75,44 +77,53 @@ export default {
       return suggestion.item.hierarchyFlat + " : " + suggestion.item.fullName;
     },
     async fetchResults(input) {
-      if (this.isExternal) {
-        return this.fetchExternal(input);
-      } else {
-        const res = await this.fetchInternal(input);
-        return res;
-      }
-    },
-    submitSelected() {
-      if (!this.selected) return;
-      this.$emit("select", { value: this.selected });
-    },
-    async fetchExternal(input) {
       if (input.length < minAutoComplete) {
         this.suggestions = [];
         return [];
       }
-      await delegatorsApi.searchUserByName(input);
+      this.input = input;
+      return await this.debounce();
+    },
+    async fetchExternal() {
 
-      const res = await delegatorsApi.searchUserByName(input);
+      const res = await delegatorsApi.searchUserByName(this.input);
       const users = res.data.users;
       if (users) {
         this.suggestions = [{ data: users }];
       }
       return users ? users : [];
     },
-    async fetchInternal(input) {
-      if (input.length < minAutoComplete) {
-        return [];
-      }
-      const res = await usersApi.searchUserByName(input);
+    async fetchInternal() {
+      const res = await usersApi.searchUserByName(this.input);
       const users = res.data.users;
       if (users) {
         this.suggestions = [{ data: users }];
       }
       return users ? users : [];
+    },
+    submitSelected() {
+      if (!this.selected) return;
+      this.$emit("select", { value: this.selected });
     }
   }
 };
+
+// An async-debouncer function. 
+// The 'func' is called after the requested interval
+function asyncDebouncer(func, interval) {
+  console.log(interval);
+  let timer = null;
+  return (...args) => {
+    clearTimeout(timer);
+    return new Promise((resolve) => {
+      timer = setTimeout(
+        () => resolve(func(...args)),
+        interval,
+      );
+    });
+  };
+}
+
 </script>
 
 <style>
