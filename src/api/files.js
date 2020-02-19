@@ -316,6 +316,32 @@ export async function getPermissions(id) {
 	return response.data;
 }
 
+export async function getPermits(id) {
+	const response = await axios.get(`${baseURL}/api/files/${id}/permits`, { headers: {Authorization: 'Bearer ' + store.state.jwt} });
+	return response.data;
+}
+
+export function simplifyStatus(status) {
+	switch (status) {
+		case "REQUEST_NOT_APPROVED":
+			return "denied";
+		case "REQUEST_PENDING_APPROVAL":
+			return "waiting for approval";
+		case "FILE_ABORTED":
+            return 'failed'
+        case "FILE_DROPPED":
+            return 'failed'
+        case "FILE_TRANSFER_FAILED":
+            return 'failed'
+        case "FILE_DELETED":
+            return 'failed';
+        case "FILE_PASSED":
+			return 'passed';
+		default:
+			return 'sending';
+	}
+}
+
 export async function getSharedWithMe() {
 	const response = await axios.get(`${baseURL}/api/files?shares`, { headers: {Authorization: 'Bearer ' + store.state.jwt} });
 

@@ -126,6 +126,7 @@
     "scheduleMessage": "Pick a date and time to schedule the publication of this post.",
     "newArchetype": "Create a new post based on an archetype. Your file will be created on content folder.",
     "permissions": "Permissions",
+    "permits": "External Shares",
     "searchUser": "Search user"
   },
   "settings": {
@@ -259,20 +260,34 @@
     "owner": "Owner",
     "permission": "user {user} has {role} permission"
   },
+  "status": {
+    "pending": "Pending",
+    "waiting for approval": "waiting for approval",
+    "denied": "denied",
+    "failed": "failed",
+    "passed": "passed",
+    "sending": "sending",
+    "message": "user {user} has status {status}"
+  },
   "download": {
     "downloadFile": "Download File",
     "downloadFolder": "Download Folder"
   },
   "exShare": {
-    "classifications": [ "None", "Limited", "Secret", "Top Secret" ],
+    "classifications": ["Limited", "Secret", "Top Secret" ],
     "classTopSecret": "Top Secret",
     "changeShare": "Change Share",
     "addMeAsApprover": "Add me as an approver",
     "changeToExShare": "Share External",
     "changeToRegShare": "Share Internal",
     "dangerAlert": {
-      "header": "Alet!",
-      "message": "You are sharing a file with a low-classification network. Please make sure the contents of the file are Secret at most.",
+      "header": "Alert!",
+      "terms": "I agree to the terms above",
+      "message": {
+        "line1": "You are sharing a file with a low-classification network.",
+        "line2": "Please make sure the contents of the file ",
+        "line3": "are Secret at most."
+      },
       "finish": "By pressing 'Agree' I declare that I have read the above and that my request meets the requirements",
       "agree": "I Agree",
       "disagree": "Dismiss Request"

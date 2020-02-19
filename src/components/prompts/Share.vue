@@ -1,34 +1,36 @@
 <template>
   <div class="card floating" id="share">
 
-    <tabs v-if="!finished" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab' }">
-      <tab :name="$t('exShare.changeToRegShare')" id="firstTab">
+    <tabs v-if="!finished" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}">
+      <tab :name="$t('exShare.changeToRegShare')" id="firstTab" class="regular-share">
       <template>
         <div class="card-content">
           <div class="user-role-select">
             <ul id="user-role-list">
               <li>
-                <autocomplete
-                  :search="search"
-                  :autoSelect="true"
-                  @submit="saveUser"
-                  :get-result-value="getResultValue"
-                  :placeholder="$t('prompts.searchUser')"
-                >
-                  <template v-slot:result="{ result, props }">
-                    <li v-bind="props" class="share-result">
-                      <div>
-                        <div class="share-title">{{ getResultValue(result) }}</div>
-                        <div class="share-snippet">{{ result.hierarchyFlat }}</div>
-                      </div>
-                    </li>
-                  </template>
-                </autocomplete>
-
+                <div class="autocomplete">
+                  <autocomplete
+                    :search="search"
+                    :autoSelect="true"
+                    @submit="saveUser"
+                    :get-result-value="getResultValue"
+                    :placeholder="$t('prompts.searchUser')"
+                  >
+                    <template v-slot:result="{ result, props }">
+                      <li v-bind="props" class="share-result">
+                        <div>
+                          <div class="share-title">{{ getResultValue(result) }}</div>
+                          <div class="share-snippet">{{ result.hierarchyFlat }}</div>
+                        </div>
+                      </li>
+                    </template>
+                  </autocomplete>
+                </div>
                 <select class="space-div" v-model="role" :aria-label="$t('role.input')">
                   <option value="READ">{{ $t("role.read") }}</option>
                   <option value="WRITE">{{ $t("role.write") }}</option>
                 </select>
+                <i class='material-icons select-icon'>{{roleToIconName(role)}}</i>
                 <button
                   class="action"
                   @click="submit"
@@ -44,12 +46,12 @@
         </div>
       </template>
       </tab>
-      <tab :name="$t('exShare.changeToExShare')" id="secondTab">
+      <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir && allowedToexternalyShare">
           <shareEx @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
       </tab>
     </tabs>
 
-    <template v-if="finished">
+    <template v-if="finished" style="pading:0px">
       <alertDialog @finish-agree="onStepperFinished"></alertDialog>
     </template>
 
@@ -59,7 +61,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
 import {Tabs, Tab} from 'vue-tabs-component';
-import { Roles, minAutoComplete } from "@/utils/constants";
+import { Roles, minAutoComplete, config } from "@/utils/constants";
 import { share as shareApi, users as usersApi } from "@/api";
 import { createExShare } from "@/api/exShare";
 import Autocomplete from "@trevoreyre/autocomplete-vue";
@@ -86,7 +88,8 @@ export default {
       role: Roles.read,
       searchText: "",
       user: "",
-      regularShare: true
+      regularShare: true,
+      externalShareName: config.externalShareName
     };
   },
   computed: {
@@ -97,6 +100,9 @@ export default {
       "emptyApprovers",
       "resetStepsRes"
     ]),
+    allowedToexternalyShare() {
+      return this.$store.getters.user.currentUnit === config.externalExclusiveUnit;
+    },
     selectedItem() {
       return this.req.items && this.selectedCount !== 0
         ? this.req.items[this.selected[0]]
@@ -149,6 +155,16 @@ export default {
     getResultValue(result) {
       return `${result.firstName} ${result.lastName}`;
     },
+    roleToIconName(roleName) {
+      switch (roleName) {
+        case Roles.read:
+          return "remove_red_eye";
+        case Roles.write:
+          return "edit";
+        default:
+          return "remove_red_eye";
+      }
+    },
     changeShare() {
       this.$store.commit("emptyGlobalExternalUsers");
       this.$store.commit("emptyApprovers");
@@ -183,7 +199,8 @@ export default {
           reqUsers,
           reqClassification,
           reqInfo,
-          reqApprovers
+          reqApprovers,
+          this.selectedItem.name
         );
       } catch (err) {
         this.$showError({ message: this.$t("exShare.finalErrorMsg") });
@@ -199,6 +216,9 @@ export default {
 <style scoped>
 .space-div {
   margin: 10px;
+  margin-left: 2px;
+  padding-left: 30px;
+  height: 35px;
 }
 .title {
   text-align: center;
@@ -210,7 +230,6 @@ export default {
 }
 
 .share-result {
-  min-width: 700px;
   padding: 5px;
   background: transparent;
 }
@@ -229,5 +248,22 @@ export default {
 .share-snippet {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.54);
+}
+
+.regular-share{
+  padding: 1.5em;
+}
+
+#share {
+  padding: 0px;
+}
+
+.autocomplete {
+  flex-grow: 1;
+}
+
+.select-icon {
+  margin-right: -45px;
+  margin-left: 28px;
 }
 </style>

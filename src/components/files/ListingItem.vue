@@ -189,6 +189,6 @@ export default {
   color: #2979ff;
 }
 .external > div > .material-icons {
-  color: green;
+  color: forestgreen;
 }
 </style>

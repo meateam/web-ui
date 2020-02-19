@@ -126,6 +126,7 @@
     "scheduleMessage": "Pick a date and time to schedule the publication of this post.",
     "newArchetype": "Create a new post based on an archetype. Your file will be created on content folder.",
     "permissions": "הרשאות",
+    "permits": "שיתופים חיצוניים",
     "searchUser": "חפש משתמש",
     "searchApprover": "חפש מאשר"
   },
@@ -260,22 +261,36 @@
     "owner": "בעלים",
     "permission": "למשתמש {user} יש הרשאות {role}"
   },
+  "status": {
+    "pending": "בתהליך",
+    "waiting for approval": "ממתין לאישור",
+    "denied": "נדחה",
+    "failed": "נכשל",
+    "passed": "הועבר",
+    "sending": "מועבר",
+    "message": "{user} - {status}"
+  },
   "download": {
     "downloadFile": "Download File",
     "downloadFolder": "Download Folder"
   },
   "exShare": {
-    "classifications": [ "ללא", "שמור", "סודי", "סודי ביותר" ],
+    "classifications": ["שמור", "סודי", "סודי ביותר" ],
     "classTopSecret": "סודי ביותר",
     "changeShare": "שנה שיתוף",
-    "addMeAsApprover": "הוסף אותי כמאשר",
+    "addMeAsApprover": "אני מוסמך לאשר ואין צורך בבחירת מאשרים נוספים",
     "changeToExShare": "שיתוף חיצוני",
     "changeToRegShare": "שיתוף פנימי",
     "dangerAlert": {
       "header": "שים לב!",
-      "message": "הנך משתף קובץ עם רשת בסיווג נמוך. אנא וודא כי תוכן הקובץ הינו עד סיווג סודי לכל היותר ואינו מכיל *תוכן מודיעיני!*",
-      "finish": "בלחיצה על האישור הנני מצהיר כי קראתי את האמור לעיל וכי בקשתי עומדת בתנאים.",
-      "agree": "אני מסכים",
+      "terms": "הנני מצהיר כי קראתי את האמור לעיל וכי בקשתי עומדת בתנאים.",
+      "message": {
+        "line1": "הנך משתף קובץ עם רשת בסיווג נמוך.",
+        "line2": "אנא וודא כי תוכן הקובץ הינו עד סיווג סודי לכל היותר",
+        "line3": "ואינו מכיל *תוכן מודיעיני!*"
+      },
+      "finish": "הנני מצהיר כי קראתי את האמור לעיל וכי בקשתי עומדת בתנאים.",
+      "agree": "המשך",
       "disagree": "בטל בקשה"
     },
     "header": "שיתוף משתמש חיצוני",

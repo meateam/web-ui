@@ -3,18 +3,42 @@
     <div class="item" v-for="user in usersToDisplay" :key="user.id" v-tooltip.bottom="$t('role.permission', { user: user.fullName, role: i18nuserRole(user) })">
       <div>{{user.letters}}</div>
     </div>
-    <div v-if="extraUsers.length > 0" class="item extra-permissions" v-tooltip.bottom="extraUsersTooltip">
+    <div 
+      v-if="extraUsers.length > 0" 
+      class="item extra-permissions" 
+      v-tooltip.bottom="extraUsersTooltip"
+      @click.stop ="$refs.menu.open ($event, { users: extraUsers })"
+    >
       <div>+{{extraUsers.length}}</div>
     </div>
+    <vue-context ref="menu" @open="onOpen">
+      <template>
+        <li v-for="user in extraUsers" :key="user.id" >
+            <a style="display: flex">
+              <div class="item">
+                <div>{{user.letters}}</div>
+              </div>
+              <div>
+                {{user.fullName}}<br> 
+                <span>{{$t(i18nuserRole(user))}}</span>
+              </div></a>
+        </li>
+      </template>
+    </vue-context>
   </div>
 </template>
 <script>
+
+/* eslint-disable */ 
+
 import { files, users } from "@/api";
+import VueContext from 'vue-context';
+import 'vue-context/dist/css/vue-context.css';
 
 export default {
   name: "permission-list",
   props: ["id"],
-  components: {},
+  components: {VueContext},
   data: function() {
     return {
       users: [],
@@ -23,8 +47,9 @@ export default {
   },
   computed: {
     extraUsers() {
-      // return this.users.length > 6 ? this.users.slice(6) : [];
-      return [];
+      // console.log(this.users.length > 6 ? this.users.slice(6) : []);
+      return this.users.length > 6 ? this.users.splice(6) : [];
+      // return [];
     },
     extraUsersTooltip() {
       // Switch direction for hebrew.
@@ -60,6 +85,10 @@ export default {
   methods: {
     i18nuserRole(user) {
       return this.$t(`role.${user.role.toLowerCase()}`);
+    },
+    onOpen (event, data, top, left) {
+                console.log('The context menu was opened');
+                console.log(event, data, top, left);
     }
   }
 };
@@ -92,7 +121,7 @@ export default {
   vertical-align: middle;
   background-color: #42a5f5;
   cursor: pointer;
-  margin-right: 8px;
+  margin-left: 8px;
 }
 
 .item.extra-permissions {
@@ -111,5 +140,31 @@ export default {
 .item.extra-permissions > div {
   font-size: 13px;
   line-height: 28px;
+}
+
+ul.v-context {
+  right: 155px;
+  top: 345px !important;
+  width: 250px;
+  max-height: 200px;
+}
+
+ul.v-context > li >a {
+  padding: 8px 10px;
+  font-size: 15px;
+}
+
+ul.v-context > li > a  span {
+  font-size: 12px;
+}
+
+ul.v-context .item {
+  font-size: 30px;
+  border-radius: 20px;
+  height: 40px;
+  width: 40px;
+  font-size: 16px;
+  line-height: 40px;  
+  margin-top: -3px;
 }
 </style>

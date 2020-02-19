@@ -3,7 +3,7 @@ const disableExternal = false;
 const baseURL = '';
 const signup = false;
 const version = '2';
-const logoURL = `/img/logo.svg`;
+const logoURL = `/img/drive_logo.svg`;
 const minAutoComplete = 2;
 const noAuth = false;
 const loginPage = false;
@@ -27,7 +27,10 @@ const config = {
 	authUrl: '',
 	environment: '',
 	supportLink: '',
-	approvalServiceUrl: ''
+	approvalServiceUrl: '',
+	externalShareName: 'שיתוף חיצוני',
+	myExternalSharesName: 'השיתופים החיצוניים שלי',
+	externalExclusiveUnit: 'יחידת ביג מאם',
 };
 
 export const Roles = {
@@ -96,6 +99,9 @@ export async function fetchConfig() {
 	config.environment = conf.environment;
 	config.supportLink = conf.supportLink;
 	config.approvalServiceUrl = conf.approvalServiceUrl || config.supportLink;
+	config.externalShareName = conf.externalShareName;
+	config.myExternalSharesName = conf.myExternalSharesName;
+	config.externalExclusiveUnit = conf.externalExclusiveUnit;
 }
 
 export {
