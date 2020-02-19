@@ -46,7 +46,7 @@
         </div>
       </template>
       </tab>
-      <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir && allowedToexternalyShare">
+      <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir && vip">
           <shareEx @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
       </tab>
     </tabs>
@@ -89,16 +89,18 @@ export default {
       searchText: "",
       user: "",
       regularShare: true,
-      externalShareName: config.externalShareName
+      externalShareName: config.externalShareName,
+      vip: false
     };
   },
   computed: {
-    ...mapState(["req", "selected", "selectedCount"]),
-    ...mapGetters(["isListing", "selectedCount"]),
+    ...mapState(["req", "selected", "selectedCount", "isVIP"]),
+    ...mapGetters(["isListing", "selectedCount", "userID"]),
     ...mapMutations([
       "emptyGlobalExternalUsers",
       "emptyApprovers",
-      "resetStepsRes"
+      "resetStepsRes",
+      "setIsVIP"
     ]),
     allowedToexternalyShare() {
       return this.$store.getters.user.currentUnit === config.externalExclusiveUnit;
@@ -110,7 +112,14 @@ export default {
     }
   },
   async beforeMount() {},
-  mounted() {},
+  async mounted() {
+    if (this.isVIP === undefined) {
+      const vip = await usersApi.checkIfVIP(this.userID);
+      this.$store.commit("setIsVIP", vip);
+      this.vip = vip;
+    } else this.vip = this.isVIP;
+    
+  },
   beforeDestroy() {},
   destroyed() {
         this.$store.commit("emptyGlobalExternalUsers");

@@ -1,6 +1,6 @@
 const name = 'KDrive';
 const disableExternal = false;
-const baseURL = '';
+const baseURL = 'http://localhost:8080/';
 const signup = false;
 const version = '2';
 const logoURL = `/img/drive_logo.svg`;
@@ -31,6 +31,7 @@ const config = {
 	externalShareName: 'שיתוף חיצוני',
 	myExternalSharesName: 'השיתופים החיצוניים שלי',
 	externalExclusiveUnit: 'יחידת ביג מאם',
+	vipServiceUrl: 'localhost:8094',
 };
 
 export const Roles = {
@@ -102,6 +103,7 @@ export async function fetchConfig() {
 	config.externalShareName = conf.externalShareName;
 	config.myExternalSharesName = conf.myExternalSharesName;
 	config.externalExclusiveUnit = conf.externalExclusiveUnit;
+	config.vipServiceUrl = conf.vipServiceUrl;
 }
 
 export {
