@@ -1,7 +1,7 @@
 <template>
   <div class="card floating" id="share">
 
-    <tabs v-if="!finished" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}" @clicked="tabClicked" @changed="tabChanged">
+    <tabs v-if="!finished" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}">
       <tab :name="$t('exShare.changeToRegShare')" id="firstTab" class="regular-share">
       <template>
         <div class="card-content">
