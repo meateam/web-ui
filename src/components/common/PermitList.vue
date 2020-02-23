@@ -38,21 +38,6 @@ export default {
       }
 
       return `+${this.extraUsers.length} ${this.$t("buttons.morePlural")}`;
-    },
-    classObject: function (user) {
-      const simpleStatus = {
-        approved: false,
-        pending: false,
-        denied: false
-      };
-      switch(user.status) {
-        case "pending":
-          simpleStatus.pending = true;
-          break;
-        default:
-          simpleStatus.denied = true;
-      }
-      return simpleStatus;
     }
   },
   async mounted() {

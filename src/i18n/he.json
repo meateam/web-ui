@@ -264,10 +264,10 @@
   "status": {
     "pending": "בתהליך",
     "waiting for approval": "ממתין לאישור",
-    "denied": "נדחה",
+    "denied": "הבקשה נדחתה",
     "failed": "נכשל",
-    "passed": "הועבר",
-    "sending": "מועבר",
+    "passed": "נשלח",
+    "sending": "בתהליך",
     "message": "{user} - {status}"
   },
   "download": {

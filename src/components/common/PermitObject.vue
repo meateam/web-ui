@@ -18,6 +18,7 @@ export default {
     classObject: function () {
       const simpleStatus = {
         approved: false,
+        sending: false,
         pending: false,
         denied: false
       };
@@ -28,6 +29,9 @@ export default {
         case "failed":
             simpleStatus.denied = true;
             break;
+        case "sending":
+          simpleStatus.sending = true;
+          break;
         case "passed":
           simpleStatus.approved = true;
           break;
@@ -49,6 +53,10 @@ export default {
 <style scoped>
 
 .pending {
+  background-color: #8e9398;
+}
+
+.sending {
   background-color: #FFB300;
 }
 

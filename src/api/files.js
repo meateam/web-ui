@@ -332,10 +332,16 @@ export function simplifyStatus(status) {
         case "FILE_DROPPED":
             return 'failed'
         case "FILE_TRANSFER_FAILED":
-            return 'failed'
+			return 'failed'
+		case "FILE_INVALID_HASH":
+			return 'failed';
         case "FILE_DELETED":
             return 'failed';
         case "FILE_PASSED":
+			return 'passed';
+		case "FILE_TRANSFER_TO_OUT_FOLDER":
+			return 'passed';
+		case "FILE_FIXED":
 			return 'passed';
 		default:
 			return 'sending';
