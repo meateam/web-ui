@@ -46,3 +46,29 @@ export function removePrefix (url) {
   return url
 }
 
+export function simplifyStatus(status) {
+	switch (status) {
+    case "REQUEST_NOT_APPROVED":
+      return "denied";
+    case "REQUEST_PENDING_APPROVAL":
+      return "waiting for approval";
+    case "FILE_ABORTED":
+      return 'failed'
+    case "FILE_DROPPED":
+      return 'failed'
+    case "FILE_TRANSFER_FAILED":
+      return 'failed'
+    case "FILE_INVALID_HASH":
+      return 'failed';
+    case "FILE_DELETED":
+      return 'failed';
+    case "FILE_PASSED":
+      return 'passed';
+    case "FILE_TRANSFER_TO_OUT_FOLDER":
+      return 'passed';
+    case "FILE_FIXED":
+      return 'passed';
+    default:
+      return 'sending';
+	}
+}

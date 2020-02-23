@@ -291,7 +291,6 @@ export default {
 }
 
 .service-unavailable {
-  height: 350px;
   padding: 35px;
   text-align: center;
   font-size: 25px;
