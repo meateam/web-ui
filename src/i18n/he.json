@@ -281,6 +281,8 @@
     "addMeAsApprover": "אני מוסמך לאשר ואין צורך בבחירת מאשרים נוספים",
     "changeToExShare": "שיתוף חיצוני",
     "changeToRegShare": "שיתוף פנימי",
+    "serviceUnavailable": "השירות נמצא בתחזוקה כעת",
+    "tryAgainLater": "אנא נסו שוב מאוחר יותר",
     "dangerAlert": {
       "header": "שים לב!",
       "terms": "הנני מצהיר כי קראתי את האמור לעיל וכי בקשתי עומדת בתנאים.",

@@ -47,7 +47,20 @@
       </template>
       </tab>
       <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir && vip">
-          <shareEx @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
+          <shareEx v-if="enableExternalShare" @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
+          <div v-else class="service-unavailable">
+            <div>
+              <i class='material-icons'>build</i>
+            </div>
+            <div>
+              <p>
+                {{$t('exShare.serviceUnavailable')}}
+              </p>
+              <b>
+                {{$t('exShare.tryAgainLater')}}
+              </b>
+            </div>
+          </div>
       </tab>
     </tabs>
 
@@ -90,7 +103,8 @@ export default {
       user: "",
       regularShare: true,
       externalShareName: config.externalShareName,
-      vip: false
+      vip: false,
+      enableExternalShare: config.enableExternalShare,
     };
   },
   computed: {
@@ -274,5 +288,22 @@ export default {
 .select-icon {
   margin-right: -45px;
   margin-left: 28px;
+}
+
+.service-unavailable {
+  height: 350px;
+  padding: 35px;
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.service-unavailable p {
+  margin: 55px 30px 22px 30px;
+  font-size: 35px;
+}
+
+.service-unavailable .material-icons {
+  font-size: 90px;
 }
 </style>
