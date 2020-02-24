@@ -4,17 +4,17 @@
       <div class="warning-header">
         <i class="material-icons" id="warning-icon">error</i>
         <br />
-        <b style="font-size: 34px; color:white">{{ $t("exShare.dangerAlert.header") }}</b>
+        <b style="font-size: 34px;">{{ $t("exShare.dangerAlert.header") }}</b>
       </div>
       <div class="warning-header">
-        <b style="color:white">{{ $t("exShare.dangerAlert.message.line1") }}</b> <br>
-        <b style="color:white">{{ $t("exShare.dangerAlert.message.line2") }}</b> <br>
-        <b style="color:white">{{ $t("exShare.dangerAlert.message.line3") }}</b> <br>
+        <b>{{ $t("exShare.dangerAlert.message.line1") }}</b> <br>
+        <b>{{ $t("exShare.dangerAlert.message.line2") }}</b> <br>
+        <b>{{ $t("exShare.dangerAlert.message.line3") }}</b> <br>
       </div>
     </div>
-    <div class="myCheckbox">
+    <div class="my-checkbox">
       <input @click="onChecked($event)" type="checkbox" id="acceptTerms" class="actualCheckbox" v-model="acceptTerms">
-      <b style="color:white">{{ $t("exShare.dangerAlert.terms") }}</b>
+      <b>{{ $t("exShare.dangerAlert.terms") }}</b>
     </div>
     <br />
     <br />
@@ -83,7 +83,7 @@ export default {
   border: 0;
   padding: 0.5em 1em;
   cursor: pointer;
-  background: lightgray;
+  background: #EEEEEE;
   color: black;
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
@@ -92,12 +92,12 @@ export default {
 }
 
 .dialog-button:hover {
-  background-color: darkgrey;
+  background-color: lightgrey;
 }
 
 .dialog-button:disabled {
   border: 1px solid #999999;
-  background-color: #cccccc;
+  background-color: #dddddd;
   color: #666666;
 }
 
@@ -118,6 +118,18 @@ export default {
 
 .alert-buttons .dialog-button {
   width: 110px;
+}
+
+.my-checkbox {
+  display: inline-flex;
+}
+
+.my-checkbox > b{
+  margin: -4px 4px;
+}
+
+.warning-message , .my-checkbox {
+  color: white;
 }
 
 </style>
