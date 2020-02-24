@@ -104,7 +104,7 @@ export default {
     submitSelected() {
       if (!this.selected) return;
       this.$emit("select", { value: this.selected });
-      const comp = document.getElementById('autosuggest__input').value = '';  
+      document.getElementById('autosuggest__input').value = '';  
     }
   }
 };
