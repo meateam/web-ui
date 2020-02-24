@@ -129,7 +129,7 @@ export default {
     if (this.isVIP === undefined) {
       const vip = await usersApi.checkIfVIP(this.userID);
       this.$store.commit("setIsVIP", vip);
-    } else this.vip = this.isVIP;
+    }
     
   },
   beforeDestroy() {},
