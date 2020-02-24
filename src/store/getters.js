@@ -14,6 +14,7 @@ const getters = {
   getStepThreeRes: state => state.stepThreeRes,
   userID: state => state.user && state.user.id,
   user: state => state.user,
+  isVIP: state => state.isVIP,
 }
 
 export default getters

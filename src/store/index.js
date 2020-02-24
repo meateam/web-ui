@@ -7,6 +7,7 @@ Vue.use(Vuex)
 
 const state = {
   user: null,
+  isVIP: undefined,
   path: [{name: "", id: ""}],
   req: {},
   oldReq: {},

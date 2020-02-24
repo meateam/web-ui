@@ -280,6 +280,8 @@
     "addMeAsApprover": "Add me as an approver",
     "changeToExShare": "Share External",
     "changeToRegShare": "Share Internal",
+    "serviceUnavailable": "The service is under maintenance",
+    "tryAgainLater": "Please try again later",
     "dangerAlert": {
       "header": "Alert!",
       "terms": "I agree to the terms above",

@@ -31,6 +31,8 @@ const config = {
 	externalShareName: 'שיתוף חיצוני',
 	myExternalSharesName: 'השיתופים החיצוניים שלי',
 	externalExclusiveUnit: 'יחידת ביג מאם',
+	enableExternalShare: false,
+	vipServiceUrl: 'localhost:8094',
 };
 
 export const Roles = {
@@ -102,6 +104,8 @@ export async function fetchConfig() {
 	config.externalShareName = conf.externalShareName;
 	config.myExternalSharesName = conf.myExternalSharesName;
 	config.externalExclusiveUnit = conf.externalExclusiveUnit;
+	config.enableExternalShare = conf.enableExternalShare === "true";
+	config.vipServiceUrl = conf.vipServiceUrl;
 }
 
 export {
