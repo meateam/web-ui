@@ -115,6 +115,8 @@ export default {
 <style scoped>
 .permission-list {
   margin-top: 20px;
+  max-height: calc(65vh - 163px);
+  overflow-y: auto;
 }
 
 .material-icons:hover{
