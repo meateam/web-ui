@@ -1,5 +1,5 @@
 import { fetchURL, fetchJSON } from './utils'
-import { baseURL } from '@/utils/constants'
+import { baseURL, config } from '@/utils/constants'
 import axios from 'axios'
 import store from '@/store'
 
@@ -10,6 +10,11 @@ export async function getAll () {
 
 export async function get (id) {
   return fetchJSON(`/api/users/${id}`, {})
+}
+
+export async function checkIfVIP (id) {
+  const vipRes = await axios.get(`${config.vipServiceUrl}/api/vips/${id}`);
+  return vipRes.data.vip === true;
 }
 
 export async function getExternal (id) {

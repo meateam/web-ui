@@ -45,12 +45,21 @@
           </div>
         </template>
       </tab>
-      <tab
-        id="secondTab"
-        :name="externalShareName"
-        v-if="regularShare && !selectedItem.isDir && allowedToexternalyShare"
-      >
-        <shareEx @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
+      <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir && isVIP">
+          <shareEx v-if="enableExternalShare" @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
+          <div v-else class="service-unavailable">
+            <div>
+              <i class='material-icons'>build</i>
+            </div>
+            <div>
+              <p>
+                {{$t('exShare.serviceUnavailable')}}
+              </p>
+              <b>
+                {{$t('exShare.tryAgainLater')}}
+              </b>
+            </div>
+          </div>
       </tab>
     </tabs>
 
@@ -93,16 +102,18 @@ export default {
       searchText: "",
       user: "",
       regularShare: true,
-      externalShareName: config.externalShareName
+      externalShareName: config.externalShareName,
+      enableExternalShare: config.enableExternalShare,
     };
   },
   computed: {
-    ...mapState(["req", "selected", "selectedCount"]),
-    ...mapGetters(["isListing", "selectedCount"]),
+    ...mapState(["req", "selected", "selectedCount", "isVIP"]),
+    ...mapGetters(["isListing", "selectedCount", "userID"]),
     ...mapMutations([
       "emptyGlobalExternalUsers",
       "emptyApprovers",
-      "resetStepsRes"
+      "resetStepsRes",
+      "setIsVIP"
     ]),
     allowedToexternalyShare() {
       return (
@@ -116,7 +127,13 @@ export default {
     }
   },
   async beforeMount() {},
-  mounted() {},
+  async mounted() {
+    if (this.isVIP === undefined) {
+      const vip = await usersApi.checkIfVIP(this.userID);
+      this.$store.commit("setIsVIP", vip);
+    }
+    
+  },
   beforeDestroy() {},
   destroyed() {
     this.$store.commit("emptyGlobalExternalUsers");
@@ -290,5 +307,21 @@ function asyncDebouncer(func, interval) {
 .select-icon {
   margin-right: -45px;
   margin-left: 28px;
+}
+
+.service-unavailable {
+  padding: 35px;
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.service-unavailable p {
+  margin: 55px 30px 22px 30px;
+  font-size: 35px;
+}
+
+.service-unavailable .material-icons {
+  font-size: 90px;
 }
 </style>
