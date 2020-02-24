@@ -1,7 +1,7 @@
 <template>
   <div class="select-approvers">
     <div class="autosuggest-container">
-      <vue-autosuggest
+      <vue-autosuggest 
         v-model="query"
         :suggestions="suggestions"
         @input="fetchResults"
@@ -104,6 +104,7 @@ export default {
     submitSelected() {
       if (!this.selected) return;
       this.$emit("select", { value: this.selected });
+      const comp = document.getElementById('autosuggest__input').value = '';  
     }
   }
 };
@@ -111,7 +112,6 @@ export default {
 // An async-debouncer function. 
 // The 'func' is called after the requested interval
 function asyncDebouncer(func, interval) {
-  console.log(interval);
   let timer = null;
   return (...args) => {
     clearTimeout(timer);
