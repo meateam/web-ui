@@ -1,50 +1,49 @@
 <template>
   <div class="card floating" id="share">
-
     <tabs v-if="!finished" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}">
       <tab :name="$t('exShare.changeToRegShare')" id="firstTab" class="regular-share">
-      <template>
-        <div class="card-content">
-          <div class="user-role-select">
-            <ul id="user-role-list">
-              <li>
-                <div class="autocomplete">
-                  <autocomplete
-                    :search="search"
-                    :autoSelect="true"
-                    @submit="saveUser"
-                    :get-result-value="getResultValue"
-                    :placeholder="$t('prompts.searchUser')"
+        <template>
+          <div class="card-content">
+            <div class="user-role-select">
+              <ul id="user-role-list">
+                <li>
+                  <div class="autocomplete">
+                    <autocomplete
+                      :search="search"
+                      :autoSelect="true"
+                      @submit="saveUser"
+                      :get-result-value="getResultValue"
+                      :placeholder="$t('prompts.searchUser')"
+                    >
+                      <template v-slot:result="{ result, props }">
+                        <li v-bind="props" class="share-result">
+                          <div>
+                            <div class="share-title">{{ getResultValue(result) }}</div>
+                            <div class="share-snippet">{{ result.hierarchyFlat }}</div>
+                          </div>
+                        </li>
+                      </template>
+                    </autocomplete>
+                  </div>
+                  <select class="space-div" v-model="role" :aria-label="$t('role.input')">
+                    <option value="READ">{{ $t("role.read") }}</option>
+                    <option value="WRITE">{{ $t("role.write") }}</option>
+                  </select>
+                  <i class="material-icons select-icon">{{roleToIconName(role)}}</i>
+                  <button
+                    class="action"
+                    @click="submit"
+                    :aria-label="$t('buttons.create')"
+                    :title="$t('buttons.create')"
                   >
-                    <template v-slot:result="{ result, props }">
-                      <li v-bind="props" class="share-result">
-                        <div>
-                          <div class="share-title">{{ getResultValue(result) }}</div>
-                          <div class="share-snippet">{{ result.hierarchyFlat }}</div>
-                        </div>
-                      </li>
-                    </template>
-                  </autocomplete>
-                </div>
-                <select class="space-div" v-model="role" :aria-label="$t('role.input')">
-                  <option value="READ">{{ $t("role.read") }}</option>
-                  <option value="WRITE">{{ $t("role.write") }}</option>
-                </select>
-                <i class='material-icons select-icon'>{{roleToIconName(role)}}</i>
-                <button
-                  class="action"
-                  @click="submit"
-                  :aria-label="$t('buttons.create')"
-                  :title="$t('buttons.create')"
-                >
-                  <i class="material-icons">add</i>
-                </button>
-              </li>
-            </ul>
+                    <i class="material-icons">add</i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <edit-permission-list :id="selectedItem.id" ref="editPermissionList"></edit-permission-list>
           </div>
-          <edit-permission-list :id="selectedItem.id" ref="editPermissionList"></edit-permission-list>
-        </div>
-      </template>
+        </template>
       </tab>
       <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir && isVIP">
           <shareEx v-if="enableExternalShare" @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
@@ -67,16 +66,16 @@
     <template v-if="finished" style="pading:0px">
       <alertDialog @finish-agree="onStepperFinished"></alertDialog>
     </template>
-
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
-import {Tabs, Tab} from 'vue-tabs-component';
+import { Tabs, Tab } from "vue-tabs-component";
 import { Roles, minAutoComplete, config } from "@/utils/constants";
 import { share as shareApi, users as usersApi } from "@/api";
 import { createExShare } from "@/api/exShare";
+import { debounceTime } from "@/utils/constants";
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import EditPermissionList from "../common/EditPermissionList";
 import moment from "moment";
@@ -97,6 +96,7 @@ export default {
   },
   data: function() {
     return {
+      debounce: asyncDebouncer(this.searchWait, debounceTime),
       finished: false,
       role: Roles.read,
       searchText: "",
@@ -116,7 +116,9 @@ export default {
       "setIsVIP"
     ]),
     allowedToexternalyShare() {
-      return this.$store.getters.user.currentUnit === config.externalExclusiveUnit;
+      return (
+        this.$store.getters.user.currentUnit === config.externalExclusiveUnit
+      );
     },
     selectedItem() {
       return this.req.items && this.selectedCount !== 0
@@ -134,9 +136,9 @@ export default {
   },
   beforeDestroy() {},
   destroyed() {
-        this.$store.commit("emptyGlobalExternalUsers");
-        this.$store.commit("emptyApprovers");
-        this.$store.commit("resetStepsRes");
+    this.$store.commit("emptyGlobalExternalUsers");
+    this.$store.commit("emptyApprovers");
+    this.$store.commit("resetStepsRes");
   },
   methods: {
     finishExShare() {
@@ -163,7 +165,13 @@ export default {
       if (input.length < minAutoComplete) {
         return [];
       }
-      const res = await usersApi.searchUserByName(input);
+      this.input = input;
+      return await this.debounce();
+    },
+    // The function wich searches for the autocomplete,
+    // called after the debouncer interval ends
+    async searchWait() {
+      const res = await usersApi.searchUserByName(this.input);
       const users = res.data.users;
       if (users) {
         return users;
@@ -232,6 +240,19 @@ export default {
     }
   }
 };
+
+// An async-debouncer function.
+// The 'func' is called after the requested interval
+function asyncDebouncer(func, interval) {
+  let timer = null;
+
+  return (...args) => {
+    clearTimeout(timer);
+    return new Promise(resolve => {
+      timer = setTimeout(() => resolve(func(...args)), interval);
+    });
+  };
+}
 </script>
 
 <style scoped>
@@ -271,7 +292,7 @@ export default {
   color: rgba(0, 0, 0, 0.54);
 }
 
-.regular-share{
+.regular-share {
   padding: 1.5em;
 }
 

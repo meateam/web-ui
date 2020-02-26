@@ -8,7 +8,7 @@ services:
     depends_on:
       - api-gateway
   api-gateway:
-    image: 'api-gateway:local'
+    image: 'bluehub.azurecr.io/meateam/api-gateway:merges'
     environment:
       GW_AUTH_URL: 'http://localhost:8084/auth/login'
       GW_PORT: 8080
@@ -183,7 +183,7 @@ services:
     ports:
       - '6379:6379'
   permission-service:
-    image: 'bluehub.azurecr.io/meateam/permission-service:override'
+    image: 'bluehub.azurecr.io/meateam/permission-service:develop'
     ports:
       - '8087:8080'
     environment:
@@ -251,7 +251,7 @@ services:
     ports: ['5601:5601']
     depends_on: ['elasticsearch']
   spike-service:
-    image: spike-service:health-check
+    image: bluehub.azurecr.io/meateam/spike-service:develop
     environment:
       AUDIENCE: "0mBMe5vYJyuFtvHpEWVDPumqaVl~xr"
       SPIKE_CLIENT_ID: "uMsljFEps0aKfAbZ1o7~iyZGVHHiT_KdRq2gsdtc"
@@ -266,7 +266,7 @@ services:
     ports:
       - '8090:8080'
   delegation-service:
-    image: delegation-service:health-check
+    image: bluehub.azurecr.io/meateam/delegation-service:develop
     ports:
       - '8091:8080'
     environment:

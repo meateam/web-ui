@@ -35,6 +35,8 @@ const config = {
 	vipServiceUrl: 'localhost:8094',
 };
 
+export const debounceTime = 200;
+
 export const Roles = {
 	owner: "OWNER",
 	write: "WRITE",
