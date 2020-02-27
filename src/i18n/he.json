@@ -266,6 +266,7 @@
     "waiting for approval": "ממתין לאישור",
     "denied": "הבקשה נדחתה",
     "failed": "נכשל",
+    "bad suffix": "סוג הקובץ אינו נתמך",
     "passed": "נשלח",
     "sending": "בתהליך",
     "message": "{user} - {status}"

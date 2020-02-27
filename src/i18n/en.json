@@ -265,6 +265,7 @@
     "waiting for approval": "waiting for approval",
     "denied": "denied",
     "failed": "failed",
+    "bad suffix": "bad suffix",
     "passed": "passed",
     "sending": "sending",
     "message": "user {user} has status {status}"

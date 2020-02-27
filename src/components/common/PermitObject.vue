@@ -29,6 +29,9 @@ export default {
         case "failed":
             simpleStatus.denied = true;
             break;
+        case "bad suffix":
+            simpleStatus.denied = true;
+            break;
         case "sending":
           simpleStatus.sending = true;
           break;

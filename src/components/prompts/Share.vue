@@ -45,7 +45,7 @@
           </div>
         </template>
       </tab>
-      <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir && isVIP">
+      <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir">
           <shareEx v-if="enableExternalShare" @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
           <div v-else class="service-unavailable">
             <div>
@@ -127,13 +127,6 @@ export default {
     }
   },
   async beforeMount() {},
-  async mounted() {
-    if (this.isVIP === undefined) {
-      const vip = await usersApi.checkIfVIP(this.userID);
-      this.$store.commit("setIsVIP", vip);
-    }
-    
-  },
   beforeDestroy() {},
   destroyed() {
     this.$store.commit("emptyGlobalExternalUsers");
