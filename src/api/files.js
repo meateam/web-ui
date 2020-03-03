@@ -169,7 +169,7 @@ export async function post(base, file, onupload) {
 			Authorization: 'Bearer ' + store.state.jwt
 		}
 
-		if (file.size <= 5 << 20) {
+		if (file.size <= 20 << 20) {
 			url += '?uploadType=multipart';
 		} else {
 			const uploadId = await this.uploadInit(file);
