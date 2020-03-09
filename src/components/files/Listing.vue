@@ -23,6 +23,27 @@
             <span>{{ $t('files.name') }}</span>
             <i class="material-icons">{{ nameIcon() }}</i>
           </p>
+
+          <p :class="{ active: sharerSorted() }" class="sharer"
+            role="button"
+            tabindex="0"
+            v-if="shares"
+            @click="sort('sharer')"
+            :title="$t('files.sortBySharer')"
+            :aria-label="$t('files.sortBySharer')">
+            <span>{{ $t('files.sharer') }}</span>
+            <i class="material-icons">{{ sharerIcon() }}</i>
+          </p>
+
+          <p class="owner"
+            role="button"
+            tabindex="0"
+            v-else
+            :title="$t('files.owner')"
+            :aria-label="$t('files.owner')">
+            <span>{{ $t('files.owner') }}</span>
+          </p>
+
           <p :class="{ active: sizeSorted() }" class="size"
             role="button"
             tabindex="0"
@@ -32,6 +53,7 @@
             <span>{{ $t('files.size') }}</span>
             <i class="material-icons">{{ sizeIcon() }}</i>
           </p>
+
           <p :class="{ active: modifiedSorted() }" class="modified"
             role="button"
             tabindex="0"
@@ -57,6 +79,8 @@
         v-bind:modified="item.modified"
         v-bind:type="item.type"
         v-bind:size="item.size"
+        v-bind:owner="item.owner"
+        v-bind:sharer="item.sharer"
         @contextmenu.prevent="$refs.menu.open($event, {file: item})">
       </item>
     </div>
@@ -72,6 +96,8 @@
         v-bind:modified="item.modified"
         v-bind:type="item.type"
         v-bind:size="item.size"
+        v-bind:owner="item.owner"
+        v-bind:sharer="item.sharer"
         @contextmenu.prevent="$refs.menu.open($event, {file: item})">
       </item>
     </div>
@@ -209,6 +235,9 @@ export default {
     modifiedSorted: function() {
       return (this.sorting.by === 'modified')
     },
+    sharerSorted: function() {
+      return (this.sorting.by === 'sharer')
+    },
     ascOrdered: function() {
       return this.sorting.asc
     },
@@ -232,6 +261,13 @@ export default {
       }
 
       return 'arrow_upward'
+    },
+    sharerIcon () {
+      if (this.sharerSorted() && this.ascOrdered()) {
+        return 'arrow_downward';
+      }
+
+      return 'arrow_upward';
     },
     base64: function (name) {
       return window.btoa(unescape(encodeURIComponent(name)))
@@ -473,6 +509,19 @@ export default {
           } else {
             this.dirs.sort((dirA, dirB) => dirB.modified - dirA.modified);
             this.files.sort((fileA, fileB) => fileB.modified - fileA.modified);
+          }
+
+          break;
+        }
+        case 'sharer': {
+          sorting.asc = this.sharerIcon() === 'arrow_upward';
+
+          if (sorting.asc) {
+            this.dirs.sort((dirA, dirB) => dirA.sharer.fullName.localeCompare(dirB.sharer.fullName));
+            this.files.sort((fileA, fileB) => fileA.sharer.fullName.localeCompare(fileB.sharer.fullName));
+          } else {
+            this.dirs.sort((dirA, dirB) => dirB.sharer.fullName.localeCompare(dirA.sharer.fullName));
+            this.files.sort((fileA, fileB) => fileB.sharer.fullName.localeCompare(fileA.sharer.fullName));
           }
 
           break;

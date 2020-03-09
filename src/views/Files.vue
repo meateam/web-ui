@@ -101,7 +101,9 @@ export default {
   watch: {
     $route: "fetchData",
     reload: function() {
-      this.fetchData();
+      if (!this.loading) {
+        this.fetchData();
+      }
     }
   },
   mounted() {
@@ -133,9 +135,9 @@ export default {
       try {
         let res = null;
         if (this.shares && url === '') {
-          res = await api.getSharedWithMe();
+          res = await api.getSharedWithMe(true);
         } else {
-          res = await api.fetch(url);
+          res = await api.fetch(url, true);
         }
 
         this.$store.commit("updateRequest", res);

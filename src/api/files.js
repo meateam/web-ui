@@ -5,7 +5,9 @@ import store from '@/store'
 
 import { fetchURL, removePrefix } from './utils'
 
-export async function fetch(url) {
+export async function fetch(url, isPopulateOwner = false) {
+	const populateOwnerQuery = 'populateOwner';
+
 	url = removePrefix(url);
 	let data = {};
 
@@ -16,7 +18,12 @@ export async function fetch(url) {
 			data = await res.json();
 			if (data.type === folderContentType) {
 				data.isDir = true;
-				const res = await fetchURL(`/api/files?parent=${data.id}`, {});
+				let request = `/api/files?parent=${data.id}`;
+				if (isPopulateOwner) {
+					request += `&${populateOwnerQuery}=true`;
+				}
+
+				const res = await fetchURL(request, {});
 				if (res.status === 200) {
 					data.items = await res.json();
 				}
@@ -28,7 +35,12 @@ export async function fetch(url) {
 		data.isDir = true;
 		data.role = Roles.owner;
 		// get files in root folder
-		const res = await fetchURL(`/api/files`, {});
+		let request = `/api/files`;
+		if (isPopulateOwner) {
+			request += `?${populateOwnerQuery}=true`;
+		}
+
+		const res = await fetchURL(request, {});
 		if (res.status === 200) {
 			data.items = await res.json();
 		} else {
@@ -316,8 +328,16 @@ export async function getPermissions(id) {
 	return response.data;
 }
 
-export async function getSharedWithMe() {
-	const response = await axios.get(`${baseURL}/api/files?shares`, { headers: {Authorization: 'Bearer ' + store.state.jwt} });
+export async function getSharedWithMe(isPopulateSharer = false) {
+	const sharedFilesQuery = 'shares';
+	const populateSharerQuery = 'populateSharer';
+
+	let request = `${baseURL}/api/files?${sharedFilesQuery}`;
+	if (isPopulateSharer) {
+		request += `&${populateSharerQuery}`
+	}
+
+	const response = await axios.get(request, { headers: {Authorization: 'Bearer ' + store.state.jwt} });
 
 	const data = { items: response.data, isDir: true, role: Roles.read };
 	

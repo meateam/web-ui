@@ -62,9 +62,13 @@
     "multipleSelectionEnabled": "Multiple selection enabled",
     "name": "Name",
     "size": "Size",
+    "owner": "Owner",
+    "sharer": "Shared by",
     "sortByName": "Sort by name",
     "sortBySize": "Sort by size",
     "sortByLastModified": "Sort by last modified",
+    "sortByOwner": "Sort by owner",
+    "sortBySharer": "Sort by sharer",
     "cannotPreview": "Can't preview this item"
   },
   "help": {
