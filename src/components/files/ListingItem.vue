@@ -21,13 +21,13 @@
     </div>
 
     <div>
-      <p class="name">{{ name }}</p>
-      <p v-if="!!sharer" class="sharer">
+      <p :class="{shares}" class="name">{{ name }}</p>
+      <p v-if="shares" class="sharer">
         {{sharer.fullName}}
       </p>
 
-      <p v-if="isDir" class="size" data-order="-1">&mdash;</p>
-      <p v-else :class="direction" class="size" :data-order="humanSize()">{{ humanSize() }}</p>
+      <p v-if="isDir" :class="{shares}" class="size" data-order="-1">&mdash;</p>
+      <p v-else :class="{direction, shares}" class="size" :data-order="humanSize()">{{ humanSize() }}</p>
 
       <p class="modified">
         <time :datetime="modified">{{ humanTime() }}</time>
@@ -52,7 +52,7 @@ export default {
   props: ['name', 'id', 'isDir', 'type', 'size', 'modified', 'index', 'sharer'],
   computed: {
     ...mapState(['selected', 'req']),
-    ...mapGetters(['selectedCount', 'direction']),
+    ...mapGetters(['selectedCount', 'direction', 'shares']),
     isSelected() {
       return this.selected.indexOf(this.index) !== -1;
     },

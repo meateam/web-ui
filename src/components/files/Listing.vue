@@ -14,7 +14,7 @@
       <div class="item header">
         <div></div>
         <div>
-          <p :class="{ active: nameSorted() }" class="name"
+          <p :class="{ active: nameSorted(), shares }" class="name"
             role="button"
             tabindex="0"
             @click="sort('name')"
@@ -35,7 +35,7 @@
             <i class="material-icons">{{ sharerIcon() }}</i>
           </p>
 
-          <p :class="{ active: sizeSorted() }" class="size"
+          <p :class="{ active: sizeSorted(), shares }" class="size"
             role="button"
             tabindex="0"
             @click="sort('size')"
@@ -45,7 +45,7 @@
             <i class="material-icons">{{ sizeIcon() }}</i>
           </p>
 
-          <p :class="{ active: modifiedSorted() }" class="modified"
+          <p :class="{ active: modifiedSorted(), shares }" class="modified"
             role="button"
             tabindex="0"
             @click="sort('modified')"

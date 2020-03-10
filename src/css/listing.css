@@ -160,10 +160,18 @@ a.pointer {
 }
 
 #listing.list .item .name {
-  width: 35%;
+  width: 50%;
 }
 
 #listing.list .item .size {
+  width: 25%;
+}
+
+#listing.list .item .name.shares {
+  width: 35%;
+}
+
+#listing.list .item .size.shares {
   width: 20%;
 }
 
