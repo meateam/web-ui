@@ -5,8 +5,8 @@ import store from '@/store'
 
 import { fetchURL, removePrefix } from './utils'
 
-export async function fetch(url, isPopulateOwner = false) {
-	const populateOwnerQuery = 'populateOwner';
+export async function fetch(url, isPopulateSharer = false) {
+	const populateSharerQuery = 'populateSharer';
 
 	url = removePrefix(url);
 	let data = {};
@@ -19,8 +19,8 @@ export async function fetch(url, isPopulateOwner = false) {
 			if (data.type === folderContentType) {
 				data.isDir = true;
 				let request = `/api/files?parent=${data.id}`;
-				if (isPopulateOwner) {
-					request += `&${populateOwnerQuery}=true`;
+				if (isPopulateSharer) {
+					request += `&${populateSharerQuery}=true`;
 				}
 
 				const res = await fetchURL(request, {});
@@ -36,8 +36,8 @@ export async function fetch(url, isPopulateOwner = false) {
 		data.role = Roles.owner;
 		// get files in root folder
 		let request = `/api/files`;
-		if (isPopulateOwner) {
-			request += `?${populateOwnerQuery}=true`;
+		if (isPopulateSharer) {
+			request += `?${populateSharerQuery}=true`;
 		}
 
 		const res = await fetchURL(request, {});

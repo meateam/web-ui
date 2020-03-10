@@ -35,15 +35,6 @@
             <i class="material-icons">{{ sharerIcon() }}</i>
           </p>
 
-          <p class="owner"
-            role="button"
-            tabindex="0"
-            v-else
-            :title="$t('files.owner')"
-            :aria-label="$t('files.owner')">
-            <span>{{ $t('files.owner') }}</span>
-          </p>
-
           <p :class="{ active: sizeSorted() }" class="size"
             role="button"
             tabindex="0"
@@ -79,7 +70,6 @@
         v-bind:modified="item.modified"
         v-bind:type="item.type"
         v-bind:size="item.size"
-        v-bind:owner="item.owner"
         v-bind:sharer="item.sharer"
         @contextmenu.prevent="$refs.menu.open($event, {file: item})">
       </item>
@@ -96,7 +86,6 @@
         v-bind:modified="item.modified"
         v-bind:type="item.type"
         v-bind:size="item.size"
-        v-bind:owner="item.owner"
         v-bind:sharer="item.sharer"
         @contextmenu.prevent="$refs.menu.open($event, {file: item})">
       </item>

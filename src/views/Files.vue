@@ -137,7 +137,7 @@ export default {
         if (this.shares && url === '') {
           res = await api.getSharedWithMe(true);
         } else {
-          res = await api.fetch(url, true);
+          res = await api.fetch(url, this.shares);
         }
 
         this.$store.commit("updateRequest", res);

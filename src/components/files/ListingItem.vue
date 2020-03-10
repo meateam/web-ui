@@ -22,11 +22,6 @@
 
     <div>
       <p class="name">{{ name }}</p>
-
-      <p v-if="!!owner" class="owner">
-        {{owner.fullName}}
-      </p>
-
       <p v-if="!!sharer" class="sharer">
         {{sharer.fullName}}
       </p>
@@ -54,7 +49,7 @@ export default {
       touches: 0
     };
   },
-  props: ['name', 'id', 'isDir', 'type', 'size', 'modified', 'index', 'owner', 'sharer'],
+  props: ['name', 'id', 'isDir', 'type', 'size', 'modified', 'index', 'sharer'],
   computed: {
     ...mapState(['selected', 'req']),
     ...mapGetters(['selectedCount', 'direction']),
