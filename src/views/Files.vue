@@ -40,6 +40,7 @@ import Editor from "@/components/files/Editor";
 import Preview from "@/components/files/Preview";
 import { files as api, quota as quotaApi } from "@/api";
 import { mapGetters, mapState, mapMutations } from "vuex";
+import { Roles } from '@/utils/constants';
 
 export default {
   name: "files",
@@ -133,15 +134,38 @@ export default {
       let url = this.$store.getters.currentFolder.id;
 
       try {
-        let res = null;
-        if (this.shares && url === '') {
-          res = await api.getSharedWithMe(true);
-        } else {
-          res = await api.fetch(url, this.shares);
-        }
+        if (this.$route.params.pathMatch && this.$route.params.pathMatch.includes('/')) {
+          const fileID = this.$route.params.pathMatch.split('/')[1];
+          const permissions = await api.getPermissions(fileID);
+          let shared = false;
+          for (let i = 0; i < permissions.length && !shared; i++) {
+            if (permissions[i].role !== Roles.owner && permissions[i].userID === this.user.id) {
+              shared = true;
+            }
+          }
+          const file = await api.fetch(fileID, shared);
+          const ancestors = await api.getAncestors(file.id);
 
-        this.$store.commit("updateRequest", res);
-        document.title = res.name || "Files";
+          this.$store.commit('changeFolder', '');
+
+          for (let i = 0; i < ancestors.length; i++) {
+            this.$store.commit('pushFolder', { id: ancestors[i].id, name: ancestors[i].name });    
+          }
+
+          this.$store.commit('pushFolder', { id: file.id, name: file.name });
+          this.$store.commit('setShares', file.shared);
+          this.$store.commit('updateRequest', file);
+        } else {
+          let res = null;
+          if (this.shares && url === '') {
+            res = await api.getSharedWithMe(true);
+          } else {
+            res = await api.fetch(url, this.shares);
+          }
+  
+          this.$store.commit("updateRequest", res);
+          document.title = res.name || "Files";
+        }
 
         const quota = await quotaApi.getQuota();
         this.$store.commit("setQuota", quota);
@@ -237,6 +261,7 @@ export default {
       this.$store.commit("showHover", "search");
     },
     onBreadcrumbsClick(id) {
+      this.$router.push({path: `/files${id ? `/${id}` : ''}`});
       this.$store.commit("changeFolder", id);
       this.$store.commit("setReload", true);
     }

@@ -60,6 +60,7 @@ export default {
       }
 
       this.$store.commit('pushFolder', { id: file.id, name: file.name });
+      this.$router.push({path: `/files${file.id ? `/${file.id}` : ''}`});
       this.$store.commit('setReload', true);
       this.$store.commit('setShares', file.shared);
       
@@ -107,6 +108,7 @@ export default {
       const data = filesApi.parseData({items: this.results, isDir: true});
       
       this.$store.commit('changeFolder', '');
+      this.$router.push({path: `/files`});
       this.$store.commit("updateRequest", data);
       this.$store.commit("activateSearch");
 

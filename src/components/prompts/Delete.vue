@@ -39,10 +39,9 @@ export default {
           await api.remove(this.req.id);
           buttons.success('delete');
           const currentIndex = this.path.findIndex(path => path.id === this.req.id);
-          this.$store.commit(
-            'changeFolder',
-            this.path[currentIndex > 0 ? currentIndex - 1 : 0].id
-          );
+          const id = this.path[currentIndex > 0 ? currentIndex - 1 : 0].id;
+          this.$store.commit('changeFolder', id);
+          this.$router.push({path: `/files${id ? `/${id}` : ''}`});
           this.$store.commit('setReload', true);
           return
         }
@@ -60,10 +59,9 @@ export default {
         buttons.success('delete');
         if (this.selectedCount === 0) {
           const currentIndex = this.path.findIndex(path => path.id === this.req.id);
-          this.$store.commit(
-            'changeFolder',
-            this.path[currentIndex > 0 ? currentIndex - 1 : 0].id
-          );
+          const id = this.path[currentIndex > 0 ? currentIndex - 1 : 0].id;
+          this.$store.commit('changeFolder', id);
+          this.$router.push({path: `/files${id ? `/${id}` : ''}`});
         }
         this.$store.commit('setReload', true);
       } catch (e) {

@@ -173,10 +173,9 @@ export default {
   methods: {
     back() {
       const currentIndex = this.path.findIndex(path => path.id === this.req.id);
-      this.$store.commit(
-        'changeFolder',
-        this.path[currentIndex > 0 ? currentIndex - 1 : 0].id
-      );
+      const id = this.path[currentIndex > 0 ? currentIndex - 1 : 0].id;
+      this.$store.commit('changeFolder', id);
+      this.$router.push({path: `/files${id ? `/${id}` : ''}`});
       this.$store.commit('setReload', true);
     },
     prev() {
@@ -186,6 +185,7 @@ export default {
         this.path[currentIndex > 0 ? currentIndex - 1 : 0].id
       );
       this.$store.commit('pushFolder', this.previousLink);
+      this.$router.push({path: `/files${this.previousLink.id ? `/${this.previousLink.id}` : ''}`});
       this.$store.commit('setReload', true);
     },
     next() {
@@ -195,6 +195,7 @@ export default {
         this.path[currentIndex > 0 ? currentIndex - 1 : 0].id
       );
       this.$store.commit('pushFolder', this.nextLink);
+      this.$router.push({path: `/files${this.nextLink.id ? `/${this.nextLink.id}` : ''}`});
       this.$store.commit('setReload', true);
     },
     key(event) {

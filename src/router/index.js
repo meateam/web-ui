@@ -37,14 +37,6 @@ const router = new Router({
       component: Layout,
       children: [
         {
-          path: '/files?shares',
-          name: 'Shares',
-          component: Files,
-          meta: {
-            requiresAuth: true
-          }
-        },
-        {
           path: '/files*',
           name: 'Files',
           component: Files,
@@ -113,12 +105,6 @@ const router = new Router({
           path: '/files',
           redirect: {
             path: '/files'
-          }
-        },
-        {
-          path: '/shares',
-          redirect: {
-            path: '/shares'
           }
         },
         {

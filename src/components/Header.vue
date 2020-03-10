@@ -255,8 +255,8 @@ export default {
       this.$store.commit('closeHovers')
     },
     redirectToMain() {
-      this.$router.push({path: '/files'});
       this.$store.commit('changeFolder', '');
+      this.$router.push({path: '/files'});
       this.$store.commit('setReload', true);
     }
   }

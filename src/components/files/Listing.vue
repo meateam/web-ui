@@ -572,6 +572,7 @@ export default {
     },
     preview: function (file) {
       this.$store.commit('pushFolder', { id: file.id, name: file.name });
+      this.$router.push({path: `/files/${file.id}`});
       this.$store.commit('setReload', true);
 
       return;
