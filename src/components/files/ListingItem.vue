@@ -22,8 +22,11 @@
 
     <div>
       <p :class="{shares}" class="name">{{ name }}</p>
-      <p v-if="shares" class="sharer">
+      <p v-if="sharer" class="sharer">
         {{sharer.fullName}}
+      </p>
+      <p v-else>
+        &mdash;
       </p>
 
       <p v-if="isDir" :class="{shares}" class="size" data-order="-1">&mdash;</p>
