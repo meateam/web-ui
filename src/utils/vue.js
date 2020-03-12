@@ -24,6 +24,14 @@ Vue.prototype.$showSuccess = (message) => {
   })).show()
 }
 
+Vue.prototype.$showLongSuccess = (message) => {
+  new Noty(Object.assign({}, notyDefault, {
+    text: message,
+    type: 'success',
+    timeout: 6000,
+  })).show()
+}
+
 Vue.prototype.$showError = (error) => {
   let btns = [
     Noty.button(i18n.t('buttons.close'), '', function () {

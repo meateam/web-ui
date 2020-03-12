@@ -1,7 +1,7 @@
 <template>
   <div class="card floating" id="share">
     <tabs v-if="!finished" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}">
-      <tab :name="$t('exShare.changeToRegShare')" id="firstTab" class="regular-share">
+      <tab :name="$t('exShare.changeToRegShare')" id="firstTab" class="regular-share tab-content">
         <template>
           <div class="card-content">
             <div class="user-role-select">
@@ -37,11 +37,11 @@
           </div>
         </template>
       </tab>
-      <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir">
-          <shareEx v-if="enableExternalShare && isAllowedFileType" @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
+      <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir" :title="$t('exShare.badFileType')">
+          <shareEx class="tab-content" v-if="enableExternalShare && isAllowedFileType" @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
           <div v-else-if="!isAllowedFileType" class="service-unavailable">
             <div>
-              <i class='material-icons'>insert_drive_file</i>
+              <i class='material-icons tab-content'>insert_drive_file</i>
             </div>
             <div>
               <p>
@@ -57,7 +57,7 @@
               </b>
             </div>
           </div>
-          <div v-else class="service-unavailable">
+          <div v-else class="service-unavailable tab-content">
             <div>
               <i class='material-icons'>build</i>
             </div>
@@ -249,7 +249,7 @@ export default {
         this.$showError({ message: this.$t("exShare.finalErrorMsg") });
         return;
       }
-      this.$showSuccess(this.$t("exShare.finalSuccessMsg"));
+      this.$showLongSuccess(this.$t("exShare.finalSuccessMsg"));
       this.$store.commit("closeHovers");
     }
   }
@@ -270,6 +270,15 @@ function asyncDebouncer(func, interval) {
 </script>
 
 <style scoped>
+.tab-content {
+  /* border-width: 10px;
+  border: rgb(210, 229, 251);
+  /* box-shadow: inset 0px 0px 40px 40px #DBA632; */
+  /* border-style: solid; */
+  stroke: #000000;
+  stroke-width: 10px;
+}
+
 .space-div {
   margin: 10px;
   margin-left: 2px;
