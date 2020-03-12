@@ -34,6 +34,16 @@
             <span>{{ $t('files.sharer') }}</span>
             <i class="material-icons">{{ sharerIcon() }}</i>
           </p>
+          <p :class="{ active: ownerSorted() }" class="owner"
+            role="button"
+            tabindex="0"
+            v-else
+            @click="sort('owner')"
+            :title="$t('files.sortByOwner')"
+            :aria-label="$t('files.sortByOwner')">
+            <span>{{ $t('files.owner') }}</span>
+            <i class="material-icons">{{ ownerIcon() }}</i>
+          </p>
 
           <p :class="{ active: sizeSorted(), shares }" class="size"
             role="button"
@@ -71,6 +81,7 @@
         v-bind:type="item.type"
         v-bind:size="item.size"
         v-bind:sharer="item.sharer"
+        v-bind:owner="item.owner"
         @contextmenu.prevent="$refs.menu.open($event, {file: item})">
       </item>
     </div>
@@ -87,6 +98,7 @@
         v-bind:type="item.type"
         v-bind:size="item.size"
         v-bind:sharer="item.sharer"
+        v-bind:owner="item.owner"
         @contextmenu.prevent="$refs.menu.open($event, {file: item})">
       </item>
     </div>
@@ -227,6 +239,9 @@ export default {
     sharerSorted: function() {
       return (this.sorting.by === 'sharer')
     },
+    ownerSorted: function() {
+      return (this.sorting.by === 'owner')
+    },
     ascOrdered: function() {
       return this.sorting.asc
     },
@@ -253,6 +268,13 @@ export default {
     },
     sharerIcon () {
       if (this.sharerSorted() && this.ascOrdered()) {
+        return 'arrow_downward';
+      }
+
+      return 'arrow_upward';
+    },
+    ownerIcon () {
+      if (this.ownerSorted() && this.ascOrdered()) {
         return 'arrow_downward';
       }
 
@@ -511,6 +533,19 @@ export default {
           } else {
             this.dirs.sort((dirA, dirB) => dirB.sharer.fullName.localeCompare(dirA.sharer.fullName));
             this.files.sort((fileA, fileB) => fileB.sharer.fullName.localeCompare(fileA.sharer.fullName));
+          }
+
+          break;
+        }
+        case 'owner': {
+          sorting.asc = this.ownerIcon() === 'arrow_upward';
+
+          if (sorting.asc) {
+            this.dirs.sort((dirA, dirB) => dirA.owner.fullName.localeCompare(dirB.owner.fullName));
+            this.files.sort((fileA, fileB) => fileA.owner.fullName.localeCompare(fileB.owner.fullName));
+          } else {
+            this.dirs.sort((dirA, dirB) => dirB.owner.fullName.localeCompare(dirA.owner.fullName));
+            this.files.sort((fileA, fileB) => fileB.owner.fullName.localeCompare(fileA.owner.fullName));
           }
 
           break;

@@ -143,7 +143,7 @@ export default {
               shared = true;
             }
           }
-          const file = await api.fetch(fileID, shared);
+          const file = await api.fetch(fileID, shared, !shared);
           const ancestors = await api.getAncestors(file.id);
 
           this.$store.commit('changeFolder', '');
@@ -160,7 +160,7 @@ export default {
           if (this.shares && url === '') {
             res = await api.getSharedWithMe(true);
           } else {
-            res = await api.fetch(url, this.shares);
+            res = await api.fetch(url, this.shares, !this.shares);
           }
   
           this.$store.commit("updateRequest", res);

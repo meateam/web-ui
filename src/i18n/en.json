@@ -63,10 +63,12 @@
     "name": "Name",
     "size": "Size",
     "sharer": "Shared by",
+    "owner": "Owner",
     "sortByName": "Sort by name",
     "sortBySize": "Sort by size",
     "sortByLastModified": "Sort by last modified",
     "sortBySharer": "Sort by sharer",
+    "sortByOwner": "Sort by owner",
     "cannotPreview": "Can't preview this item"
   },
   "help": {

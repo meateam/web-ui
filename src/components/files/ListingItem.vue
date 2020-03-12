@@ -21,17 +21,25 @@
     </div>
 
     <div>
-      <p :class="{shares}" class="name">{{ name }}</p>
+      <p class="name">{{ name }}</p>
       <span v-if="shares" class="sharer">
         <p v-if="sharer">
           {{sharer.fullName}}
         </p>
-        <p v-else class="sharer">
+        <p v-else>
+          &mdash;
+        </p>
+      </span>
+      <span v-else class="owner">
+        <p v-if="owner">
+          {{owner.fullName}}
+        </p>
+        <p v-else>
           &mdash;
         </p>
       </span>
 
-      <p v-if="isDir" :class="{shares}" class="size" data-order="-1">&mdash;</p>
+      <p v-if="isDir" class="size" data-order="-1">&mdash;</p>
       <p v-else :class="{direction, shares}" class="size" :data-order="humanSize()">{{ humanSize() }}</p>
 
       <p class="modified">
@@ -54,7 +62,7 @@ export default {
       touches: 0
     };
   },
-  props: ['name', 'id', 'isDir', 'type', 'size', 'modified', 'index', 'sharer'],
+  props: ['name', 'id', 'isDir', 'type', 'size', 'modified', 'index', 'sharer', 'owner'],
   computed: {
     ...mapState(['selected', 'req']),
     ...mapGetters(['selectedCount', 'direction', 'shares']),

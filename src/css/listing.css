@@ -167,15 +167,19 @@ a.pointer {
   width: 25%;
 }
 
-#listing.list .item .name.shares {
+#listing.list .item .name {
   width: 35%;
 }
 
-#listing.list .item .size.shares {
+#listing.list .item .size {
   width: 20%;
 }
 
 #listing.list .item .sharer {
+  width: 30%;
+}
+
+#listing.list .item .owner {
   width: 30%;
 }
 

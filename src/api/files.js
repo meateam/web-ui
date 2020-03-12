@@ -5,8 +5,9 @@ import store from '@/store'
 
 import { fetchURL, removePrefix } from './utils'
 
-export async function fetch(url, isPopulateSharer = false) {
+export async function fetch(url, isPopulateSharer = false, isPopulateOwner = false) {
 	const populateSharerQuery = 'populateSharer';
+	const populateOwnerQuery = 'populateOwner';
 
 	url = removePrefix(url);
 	let data = {};
@@ -21,6 +22,10 @@ export async function fetch(url, isPopulateSharer = false) {
 				let request = `/api/files?parent=${data.id}`;
 				if (isPopulateSharer) {
 					request += `&${populateSharerQuery}=true`;
+				}
+
+				if (isPopulateOwner) {
+					request += `&${populateOwnerQuery}=true`;
 				}
 
 				const res = await fetchURL(request, {});
@@ -38,6 +43,10 @@ export async function fetch(url, isPopulateSharer = false) {
 		let request = `/api/files`;
 		if (isPopulateSharer) {
 			request += `?${populateSharerQuery}=true`;
+		}
+
+		if (isPopulateOwner) {
+			request += `?${populateOwnerQuery}=true`;
 		}
 
 		const res = await fetchURL(request, {});

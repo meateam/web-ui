@@ -63,10 +63,12 @@
     "name": "שם",
     "size": "גודל",
     "sharer": "שותף על ידי",
+    "owner": "בעלים",
     "sortByName": "מיון לפי שם",
     "sortBySize": "מיון לפי גודל",
     "sortByLastModified": "מיון לפי זמן שינוי אחרון",
     "sortBySharer": "מיון לפי משתף",
+    "sortByOwner": "מיין לפי בעלים",
     "cannotPreview": "לא ניתן להציג פריט זה"
   },
   "help": {
