@@ -261,7 +261,9 @@ export default {
       this.$store.commit("showHover", "search");
     },
     onBreadcrumbsClick(id) {
-      this.$router.push({path: `/files${id ? `/${id}` : ''}`});
+      if (this.$route.path !== `/files${id ? `/${id}` : ''}`) {
+        this.$router.push({path: `/files${id ? `/${id}` : ''}`});
+      }
       this.$store.commit("changeFolder", id);
       this.$store.commit("setReload", true);
     }

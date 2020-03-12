@@ -189,7 +189,9 @@ export default {
     },
     open: function() {
       this.$store.commit('pushFolder', { id: this.id, name: this.name });
-      this.$router.push({path: `/files${this.id ? `/${this.id}` : ''}`});
+      if (this.$route.path !== `/files${this.id ? `/${this.id}` : ''}`) {
+        this.$router.push({path: `/files${this.id ? `/${this.id}` : ''}`});
+      }
       this.$store.commit('setReload', true);
       
       return;

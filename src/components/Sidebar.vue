@@ -79,13 +79,17 @@ export default {
     onMyFilesClick() {
       this.$store.commit("setShares", false);
       this.$store.commit("changeFolder", '');
-      this.$router.push({path: '/files'});
+      if (this.$route.path !== '/files') {
+        this.$router.push({path: '/files'});
+      }
       this.$store.commit("setReload", true);
     },
     onSharedWithMeClick() {
       this.$store.commit("setShares", true);
       this.$store.commit("changeFolder", '');
-      this.$router.push({path: '/files'});
+      if (this.$route.path !== '/files') {
+        this.$router.push({path: '/files'});
+      }
       this.$store.commit("setReload", true);
     },
     logout: auth.logout

@@ -256,7 +256,9 @@ export default {
     },
     redirectToMain() {
       this.$store.commit('changeFolder', '');
-      this.$router.push({path: '/files'});
+      if (this.$route.path !== '/files') {
+        this.$router.push({path: '/files'});
+      }
       this.$store.commit('setReload', true);
     }
   }
