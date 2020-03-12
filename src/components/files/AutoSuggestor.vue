@@ -1,7 +1,8 @@
 <template>
   <div class="select-approvers">
     <div class="autosuggest-container">
-      <vue-autosuggest 
+      <vue-autosuggest
+        class="blavla"
         v-model="query"
         :suggestions="suggestions"
         @input="fetchResults"
@@ -10,24 +11,16 @@
         :input-props="inputProps"
       >
         <template slot-scope="{ suggestion }">
-          <span v-if="isExternal" class="my-suggestion-item"
-            >{{ suggestion.item.hierarchy }} :
-            {{ suggestion.item.full_name }}</span
-          >
-          <span v-if="!isExternal" class="my-suggestion-item"
-            >{{ suggestion.item.hierarchyFlat }} :
-            {{ suggestion.item.fullName }}</span
-          >
+          <span v-if="isExternal" >
+            {{ suggestion.item.hierarchy }} :
+            {{ suggestion.item.full_name }}
+          </span>
+          <span v-if="!isExternal">
+            {{ suggestion.item.hierarchyFlat }} :
+            {{ suggestion.item.fullName }}
+          </span>
         </template>
       </vue-autosuggest>
-      <button
-        class="action"
-        @click="submitSelected"
-        :aria-label="$t('buttons.create')"
-        :title="$t('buttons.create')"
-      >
-        <i class="material-icons">add</i>
-      </button>
     </div>
   </div>
 </template>
@@ -51,7 +44,10 @@ export default {
   },
   data() {
     return {
-      debounce: asyncDebouncer(this.isExternal ? this.fetchExternal : this.fetchInternal, debounceTime),
+      debounce: asyncDebouncer(
+        this.isExternal ? this.fetchExternal : this.fetchInternal,
+        debounceTime
+      ),
       query: "",
       selected: "",
       selectedList: [],
@@ -69,6 +65,7 @@ export default {
   methods: {
     onSelected(item) {
       this.selected = item.item;
+      this.submitSelected();
     },
     getSuggestionValue(suggestion) {
       if (this.isExternal) {
@@ -85,7 +82,6 @@ export default {
       return await this.debounce();
     },
     async fetchExternal() {
-
       const res = await delegatorsApi.searchUserByName(this.input);
       const users = res.data.users;
       if (users) {
@@ -104,26 +100,22 @@ export default {
     submitSelected() {
       if (!this.selected) return;
       this.$emit("select", { value: this.selected });
-      document.getElementById('autosuggest__input').value = '';  
+      document.getElementById("autosuggest__input").value = "";
     }
   }
 };
 
-// An async-debouncer function. 
+// An async-debouncer function.
 // The 'func' is called after the requested interval
 function asyncDebouncer(func, interval) {
   let timer = null;
   return (...args) => {
     clearTimeout(timer);
-    return new Promise((resolve) => {
-      timer = setTimeout(
-        () => resolve(func(...args)),
-        interval,
-      );
+    return new Promise(resolve => {
+      timer = setTimeout(() => resolve(func(...args)), interval);
     });
   };
 }
-
 </script>
 
 <style>
@@ -164,6 +156,8 @@ input {
   border: 1px solid #616161;
   border-radius: 5px;
   padding: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
   width: 100%;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -225,5 +219,4 @@ input {
   .autosuggest__results_item.autosuggest__results_item-highlighted {
   background-color: #ddd;
 }
-
 </style>

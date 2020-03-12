@@ -1,17 +1,15 @@
 <template>
   <div class="step1">
+    <i class="material-icons blink" :title="$t('exShare.chooseExUsersInfo')">info</i>
     <p>{{ $t("exShare.SOHeader") }}:</p>
-    <my-autosuggestor
-      :isExternal="external"
-      @select="addExUser"
-    ></my-autosuggestor>
+    <my-autosuggestor :isExternal="external" @select="addExUser"></my-autosuggestor>
 
     <ul id="example-1">
-      <li v-bind:key="exUser.id" v-for="exUser in externalUsers">
+      <li v-bind:key="exUser.id" v-for="exUser in externalUsers" class="user-exshare">
         {{ exUser.hierarchy }} : {{ exUser.full_name }}
-        <button @click="removeExUser(exUser.id)">
-          {{ $t("exShare.rmButton") }}
-        </button>
+        <button
+          @click="removeExUser(exUser.id)"
+        >{{ $t("exShare.rmButton") }}</button>
       </li>
     </ul>
   </div>
@@ -85,6 +83,10 @@ export default {
 };
 </script>
 <style>
+.user-exshare {
+  margin-bottom: 5px;
+}
+
 .step1 {
   margin: 10px;
   min-height: 200px;

@@ -30,14 +30,6 @@
                     <option value="WRITE">{{ $t("role.write") }}</option>
                   </select>
                   <i class="material-icons select-icon">{{roleToIconName(role)}}</i>
-                  <button
-                    class="action"
-                    @click="submit"
-                    :aria-label="$t('buttons.create')"
-                    :title="$t('buttons.create')"
-                  >
-                    <i class="material-icons">add</i>
-                  </button>
                 </li>
               </ul>
             </div>
@@ -46,7 +38,25 @@
         </template>
       </tab>
       <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir">
-          <shareEx v-if="enableExternalShare" @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
+          <shareEx v-if="enableExternalShare && isAllowedFileType" @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
+          <div v-else-if="!isAllowedFileType" class="service-unavailable">
+            <div>
+              <i class='material-icons'>insert_drive_file</i>
+            </div>
+            <div>
+              <p>
+                {{$t('exShare.badFileType')}}
+              </p>
+              <b>
+                {{$t('exShare.allowedFileTypes')}}
+              </b>
+              <br>
+              <br>
+              <b>
+                {{ allowedTypes() }}
+              </b>
+            </div>
+          </div>
           <div v-else class="service-unavailable">
             <div>
               <i class='material-icons'>build</i>
@@ -72,7 +82,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { Tabs, Tab } from "vue-tabs-component";
-import { Roles, minAutoComplete, config } from "@/utils/constants";
+import { Roles, minAutoComplete, config, allowedFileTypes } from "@/utils/constants";
 import { share as shareApi, users as usersApi } from "@/api";
 import { createExShare } from "@/api/exShare";
 import { debounceTime } from "@/utils/constants";
@@ -124,9 +134,16 @@ export default {
       return this.req.items && this.selectedCount !== 0
         ? this.req.items[this.selected[0]]
         : this.req;
+    },
+    isAllowedFileType() {
+      const nameArray = this.selectedItem.name.split(".");
+      const fileType = nameArray[nameArray.length-1];
+      return allowedFileTypes.includes(fileType.toLowerCase());
     }
   },
-  async beforeMount() {},
+  async beforeMount() {
+    this.isAllowedFileType();
+  },
   beforeDestroy() {},
   destroyed() {
     this.$store.commit("emptyGlobalExternalUsers");
@@ -134,11 +151,15 @@ export default {
     this.$store.commit("resetStepsRes");
   },
   methods: {
+    allowedTypes() {
+      return allowedFileTypes.toString().split(",").join(", ");
+    },
     finishExShare() {
       this.finished = true;
     },
     saveUser(user) {
       this.user = user;
+      this.submit();
     },
     submit: async function() {
       if (!this.role) return;

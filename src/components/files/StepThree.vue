@@ -1,25 +1,20 @@
 <template>
   <div class="step3">
     <div>
+      <div>
+        <i class="material-icons blink" :title="$t('exShare.addInfoInfo')">info</i>
+      </div>
       <h3>{{ $t("exShare.headerTS") }}</h3>
     </div>
     <div class="card-content">
-      <textarea
-        @input="onInput"
-        id="infoText"
-        class="textbox"
-        rows="4"
-        cols="50"
-      ></textarea>
+      <textarea @input="onInput" id="infoText" class="textbox" rows="4" cols="50"></textarea>
     </div>
     <form>
       <p>{{ $t("exShare.chooseClass") }}</p>
       <select @change="onInput" id="classSelect">
         <option v-bind:key="c" v-for="c in classifications">{{ c }}</option>
       </select>
-      <p v-if="isTopSecret === true" style="color: red">
-        {{ $t("exShare.classErrMessage") }}
-      </p>
+      <p v-if="isTopSecret === true" style="color: red">{{ $t("exShare.classErrMessage") }}</p>
     </form>
   </div>
 </template>

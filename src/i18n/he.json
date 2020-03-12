@@ -276,6 +276,11 @@
     "downloadFolder": "Download Folder"
   },
   "exShare": {
+    "approversInfo": ".בחר אנשים שיאשרו את בקשת השיתוף שלך\n. שים לב! המאשרים יקבל הרשאות כתיבה על הקובץ",
+    "addInfoInfo": "המידע יעזור למאשר לקבל החלטה לגבי אישור השיתוף",
+    "chooseExUsersInfo": "המשתמשים נלקחים מהדומיין החיצוני",
+    "badFileType": "לא ניתן לשתף החוצה את סוג קובץ זה",
+    "allowedFileTypes": "סוגי קבצים מאושרים:",
     "classifications": ["שמור", "סודי", "סודי ביותר" ],
     "classTopSecret": "סודי ביותר",
     "changeShare": "שנה שיתוף",
