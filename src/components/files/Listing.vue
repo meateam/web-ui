@@ -560,7 +560,7 @@ export default {
       this.$store.commit('showHover', 'info');
     },
     showDownloadButton (file) {
-      return !file.isDir && DownloadRole(file.role);
+      return DownloadRole(file.role);
     },
     showDeleteButton (file) {
       // Can't delete a file that is being shared with you directly.

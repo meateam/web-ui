@@ -136,7 +136,19 @@ export default {
     },
     showDownloadButton () {
       // Show only if one file selected and the selected file is not a folder.
-      return this.isFiles && this.selectedCount === 1 && ! this.req.items[this.selected[0]].isDir && DownloadRole(this.req.items[this.selected[0]].role);
+      if (this.isFiles) {
+        if (this.selectedCount > 0) {
+          for (let i = 0; i < this.selectedCount; i++) {
+            if (!DownloadRole(this.req.items[this.selected[i]].role)) {
+              return false
+            }
+          }
+
+          return true
+        }
+      }
+
+      return false;
     },
     showDeleteButton () {
       if (this.isFiles) {

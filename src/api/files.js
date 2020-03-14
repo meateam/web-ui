@@ -100,9 +100,22 @@ export async function put(url, content = '') {
 	return resourceAction(url, 'PUT', content)
 }
 
-export function download(files) {
-	if (files.length > 0) {
+export async function download(files) {
+	if (files.length === 1) {
 		window.open(`${baseURL}/api/files/${files[0]}?alt=media`);
+	} else if (files.length > 1) {
+		const response = await axios.post(`${baseURL}/api/files/zip`, {files}, {
+				headers: {Authorization: 'Bearer ' + store.state.jwt},
+				responseType: 'blob'
+		});
+
+		const url = window.URL.createObjectURL(new Blob([response.data]));
+		const link = document.createElement('a');
+		link.href = url;
+		const d = new Date().toISOString().replace(/(:|-)/g, '').split('.')[0]+'Z';
+		link.setAttribute('download', `drive-download-${d}.zip`); //or any other extension
+		document.body.appendChild(link);
+		link.click();
 	}
 }
 

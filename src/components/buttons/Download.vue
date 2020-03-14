@@ -23,12 +23,17 @@ export default {
         return;
       }
 
-      if (this.selectedCount === 1 && !this.req.items[this.selected[0]].isDir) {
+      if (this.selectedCount === 1) {
         api.download([this.req.items[this.selected[0]].id]);
         return;
       }
+      
+      const selectedIDs = [];
+      for (let i = 0; i < this.selectedCount; i++) {
+        selectedIDs.push(this.req.items[this.selected[i]].id);
+      }
 
-      this.$store.commit('showHover', 'download');
+      api.download(selectedIDs);
     }
   }
 }
