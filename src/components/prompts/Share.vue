@@ -37,7 +37,7 @@
           </div>
         </template>
       </tab>
-      <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir" :title="$t('exShare.badFileType')">
+      <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir">
           <shareEx class="tab-content" v-if="enableExternalShare && isAllowedFileType" @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
           <div v-else-if="!isAllowedFileType" class="service-unavailable">
             <div>
