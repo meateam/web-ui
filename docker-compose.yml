@@ -143,7 +143,6 @@ services:
       SECRET_KEY: 'pandora@drive'
       CLIENT_ENDPOINT: 'http://localhost'
       SHRAGA_URL: 'http://SHARAGA_URL'
-      STRATEGY: 'shraga'
     depends_on:
       - saml-idp
       - user-service
@@ -252,3 +251,20 @@ services:
     container_name: kibana
     ports: ['5601:5601']
     depends_on: ['elasticsearch']
+  spike-service:
+    image: bluehub.azurecr.io/meateam/spike-service:develop
+    environment:
+      AUDIENCE: "0mBMe5vYJyuFtvHpEWVDPumqaVl~xr"
+      SPIKE_CLIENT_ID: "EPBpjCiczupCXZgBEq3ARZCinUt4LSXtOsVrI1Ub"
+      SPIKE_CLIENT_SECRET: "u5qxEK0sy17ReZ7t8aVeN1gCcdI9hRiM78i9J_9Z6jA2YWcvbgczcchKqZ4WnXOsdT6jxmuVCLC3~RXuVcE5EsOG4JJi~B8AJQSB"
+      REDIS_URL: 'redis://redis:6379'
+      SPIKE_TOKEN_URL: "https://spike.westeurope.cloudapp.azure.com:1337/oauth2/token"
+      SPIKE_PUBLIC_KEY_FULL_PATH: "/usr/src/app/utils/publickey.pem"
+      SPIKE_PUBKEY_PATH: 'https://spike.westeurope.cloudapp.azure.com:1337/.well-known/publickey.pem'
+      NODE_TLS_REJECT_UNAUTHORIZED: 0
+    depends_on:
+      - redis
+    ports:
+      - '8090:8080'
+volumes:
+  dbdata:

@@ -214,6 +214,7 @@
     "storage": "Current usage",
     "newFile": "New file",
     "newFolder": "New folder",
+    "uploadFolder": "Upload folder",
     "settings": "Settings",
     "siteSettings": "Site Settings",
     "hugoNew": "Hugo New",
