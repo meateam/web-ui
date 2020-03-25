@@ -1,5 +1,5 @@
 <template>
-  <nav :class="{active}">
+  <nav :class="navClass">
     <template v-if="isLogged">
       <div
         @click="onMyFilesClick"
@@ -66,9 +66,20 @@ export default {
   },
   computed: {
     ...mapState([ 'req', 'user', 'quota' ]),
-    ...mapGetters([ 'isLogged', 'shares', 'isSearch' ]),
+    ...mapGetters([ 'isLogged', 'shares', 'isSearch', 'direction' ]),
     active () {
       return this.$store.state.show === 'sidebar'
+    },
+    navClass() {
+      const isLtr = this.direction === 'ltr' ? true : false;
+      const isRtl = this.direction === 'rtl' ? true : false;
+      if (isLtr) {
+        return {'active': this.$store.state.show === 'sidebar', 'ltr': true};
+      }
+
+      if (isRtl) {
+        return {'active': this.$store.state.show === 'sidebar', 'rtl': true};
+      }
     },
     signup: () => signup,
     supportLink: () => config.supportLink,

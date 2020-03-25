@@ -109,7 +109,7 @@
     "downloadMessage": "Choose the format you want to download.",
     "error": "Something went wrong",
     "fileInfo": "File information",
-    "filesSelected": "{count} files selected.",
+    "filesSelected": "{count} files selected",
     "lastModified": "Last Modified",
     "move": "Move",
     "moveMessage": "Choose new house for your file(s)/folder(s):",

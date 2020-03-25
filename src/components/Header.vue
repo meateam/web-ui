@@ -23,7 +23,7 @@
 
         <!-- Menu that shows on listing AND mobile when there are files selected -->
         <div id="file-selection" v-if="isMobile && isListing">
-          <span v-if="selectedCount > 0">{{ selectedCount }} selected</span>
+          <span v-if="selectedCount > 0">{{ $t('prompts.filesSelected', { count: selectedCount }) }}</span>
           <share-button v-show="showShareButton"></share-button>
           <rename-button v-show="showRenameButton"></rename-button>
           <!-- <copy-button v-show="showCopyButton"></copy-button> -->
@@ -32,7 +32,7 @@
         </div>
 
         <!-- This buttons are shown on a dropdown on mobile phones -->
-        <div id="dropdown" :class="{ active: showMore }">
+        <div id="dropdown" :class="dropdownClass">
           <div v-if="!isListing || !isMobile">
             <share-button v-show="showShareButton"></share-button>
             <rename-button v-show="showRenameButton"></rename-button>
@@ -127,6 +127,17 @@ export default {
     logoURL: () => logoURL,
     isMobile () {
       return this.width <= 736
+    },
+    dropdownClass() {
+      const isLtr = this.direction === 'ltr' ? true : false;
+      const isRtl = this.direction === 'rtl' ? true : false;
+      if (isLtr) {
+        return {'active': this.showMore, 'ltr': true};
+      }
+
+      if (isRtl) {
+        return {'active': this.showMore, 'rtl': true};
+      }
     },
     showUpload () {
       return this.isListing && UploadRole(this.req.role) && this.selectedCount === 0

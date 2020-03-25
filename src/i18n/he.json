@@ -109,7 +109,7 @@
     "downloadMessage": "Choose the format you want to download.",
     "error": "משהו השתבש",
     "fileInfo": "פרטי קובץ",
-    "filesSelected": "{count} קבצים נבחרו.",
+    "filesSelected": "{count} קבצים נבחרו",
     "lastModified": "שונה לאחרונה",
     "move": "העברה",
     "moveMessage": "Choose new house for your file(s)/folder(s):",

@@ -1,12 +1,28 @@
 @media (max-width: 1024px) {
   nav {
-    width: 10em
+    width: 13em
   }
 }
 
 @media (max-width: 1024px) {
   main {
-    width: calc(100% - 13em)
+    width: calc(100% - 13em) !important;
+  }
+  main.rtl {
+    margin: 0 13em 1em 1em;
+  }
+  .search.rtl {
+    margin-right: 8em !important;
+  }
+  #listing.list .item {
+    padding: 0.5em;
+  }
+  #listing.list .item div:last-of-type {
+    width: 100%;
+  }
+
+  #listing.list .item div:last-of-type * {
+    text-overflow: unset;
   }
 }
 
@@ -18,7 +34,7 @@
     display: none;
   }
   #listing.list .item .name {
-    width: 60%;
+    width: 50%;
   }
   #more {
     display: inherit
@@ -31,14 +47,20 @@
   #dropdown {
     position: fixed;
     top: 1em;
-    right: 1em;
     display: block;
     background-color: #fff;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     transform: scale(0);
     transition: .1s ease-in-out transform;
-    transform-origin: top right;
     z-index: 99999;
+  }
+  #dropdown.ltr {
+    transform-origin: top right;
+    right: 1em;
+  }
+  #dropdown.rtl {
+    transform-origin: top left;
+    left: 1em;
   }
   #dropdown > div {
     display: block;
@@ -89,12 +111,19 @@
     width: 16em;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     transition: .1s ease left;
+  }
+  nav.ltr {
     left: -17em;
   }
-  nav.active {
+  nav.rtl {
+    right: -17em;
+  }
+  nav.ltr.active {
     left: 0;
   }
-  header .search-button,
+  nav.rtl.active {
+    right: 0;
+  }
   header>div:first-child>.action {
     display: inherit;
   }
@@ -104,15 +133,22 @@
   #listing {
     margin-bottom: 5em;
   }
-  main {
+  main.ltr {
     margin: 0 1em;
-    width: calc(100% - 2em);
+    width: calc(100% - 2em) !important;
+  }
+  main.rtl {
+    margin: 0 1em;
+    width: calc(100% - 2em) !important;
   }
   #search {
     display: none;
   }
   #search.active {
     display: block;
+  }
+  .search.rtl {
+    margin-right: 0 !important;
   }
 }
 
@@ -121,6 +157,9 @@
     display: none;
   }
   #listing.list .item .name {
-    width: 100%;
+    width: 50%;
+  }
+  header>div {
+    width: unset;
   }
 }
