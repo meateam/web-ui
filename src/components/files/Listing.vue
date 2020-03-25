@@ -170,7 +170,8 @@ import {
   DeleteRole,
   RenameRole,
   ShareRole,
-  MoveRole
+  MoveRole,
+  UploadRole
 } from '@/utils/constants';
 
 export default {
@@ -386,7 +387,6 @@ export default {
       this.resetOpacity()
     },
     drop: function (event) {
-      if (this.shares) return;
       event.preventDefault()
       this.resetOpacity()
 
@@ -410,12 +410,14 @@ export default {
       if (base !== '') {
         api.fetch(base)
           .then(req => {
+            if (!UploadRole(req.role)) return;
             this.checkConflict(files, req.items, base)
           })
           .catch(e => this.$showError(e))
         return
       }
 
+      if (!UploadRole(this.req.role)) return;
       this.checkConflict(files, this.req.items, this.$store.getters.currentFolder.id);
     },
     checkConflict (files, items, base) {
