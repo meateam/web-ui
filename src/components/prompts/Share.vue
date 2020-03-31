@@ -30,6 +30,14 @@
                     <option value="WRITE">{{ $t("role.write") }}</option>
                   </select>
                   <i class="material-icons select-icon">{{roleToIconName(role)}}</i>
+                  <button	
+                      class="action"	
+                      @click="submit"	
+                      :aria-label="$t('buttons.create')"	
+                      :title="$t('buttons.create')"	
+                    >	
+                      <i class="material-icons">add</i>	
+                  </button>
                 </li>
               </ul>
             </div>
@@ -159,7 +167,6 @@ export default {
     },
     saveUser(user) {
       this.user = user;
-      this.submit();
     },
     submit: async function() {
       if (!this.role) return;
