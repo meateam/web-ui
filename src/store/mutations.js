@@ -42,10 +42,6 @@ const mutations = {
     i18n.default.locale = locale
     state.user = value
   },
-  setIsVIP: (state, value) => {
-    state.isVIP = value;
-    return;
-  },
   setJWT: (state, value) => (state.jwt = value),
   multiple: (state, value) => (state.multiple = value),
   addSelected: (state, value) => (state.selected.push(value)),

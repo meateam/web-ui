@@ -125,19 +125,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(["req", "selected", "selectedCount", "isVIP"]),
+    ...mapState(["req", "selected", "selectedCount"]),
     ...mapGetters(["isListing", "selectedCount", "userID"]),
     ...mapMutations([
       "emptyGlobalExternalUsers",
       "emptyApprovers",
-      "resetStepsRes",
-      "setIsVIP"
+      "resetStepsRes"
     ]),
-    allowedToexternalyShare() {
-      return (
-        this.$store.getters.user.currentUnit === config.externalExclusiveUnit
-      );
-    },
     selectedItem() {
       return this.req.items && this.selectedCount !== 0
         ? this.req.items[this.selected[0]]

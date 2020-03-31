@@ -12,11 +12,6 @@ export async function get (id) {
   return fetchJSON(`/api/users/${id}`, {})
 }
 
-export async function checkIfVIP (id) {
-  const vipRes = await axios.get(`${config.vipServiceUrl}/api/vips/${id}`);
-  return vipRes.data.vip === true;
-}
-
 export async function getExternal (id) {
   const res = await fetchJSON(`/api/delegators/${id}`, {})
   res.user.firstName = res.user.first_name;

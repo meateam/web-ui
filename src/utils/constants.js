@@ -30,9 +30,7 @@ const config = {
 	approvalServiceUrl: '',
 	externalShareName: 'שיתוף חיצוני',
 	myExternalSharesName: 'השיתופים החיצוניים שלי',
-	externalExclusiveUnit: 'יחידת ביג מאם',
 	enableExternalShare: false,
-	vipServiceUrl: 'localhost:8094',
 };
 
 const allowedFileTypes = ['png', 'xlsx', 'docx', 'jpg', 'pptx', 'txt', 'jpeg', 'mp4', 'mpg', 'mpeg', 'bmp', 'gif', 'wav', 'wave', 'pdf'];
@@ -107,9 +105,7 @@ export async function fetchConfig() {
 	config.approvalServiceUrl = conf.approvalServiceUrl || config.supportLink;
 	config.externalShareName = conf.externalShareName;
 	config.myExternalSharesName = conf.myExternalSharesName;
-	config.externalExclusiveUnit = conf.externalExclusiveUnit;
 	config.enableExternalShare = conf.enableExternalShare === "true";
-	config.vipServiceUrl = conf.vipServiceUrl;
 }
 
 export {
