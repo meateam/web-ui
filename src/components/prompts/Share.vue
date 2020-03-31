@@ -31,7 +31,7 @@
                   </select>
                   <i class="material-icons select-icon">{{roleToIconName(role)}}</i>
                   <button	
-                      class="action"	
+                      class="action blink add-button"	
                       @click="submit"	
                       :aria-label="$t('buttons.create')"	
                       :title="$t('buttons.create')"	
@@ -354,4 +354,17 @@ function asyncDebouncer(func, interval) {
 .service-unavailable .material-icons {
   font-size: 90px;
 }
+
+.add-button {
+  color: rgb(16, 74, 100);
+  background-color: rgb(173, 214, 233);
+  margin-right: 15px;
+}
+
+.add-button:hover {
+  color: rgb(16, 74, 100);
+  background-color: rgb(173, 214, 255);
+}
+
+
 </style>
