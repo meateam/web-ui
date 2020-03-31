@@ -68,7 +68,7 @@
     .tabs-component-panels {
       border-top-left-radius: 0;
       background-color: #fff;
-      border: solid 1px #ddd;
+      border: solid 1px rgb(210, 229, 251);
       border-radius: 0 6px 6px 6px;
       box-shadow: 0 0 10px rgba(0, 0, 0, .05);
       /* padding: 3em 2em; */

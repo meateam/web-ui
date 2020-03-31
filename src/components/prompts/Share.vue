@@ -1,7 +1,7 @@
 <template>
   <div class="card floating" id="share">
     <tabs v-if="!finished" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}">
-      <tab :name="$t('exShare.changeToRegShare')" id="firstTab" class="regular-share">
+      <tab :name="$t('exShare.changeToRegShare')" id="firstTab" class="regular-share tab-content">
         <template>
           <div class="card-content">
             <div class="user-role-select">
@@ -30,13 +30,13 @@
                     <option value="WRITE">{{ $t("role.write") }}</option>
                   </select>
                   <i class="material-icons select-icon">{{roleToIconName(role)}}</i>
-                  <button
-                    class="action"
-                    @click="submit"
-                    :aria-label="$t('buttons.create')"
-                    :title="$t('buttons.create')"
-                  >
-                    <i class="material-icons">add</i>
+                  <button	
+                      class="action blink add-button"	
+                      @click="submit"	
+                      :aria-label="$t('buttons.create')"	
+                      :title="$t('buttons.create')"	
+                    >	
+                      <i class="material-icons">add</i>	
                   </button>
                 </li>
               </ul>
@@ -46,8 +46,26 @@
         </template>
       </tab>
       <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir">
-          <shareEx v-if="enableExternalShare" @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
-          <div v-else class="service-unavailable">
+          <shareEx class="tab-content" v-if="enableExternalShare && isAllowedFileType" @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
+          <div v-else-if="!isAllowedFileType" class="service-unavailable">
+            <div>
+              <i class='material-icons tab-content'>insert_drive_file</i>
+            </div>
+            <div>
+              <p>
+                {{$t('exShare.badFileType')}}
+              </p>
+              <b>
+                {{$t('exShare.allowedFileTypes')}}
+              </b>
+              <br>
+              <br>
+              <b>
+                {{ allowedTypes() }}
+              </b>
+            </div>
+          </div>
+          <div v-else class="service-unavailable tab-content">
             <div>
               <i class='material-icons'>build</i>
             </div>
@@ -72,7 +90,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { Tabs, Tab } from "vue-tabs-component";
-import { Roles, minAutoComplete, config } from "@/utils/constants";
+import { Roles, minAutoComplete, config, allowedFileTypes } from "@/utils/constants";
 import { share as shareApi, users as usersApi } from "@/api";
 import { createExShare } from "@/api/exShare";
 import { debounceTime } from "@/utils/constants";
@@ -124,9 +142,16 @@ export default {
       return this.req.items && this.selectedCount !== 0
         ? this.req.items[this.selected[0]]
         : this.req;
+    },
+    isAllowedFileType() {
+      const nameArray = this.selectedItem.name.split(".");
+      const fileType = nameArray[nameArray.length-1];
+      return allowedFileTypes.includes(fileType.toLowerCase());
     }
   },
-  async beforeMount() {},
+  async beforeMount() {
+    this.isAllowedFileType();
+  },
   beforeDestroy() {},
   destroyed() {
     this.$store.commit("emptyGlobalExternalUsers");
@@ -134,6 +159,9 @@ export default {
     this.$store.commit("resetStepsRes");
   },
   methods: {
+    allowedTypes() {
+      return allowedFileTypes.toString().split(",").join(", ");
+    },
     finishExShare() {
       this.finished = true;
     },
@@ -228,7 +256,7 @@ export default {
         this.$showError({ message: this.$t("exShare.finalErrorMsg") });
         return;
       }
-      this.$showSuccess(this.$t("exShare.finalSuccessMsg"));
+      this.$showLongSuccess(this.$t("exShare.finalSuccessMsg"));
       this.$store.commit("closeHovers");
     }
   }
@@ -249,6 +277,15 @@ function asyncDebouncer(func, interval) {
 </script>
 
 <style scoped>
+.tab-content {
+  /* border-width: 10px;
+  border: rgb(210, 229, 251);
+  /* box-shadow: inset 0px 0px 40px 40px #DBA632; */
+  /* border-style: solid; */
+  stroke: #000000;
+  stroke-width: 10px;
+}
+
 .space-div {
   margin: 10px;
   margin-left: 2px;
@@ -317,4 +354,17 @@ function asyncDebouncer(func, interval) {
 .service-unavailable .material-icons {
   font-size: 90px;
 }
+
+.add-button {
+  color: rgb(16, 74, 100);
+  background-color: rgb(173, 214, 233);
+  margin-right: 15px;
+}
+
+.add-button:hover {
+  color: rgb(16, 74, 100);
+  background-color: rgb(173, 214, 255);
+}
+
+
 </style>

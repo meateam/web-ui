@@ -1,6 +1,12 @@
 <template>
   <div class="step2">
-    <p>{{ $t("exShare.STwoHeader") }}:</p>
+    <span>
+      <i 
+        class="material-icons blink"
+        :title="$t('exShare.approversInfo')"
+       >info</i>
+      <p>{{ $t("exShare.STwoHeader") }}:</p>
+    </span>
     <div class="myCheckbox">
       <input
         class="actualCheckbox"
@@ -101,15 +107,36 @@ export default {
 };
 </script>
 <style>
+
 .step2 {
   margin: 10px;
   min-height: 400px;
 }
 .myCheckbox {
-  margin: 1%;
+  margin: 2%;
 }
 input {
   width: 25px;
   margin:10px;
 }
+
+.blink {
+  text-align: center;
+  position: absolute;
+  left: 10px;
+  color:rgb(55, 146, 202);
+  animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+}
+
+
+.blink:hover {
+  animation:none;
+  color:rgb(9, 107, 168);
+}
+
+@keyframes blinker {  
+  from { opacity: 1; }
+  to { opacity: 0.6; }
+}
+
 </style>

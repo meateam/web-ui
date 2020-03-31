@@ -275,6 +275,11 @@
     "downloadFolder": "Download Folder"
   },
   "exShare": {
+    "approversInfo": "Choose the person who will approve your external share request.\nNot every person is a valid approver, check who are the approvers in your unit\nNotice! The approver will get read permission on the file.",
+    "addInfoInfo": "The information will aid the approver with approving the share",
+    "chooseExUsersInfo": "The users are taken from the other domain",
+    "badFileType": "This file type cannot be shared exterrnally",
+    "allowedFileTypes": "Allowed file types:",
     "classifications": ["Limited", "Secret", "Top Secret" ],
     "classTopSecret": "Top Secret",
     "changeShare": "Change Share",

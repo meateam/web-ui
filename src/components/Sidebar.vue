@@ -4,7 +4,7 @@
       <div
         @click="onMyFilesClick"
         class="action"
-        :class="{ selected: !shares && !isSearch}"
+        :class="{ selected: !shares && !isSearch }"
         to="/files"
         :aria-label="$t('sidebar.myFiles.title')"
         :title="$t('sidebar.myFiles.title')">
@@ -14,7 +14,7 @@
       </div>
       <div
         @click="onSharedWithMeClick"
-        :class="{ selected: shares && !isSearch}"
+        :class="{ selected: shares && !isSearch }"
         class="action" to="/shares"
         :aria-label="$t('sidebar.sharedFiles')"
         :title="$t('sidebar.sharedFiles')">
@@ -99,7 +99,6 @@ export default {
       this.$store.commit("setReload", true);
     },
     onMySharesClick() {
-      console.log(config);
     },
     logout: auth.logout
   }

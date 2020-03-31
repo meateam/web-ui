@@ -35,6 +35,8 @@ const config = {
 	vipServiceUrl: 'localhost:8094',
 };
 
+const allowedFileTypes = ['png', 'xlsx', 'docx', 'jpg', 'pptx', 'txt', 'jpeg', 'mp4', 'mpg', 'mpeg', 'bmp', 'gif', 'wav', 'wave', 'pdf'];
+
 export const debounceTime = 200;
 
 export const Roles = {
@@ -111,14 +113,15 @@ export async function fetchConfig() {
 }
 
 export {
-  name,
-  disableExternal,
-  baseURL,
-  minAutoComplete,
-  logoURL,
-  signup,
-  version,
-  noAuth,
+	allowedFileTypes,
+	name,
+	disableExternal,
+	baseURL,
+	minAutoComplete,
+	logoURL,
+	signup,
+	version,
+	noAuth,
 	loginPage,
 	folderContentType,
 	config
