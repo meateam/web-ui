@@ -1,5 +1,5 @@
 import { fetchURL, fetchJSON } from './utils'
-import { baseURL, config } from '@/utils/constants'
+import { baseURL } from '@/utils/constants'
 import axios from 'axios'
 import store from '@/store'
 
