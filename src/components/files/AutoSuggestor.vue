@@ -2,7 +2,6 @@
   <div class="select-approvers">
     <div class="autosuggest-container">
       <vue-autosuggest
-        class="blavla"
         v-model="query"
         :suggestions="suggestions"
         @input="fetchResults"

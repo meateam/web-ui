@@ -11,7 +11,7 @@
   </div>
 </template>
 <script>
-import { files, users } from "@/api";
+import { files, users, utils } from "@/api";
 import PermitObject from './PermitObject'
 
 export default {
@@ -28,7 +28,6 @@ export default {
   },
   computed: {
     extraUsers() {
-      // return this.users.length > 6 ? this.users.slice(6) : [];
       return [];
     },
     extraUsersTooltip() {
@@ -47,7 +46,7 @@ export default {
     for (let i = 0; i < permits.length; i++) {
       permitsMap[permits[i].userId] = permits[i];
       const res = await users.getExternal(permits[i].userId);
-      res.user.status = users.simplifyStatus(permits[i].status);
+      res.user.status = utils.simplifyStatus(permits[i].status);
       promises.push(res);
     }
 
@@ -56,7 +55,7 @@ export default {
         .filter(res => !!res && !!res.user && res.user.firstName && res.user.lastName && res.user.fullName)
         .map(res => {
           res.user.letters = (res.user.firstName[0] + res.user.lastName[0]).toUpperCase();
-          res.user.status = users.simplifyStatus(permitsMap[res.user.id].status);
+          res.user.status = utils.simplifyStatus(permitsMap[res.user.id].status);
           return res.user;
         });
       this.usersToDisplay = this.users;

@@ -9,7 +9,6 @@
     </span>
     <div class="myCheckbox">
       <input
-        class="actualCheckbox"
         @click="onChecked($event)"
         type="checkbox"
         id="checkboxID"
@@ -63,10 +62,9 @@ export default {
       const approversLength = this.$store.getters.getApprovers.length;
       if ( this.checked || (approversLength >= 1) ) {
         this.$emit("can-continue", { value: true });
-        return true;
+        return;
       }
       this.$emit("can-continue", { value: false });
-      return false;
     },
     onChecked(event) {
       this.checked = event.target.checked;
@@ -81,9 +79,7 @@ export default {
           false
         );
         this.$refs.editApproversList.addUser(approver.value);
-        this.$showSuccess(
-          `successfully shared with ${approver.value.fullName}`
-        );
+        this.$showSuccess(this.$t("success.shared", { user: approver.value.fullName }));
         this.$emit("can-continue", { value: true });
       } catch (err) {
         this.$showError(err);

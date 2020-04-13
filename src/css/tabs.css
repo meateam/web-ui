@@ -1,6 +1,5 @@
 
 .tabs-component {
-    /* margin: 4em 0; */
 }
 
 .tabs-component-tabs {
@@ -50,9 +49,7 @@
     }
   
     .tabs-component-tab.is-active {
-      /* border-bottom: solid 1px #fff; */
       z-index: 2;
-      /* transform: translateY(0); */
     }
   }
   
@@ -71,7 +68,6 @@
       border: solid 1px rgb(210, 229, 251);
       border-radius: 0 6px 6px 6px;
       box-shadow: 0 0 10px rgba(0, 0, 0, .05);
-      /* padding: 3em 2em; */
       padding: 0px;
     }
   }

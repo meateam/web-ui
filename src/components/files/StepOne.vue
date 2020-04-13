@@ -4,7 +4,7 @@
     <p>{{ $t("exShare.SOHeader") }}:</p>
     <my-autosuggestor :isExternal="external" @select="addExUser"></my-autosuggestor>
 
-    <ul id="example-1">
+    <ul>
       <li v-bind:key="exUser.id" v-for="exUser in externalUsers" class="user-exshare">
         {{ exUser.hierarchy }} : {{ exUser.full_name }}
         <button
@@ -68,16 +68,10 @@ export default {
       }
     },
     checkExists(id) {
-      let exists = false;
       if (!id) {
         return false;
       }
-      this.externalUsers.forEach(user => {
-        if (user.id === id) {
-          exists = true;
-        }
-      });
-      return exists;
+      return this.externalUsers.some(user => user.id === id);
     }
   }
 };

@@ -11,7 +11,7 @@
     >
       <div>+{{extraUsers.length}}</div>
     </div>
-    <vue-context ref="menu" @open="onOpen">
+    <vue-context ref="menu">
       <template>
         <li v-for="user in extraUsers" :key="user.id" >
             <a style="display: flex">
@@ -47,9 +47,7 @@ export default {
   },
   computed: {
     extraUsers() {
-      // console.log(this.users.length > 6 ? this.users.slice(6) : []);
       return this.users.length > 6 ? this.users.splice(6) : [];
-      // return [];
     },
     extraUsersTooltip() {
       // Switch direction for hebrew.
@@ -86,10 +84,6 @@ export default {
     i18nuserRole(user) {
       return this.$t(`role.${user.role.toLowerCase()}`);
     },
-    onOpen (event, data, top, left) {
-                console.log('The context menu was opened');
-                console.log(event, data, top, left);
-    }
   }
 };
 </script>

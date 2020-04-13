@@ -27,7 +27,7 @@
           <span>{{ $t('sidebar.newFolder') }}</span>
         </button>
       </div>
-      <div @click="onMySharesClick">
+      <div>
         <a v-bind:href="approvalServiceUrl" class="action" target="_blank" :aria-label="myExternalSharesName" :title="myExternalSharesName">
           <i class="material-icons">info</i>
           <span>{{myExternalSharesName}}</span>
@@ -97,8 +97,6 @@ export default {
       this.$store.commit("setShares", true);
       this.$store.commit("changeFolder", '');
       this.$store.commit("setReload", true);
-    },
-    onMySharesClick() {
     },
     logout: auth.logout
   }

@@ -91,8 +91,7 @@
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { Tabs, Tab } from "vue-tabs-component";
 import { Roles, minAutoComplete, config, allowedFileTypes } from "@/utils/constants";
-import { share as shareApi, users as usersApi } from "@/api";
-import { createExShare } from "@/api/exShare";
+import { share as shareApi, users as usersApi, exShare } from "@/api";
 import { debounceTime } from "@/utils/constants";
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import EditPermissionList from "../common/EditPermissionList";
@@ -143,10 +142,6 @@ export default {
       return allowedFileTypes.includes(fileType.toLowerCase());
     }
   },
-  async beforeMount() {
-    this.isAllowedFileType();
-  },
-  beforeDestroy() {},
   destroyed() {
     this.$store.commit("emptyGlobalExternalUsers");
     this.$store.commit("emptyApprovers");
@@ -209,12 +204,6 @@ export default {
           return "remove_red_eye";
       }
     },
-    changeShare() {
-      this.$store.commit("emptyGlobalExternalUsers");
-      this.$store.commit("emptyApprovers");
-      this.$store.commit("resetStepsRes");
-      this.regularShare = !this.regularShare;
-    },
     async onStepperFinished(payload) {
       if (!payload.value) {
         this.finished = false;
@@ -238,7 +227,7 @@ export default {
       const reqInfo = step3Res.info;
 
       try {
-        await createExShare(
+        await exShare.createExShare(
           this.selectedItem.id,
           reqUsers,
           reqClassification,
