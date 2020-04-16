@@ -1,136 +1,52 @@
 <template>
   <div class="card floating" id="share">
-    <tabs v-if="!finished" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}">
+    <tabs v-if="!finishedExShare" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}">
       <tab :name="$t('exShare.changeToRegShare')" id="firstTab" class="regular-share tab-content">
-        <template>
-          <div class="card-content">
-            <div class="user-role-select">
-              <ul id="user-role-list">
-                <li>
-                  <div class="autocomplete">
-                    <autocomplete
-                      :search="search"
-                      :autoSelect="true"
-                      @submit="saveUser"
-                      :get-result-value="getResultValue"
-                      :placeholder="$t('prompts.searchUser')"
-                    >
-                      <template v-slot:result="{ result, props }">
-                        <li v-bind="props" class="share-result">
-                          <div>
-                            <div class="share-title">{{ getResultValue(result) }}</div>
-                            <div class="share-snippet">{{ result.hierarchyFlat }}</div>
-                          </div>
-                        </li>
-                      </template>
-                    </autocomplete>
-                  </div>
-                  <select class="space-div" v-model="role" :aria-label="$t('role.input')">
-                    <option value="READ">{{ $t("role.read") }}</option>
-                    <option value="WRITE">{{ $t("role.write") }}</option>
-                  </select>
-                  <i class="material-icons select-icon">{{roleToIconName(role)}}</i>
-                  <button	
-                      class="action blink add-button"	
-                      @click="submit"	
-                      :aria-label="$t('buttons.create')"	
-                      :title="$t('buttons.create')"	
-                    >	
-                      <i class="material-icons">add</i>	
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <edit-permission-list :id="selectedItem.id" ref="editPermissionList"></edit-permission-list>
-          </div>
-        </template>
+        <share-first-tab></share-first-tab>
       </tab>
+
       <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir">
-          <shareEx class="tab-content" v-if="enableExternalShare && isAllowedFileType" @finished-exshare="finishExShare" @close-share="$store.commit('closeHovers')"></shareEx>
-          <div v-else-if="!isAllowedFileType" class="service-unavailable">
-            <div>
-              <i class='material-icons tab-content'>insert_drive_file</i>
-            </div>
-            <div>
-              <p>
-                {{$t('exShare.badFileType')}}
-              </p>
-              <b>
-                {{$t('exShare.allowedFileTypes')}}
-              </b>
-              <br>
-              <br>
-              <b>
-                {{ allowedTypes() }}
-              </b>
-            </div>
-          </div>
-          <div v-else class="service-unavailable tab-content">
-            <div>
-              <i class='material-icons'>build</i>
-            </div>
-            <div>
-              <p>
-                {{$t('exShare.serviceUnavailable')}}
-              </p>
-              <b>
-                {{$t('exShare.tryAgainLater')}}
-              </b>
-            </div>
-          </div>
+        <share-second-tab @finished-second-tab="finishExShare"></share-second-tab>
       </tab>
     </tabs>
 
-    <template v-if="finished" style="pading:0px">
-      <alertDialog @finish-agree="onStepperFinished"></alertDialog>
-    </template>
+    <alertDialog v-if="finishedExShare" style="pading:0px" @finish-agree="onStepperFinished"></alertDialog>
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { Tabs, Tab } from "vue-tabs-component";
-import { Roles, minAutoComplete, config, allowedFileTypes } from "@/utils/constants";
-import { share as shareApi, users as usersApi, exShare } from "@/api";
-import { debounceTime } from "@/utils/constants";
-import Autocomplete from "@trevoreyre/autocomplete-vue";
-import EditPermissionList from "../common/EditPermissionList";
-import moment from "moment";
-import "@trevoreyre/autocomplete-vue/dist/style.css";
+import { exShare } from "@/api";
+import { allowedFileTypes, config } from "@/utils/constants";
 
 import AlertDialog from "../files/AlertDialog";
-import ShareExternal from "./ShareExternal";
+import ShareFirstTab from "../files/ShareFirstTab";
+import ShareSecondTab from "../files/ShareSecondTab";
 
 export default {
   name: "share",
   components: {
-    Autocomplete,
-    EditPermissionList,
-    shareEx: ShareExternal,
+    ShareFirstTab,
+    ShareSecondTab,
     alertDialog: AlertDialog,
     tabs: Tabs,
     tab: Tab
   },
   data: function() {
     return {
-      debounce: asyncDebouncer(this.searchWait, debounceTime),
-      finished: false,
-      role: Roles.read,
+      finishedExShare: false,
       searchText: "",
       user: "",
       regularShare: true,
       externalShareName: config.externalShareName,
-      enableExternalShare: config.enableExternalShare,
+      enableExternalShare: config.enableExternalShare
     };
   },
   computed: {
     ...mapState(["req", "selected", "selectedCount"]),
     ...mapGetters(["isListing", "selectedCount", "userID"]),
-    ...mapMutations([
-      "emptyGlobalExternalUsers",
-      "emptyApprovers",
-      "resetStepsRes"
-    ]),
+    ...mapMutations(["emptyGlobalExternalUsers", "emptyApprovers", "resetStepsRes"]),
     selectedItem() {
       return this.req.items && this.selectedCount !== 0
         ? this.req.items[this.selected[0]]
@@ -138,7 +54,7 @@ export default {
     },
     isAllowedFileType() {
       const nameArray = this.selectedItem.name.split(".");
-      const fileType = nameArray[nameArray.length-1];
+      const fileType = nameArray[nameArray.length - 1];
       return allowedFileTypes.includes(fileType.toLowerCase());
     }
   },
@@ -148,65 +64,11 @@ export default {
     this.$store.commit("resetStepsRes");
   },
   methods: {
-    allowedTypes() {
-      return allowedFileTypes.toString().split(",").join(", ");
-    },
-    finishExShare() {
-      this.finished = true;
-    },
-    saveUser(user) {
-      this.user = user;
-    },
-    submit: async function() {
-      if (!this.role) return;
-      if (!this.user) return;
-
-      try {
-        await shareApi.create(this.selectedItem.id, this.user.id, this.role);
-        this.$showSuccess(
-          this.$t("success.shared", { user: this.getResultValue(this.user) })
-        );
-        this.$refs.editPermissionList.addUser(this.user);
-      } catch (e) {
-        this.$showError(e);
-      }
-    },
-    async search(input) {
-      if (input.length < minAutoComplete) {
-        return [];
-      }
-      this.input = input;
-      return await this.debounce();
-    },
-    // The function wich searches for the autocomplete,
-    // called after the debouncer interval ends
-    async searchWait() {
-      const res = await usersApi.searchUserByName(this.input);
-      const users = res.data.users;
-      if (users) {
-        return users;
-      }
-      return [];
-    },
-    humanTime(time) {
-      return moment(time * 1000).fromNow();
-    },
-    getResultValue(result) {
-      return `${result.firstName} ${result.lastName}`;
-    },
-    roleToIconName(roleName) {
-      switch (roleName) {
-        case Roles.read:
-          return "remove_red_eye";
-        case Roles.write:
-          return "edit";
-        default:
-          return "remove_red_eye";
-      }
-    },
+    // Wrap up the external share and send the request 
+    // in the correct format.
     async onStepperFinished(payload) {
       if (!payload.value) {
-        this.finished = false;
+        this.finishedExShare = false;
         this.$store.commit("closeHovers");
         return;
       }
@@ -241,68 +103,18 @@ export default {
       }
       this.$showLongSuccess(this.$t("exShare.finalSuccessMsg"));
       this.$store.commit("closeHovers");
+    },
+    finishExShare() {
+      this.finishedExShare = true;
     }
   }
 };
-
-// An async-debouncer function.
-// The 'func' is called after the requested interval
-function asyncDebouncer(func, interval) {
-  let timer = null;
-
-  return (...args) => {
-    clearTimeout(timer);
-    return new Promise(resolve => {
-      timer = setTimeout(() => resolve(func(...args)), interval);
-    });
-  };
-}
 </script>
 
 <style scoped>
 .tab-content {
-  /* border-width: 10px;
-  border: rgb(210, 229, 251);
-  /* box-shadow: inset 0px 0px 40px 40px #DBA632; */
-  /* border-style: solid; */
   stroke: #000000;
   stroke-width: 10px;
-}
-
-.space-div {
-  margin: 10px;
-  margin-left: 2px;
-  padding-left: 30px;
-  height: 35px;
-}
-.title {
-  text-align: center;
-}
-
-#app {
-  min-width: 200px;
-  margin: 0 auto;
-}
-
-.share-result {
-  padding: 5px;
-  background: transparent;
-}
-
-.share-result:hover {
-  background: #bdddf0;
-}
-
-.share-title {
-  font-size: 20px;
-  margin-bottom: 1px;
-  margin-top: 1px;
-  margin-right: 10px;
-}
-
-.share-snippet {
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.54);
 }
 
 .regular-share {
@@ -312,42 +124,4 @@ function asyncDebouncer(func, interval) {
 #share {
   padding: 0px;
 }
-
-.autocomplete {
-  flex-grow: 1;
-}
-
-.select-icon {
-  margin-right: -45px;
-  margin-left: 28px;
-}
-
-.service-unavailable {
-  padding: 35px;
-  text-align: center;
-  font-size: 25px;
-  font-weight: bold;
-}
-
-.service-unavailable p {
-  margin: 55px 30px 22px 30px;
-  font-size: 35px;
-}
-
-.service-unavailable .material-icons {
-  font-size: 90px;
-}
-
-.add-button {
-  color: rgb(16, 74, 100);
-  background-color: rgb(173, 214, 233);
-  margin-right: 15px;
-}
-
-.add-button:hover {
-  color: rgb(16, 74, 100);
-  background-color: rgb(173, 214, 255);
-}
-
-
 </style>
