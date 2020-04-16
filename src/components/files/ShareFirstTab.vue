@@ -43,14 +43,15 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import Autocomplete from "@trevoreyre/autocomplete-vue";
 import { debounceTime } from "@/utils/constants";
 import { Roles, minAutoComplete } from "@/utils/constants";
 import { share as shareApi, users as usersApi } from "@/api";
+
 import EditPermissionList from "../common/EditPermissionList";
+import Autocomplete from "@trevoreyre/autocomplete-vue";
 
 export default {
-  name: "first-tab",
+  name: "share-first-tab",
   components: {
     EditPermissionList,
     Autocomplete

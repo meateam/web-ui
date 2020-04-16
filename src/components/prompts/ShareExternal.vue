@@ -7,7 +7,7 @@
       @completed-step="completeStep"
       :top-buttons="false"
       :isRTL="$t('settings.langName')==='he'"
-      @active-step="isStepActive"
+      @active-step="updateActiveSteps"
       @stepper-finished="onStepperFinished"
     ></horizontal-stepper>
   </div>
@@ -72,7 +72,7 @@ export default {
         }
       });
     },
-    isStepActive(payload) {
+    updateActiveSteps(payload) {
       this.demoSteps.forEach(step => {
         if (step.name === payload.name) {
           if (step.completed === true) {

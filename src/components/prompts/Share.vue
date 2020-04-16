@@ -1,45 +1,16 @@
 <template>
   <div class="card floating" id="share">
-    <tabs v-if="!finished" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}">
-      
+    <tabs v-if="!finishedExShare" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}">
       <tab :name="$t('exShare.changeToRegShare')" id="firstTab" class="regular-share tab-content">
-        <first-tab></first-tab>
+        <share-first-tab></share-first-tab>
       </tab>
 
       <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir">
-        <shareEx
-          class="tab-content"
-          v-if="enableExternalShare && isAllowedFileType"
-          @finished-exshare="finishExShare"
-          @close-share="$store.commit('closeHovers')"
-        ></shareEx>
-        <div v-else-if="!isAllowedFileType" class="service-unavailable">
-          <div>
-            <i class="material-icons tab-content">insert_drive_file</i>
-          </div>
-          <div>
-            <p>{{$t('exShare.badFileType')}}</p>
-            <b>{{$t('exShare.allowedFileTypes')}}</b>
-            <br />
-            <br />
-            <b>{{ allowedTypes() }}</b>
-          </div>
-        </div>
-        <div v-else class="service-unavailable tab-content">
-          <div>
-            <i class="material-icons">build</i>
-          </div>
-          <div>
-            <p>{{$t('exShare.serviceUnavailable')}}</p>
-            <b>{{$t('exShare.tryAgainLater')}}</b>
-          </div>
-        </div>
+        <share-second-tab @finished-second-tab="finishExShare"></share-second-tab>
       </tab>
     </tabs>
 
-    <template v-if="finished" style="pading:0px">
-      <alertDialog @finish-agree="onStepperFinished"></alertDialog>
-    </template>
+    <alertDialog v-if="finishedExShare" style="pading:0px" @finish-agree="onStepperFinished"></alertDialog>
   </div>
 </template>
 
@@ -47,28 +18,24 @@
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { Tabs, Tab } from "vue-tabs-component";
 import { exShare } from "@/api";
-
-import moment from "moment";
-import "@trevoreyre/autocomplete-vue/dist/style.css";
 import { allowedFileTypes, config } from "@/utils/constants";
-import AlertDialog from "../files/AlertDialog";
-import ShareExternal from "./ShareExternal";
 
-import FirstTab from "../files/FirstTab";
+import AlertDialog from "../files/AlertDialog";
+import ShareFirstTab from "../files/ShareFirstTab";
+import ShareSecondTab from "../files/ShareSecondTab";
 
 export default {
   name: "share",
   components: {
-    FirstTab,
-    shareEx: ShareExternal,
+    ShareFirstTab,
+    ShareSecondTab,
     alertDialog: AlertDialog,
     tabs: Tabs,
     tab: Tab
   },
   data: function() {
     return {
-      finished: false,
-
+      finishedExShare: false,
       searchText: "",
       user: "",
       regularShare: true,
@@ -79,11 +46,7 @@ export default {
   computed: {
     ...mapState(["req", "selected", "selectedCount"]),
     ...mapGetters(["isListing", "selectedCount", "userID"]),
-    ...mapMutations([
-      "emptyGlobalExternalUsers",
-      "emptyApprovers",
-      "resetStepsRes"
-    ]),
+    ...mapMutations(["emptyGlobalExternalUsers", "emptyApprovers", "resetStepsRes"]),
     selectedItem() {
       return this.req.items && this.selectedCount !== 0
         ? this.req.items[this.selected[0]]
@@ -101,24 +64,11 @@ export default {
     this.$store.commit("resetStepsRes");
   },
   methods: {
-    allowedTypes() {
-      return allowedFileTypes
-        .toString()
-        .split(",")
-        .join(", ");
-    },
-    finishExShare() {
-      this.finished = true;
-    },
-    humanTime(time) {
-      return moment(time * 1000).fromNow();
-    },
-    getResultValue(result) {
-      return `${result.firstName} ${result.lastName}`;
-    },
+    // Wrap up the external share and send the request 
+    // in the correct format.
     async onStepperFinished(payload) {
       if (!payload.value) {
-        this.finished = false;
+        this.finishedExShare = false;
         this.$store.commit("closeHovers");
         return;
       }
@@ -153,10 +103,12 @@ export default {
       }
       this.$showLongSuccess(this.$t("exShare.finalSuccessMsg"));
       this.$store.commit("closeHovers");
+    },
+    finishExShare() {
+      this.finishedExShare = true;
     }
   }
 };
-
 </script>
 
 <style scoped>
@@ -172,5 +124,4 @@ export default {
 #share {
   padding: 0px;
 }
-
 </style>
