@@ -26,7 +26,7 @@
   </div>
 </template>
 <script>
-import { files } from "@/api";
+
 import { mapState, mapGetters, mapMutations } from "vuex";
 
 export default {
@@ -44,12 +44,6 @@ export default {
   },
   methods: {
     deleteApprover: async function(user) {
-      try {
-        await files.unShare(this.id, user.id);
-      } catch (err) {
-        this.$showError(err);
-        return;
-      }
       this.$store.commit("removeApprover", user.id);
       if (this.$store.getters.getApprovers.length <= 0) {
         this.$emit("list-empty", { value: true });
