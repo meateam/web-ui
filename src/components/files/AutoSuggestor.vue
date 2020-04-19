@@ -2,11 +2,10 @@
   <div class="select-approvers">
     <div class="autosuggest-container">
       <vue-autosuggest
-        v-model="query"
+        v-model="currValue"
         :suggestions="suggestions"
         @input="fetchResults"
         @selected="onSelected"
-        :get-suggestion-value="getSuggestionValue"
         :input-props="inputProps"
       >
         <template slot-scope="{ suggestion }">
@@ -47,7 +46,7 @@ export default {
         this.isExternal ? this.fetchExternal : this.fetchInternal,
         debounceTime
       ),
-      query: "",
+      currValue: "",
       selected: "",
       selectedList: [],
       suggestions: [],
@@ -65,12 +64,8 @@ export default {
     onSelected(item) {
       this.selected = item.item;
       this.submitSelected();
-    },
-    getSuggestionValue(suggestion) {
-      if (this.isExternal) {
-        return suggestion.item.hierarchy + " : " + suggestion.item.full_name;
-      }
-      return suggestion.item.hierarchyFlat + " : " + suggestion.item.fullName;
+      this.suggestions = [];
+      this.currValue = "";
     },
     async fetchResults(input) {
       if (input.length < minAutoComplete) {

@@ -5,6 +5,7 @@
         <li>
           <div class="autocomplete">
             <autocomplete
+              ref="autocomplete"
               :search="search"
               :autoSelect="true"
               @submit="saveUser"
@@ -106,6 +107,7 @@ export default {
       } catch (e) {
         this.$showError(e);
       }
+      this.$refs.autocomplete.value = '';
     },
     saveUser(user) {
       this.user = user;
