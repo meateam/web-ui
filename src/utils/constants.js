@@ -4,6 +4,7 @@ const baseURL = '';
 const signup = false;
 const version = '2';
 const logoURL = `/img/drive_logo.svg`;
+const plusURL = `/img/plus.png`;
 const minAutoComplete = 2;
 const noAuth = false;
 const loginPage = false;
@@ -115,6 +116,7 @@ export {
 	baseURL,
 	minAutoComplete,
 	logoURL,
+	plusURL,
 	signup,
 	version,
 	noAuth,
