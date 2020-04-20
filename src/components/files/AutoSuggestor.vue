@@ -127,6 +127,7 @@ input {
   display: flex;
   justify-content: center;
   width: 480px;
+  padding: 0.5rem
 }
 
 #autosuggest {
