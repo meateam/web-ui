@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div v-if="isSearch" id="breadcrumbs">
-      {{ $t('search.results') }}
-    </div>
+    <div v-if="isSearch" id="breadcrumbs">{{ $t('search.results') }}</div>
     <div v-else id="breadcrumbs">
       <div @click="onBreadcrumbsClick('')" :aria-label="$t('files.home')" :title="$t('files.home')">
         <i class="material-icons">home</i>
@@ -32,6 +30,8 @@
 </template>
 
 <script>
+import io from "socket.io-client";
+// import { baseURL } from "@/utils/constants";
 import Forbidden from "./errors/403";
 import NotFound from "./errors/404";
 import InternalError from "./errors/500";
@@ -52,7 +52,17 @@ export default {
     Preview
   },
   computed: {
-    ...mapGetters(["selectedCount", "isListing", "isEditor", "isFiles", "isActiveDialog", "shares", "direction", "isSearch"]),
+    ...mapGetters([
+      "selectedCount",
+      "isListing",
+      "isEditor",
+      "userID",
+      "isFiles",
+      "isActiveDialog",
+      "shares",
+      "direction",
+      "isSearch"
+    ]),
     ...mapState(["req", "user", "reload", "multiple", "loading", "path"]),
     isPreview() {
       return !this.loading && !this.isListing && !this.isEditor;
@@ -127,15 +137,27 @@ export default {
       // Set loading to true and reset the error.
       this.setLoading(true);
       this.error = null;
-      
+
       let url = this.$store.getters.currentFolder.id;
 
       try {
         let res = null;
-        if (this.shares && url === '') {
+        if (this.shares && url === "") {
           res = await api.getSharedWithMe();
+          // io(`${baseURL}/shared-folders`).emit("joinRoom", this.userID).on("refresh", () => {
+          io(`http://localhost:3000/shared-folders`)
+            .emit("joinRoom", this.userID)
+            .on("refresh", async () => {
+              res = await api.getSharedWithMe();
+            });
         } else {
           res = await api.fetch(url);
+          // io(`${baseURL}/folder`).emit("joinRoom", url).on("refresh", () => {
+          io(`http://localhost:3000/folder`)
+            .emit("joinRoom", url)
+            .on("refresh", async () => {
+              res = await api.fetch();
+            });
         }
 
         this.$store.commit("updateRequest", res);
@@ -151,9 +173,29 @@ export default {
         this.setLoading(false);
       }
     },
+    connectSocket() {
+      let res = null;
+      let folder = this.$store.getters.currentFolder.id;
+      if (this.shares && folder === "") {
+        // io(`${baseURL}/shared-folders`).emit("joinRoom", this.userID).on("refresh", () => {
+        io(`http://localhost:3000/shared-folders`)
+          .emit("joinRoom", this.userID)
+          .on("refresh", async () => {
+            res = await api.getSharedWithMe();
+          });
+      } else {
+        // io(`${baseURL}/folder`).emit("joinRoom", url).on("refresh", () => {
+        io(`http://localhost:3000/folder`)
+          .emit("joinRoom", folder)
+          .on("refresh", async () => {
+            res = await api.fetch();
+          });
+      }
+      this.$store.commit("updateRequest", res);
+    },
     keyEvent(event) {
       // Shortcuts on files shouldn't work when a dialog is active
-      if(this.$store.getters.isActiveDialog) return;
+      if (this.$store.getters.isActiveDialog) return;
 
       // Esc!
       if (event.keyCode === 27) {
