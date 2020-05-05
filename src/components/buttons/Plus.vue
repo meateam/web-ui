@@ -1,7 +1,6 @@
 <template>
   <div v-show="showPlus">
     <fab
-      id="plus-button"
       :bg-color="bgColor"
       :actions="fabActions"
       :position="position"
