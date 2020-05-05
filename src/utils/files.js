@@ -1,4 +1,4 @@
-export function checkConflict(files, items, base) {
+export function checkConflict(files, items) {
     if (typeof items === 'undefined' || items === null) {
         items = []
       }

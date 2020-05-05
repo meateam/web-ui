@@ -25,6 +25,10 @@
         <strong>{{$t('prompts.permissions')}}:</strong>
         <permission-list :id="selectedItem.id"></permission-list>
       </div>
+      <div class="permission-list" v-if="showPermissionList">
+        <strong>{{$t('prompts.permits')}}:</strong>
+        <permit-list :id="selectedItem.id"></permit-list>
+      </div>
     </div>
 
     <div class="card-action" :class="direction">
@@ -43,11 +47,13 @@ import filesize from 'filesize'
 import moment from 'moment'
 import { files as api, users } from '@/api'
 import PermissionList from '../common/PermissionList'
+import PermitList from '../common/PermitList'
 
 export default {
   name: 'info',
   components: {
-    PermissionList
+    PermissionList,
+    PermitList
   },
   data: function() {
     return {
@@ -55,7 +61,8 @@ export default {
     };
   },
   async mounted() {
-    const res = await users.get(this.selectedItem.ownerId);
+    const getUser = this.selectedItem.isExternal?users.getExternal:users.get;
+    const res = await getUser(this.selectedItem.ownerId);
     this.ownerName = res.user.fullName;
   },
   computed: {

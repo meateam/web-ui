@@ -12,6 +12,14 @@ export async function get (id) {
   return fetchJSON(`/api/users/${id}`, {})
 }
 
+export async function getExternal (id) {
+  const res = await fetchJSON(`/api/delegators/${id}`, {})
+  res.user.firstName = res.user.first_name;
+  res.user.lastName = res.user.last_name;
+  res.user.fullName = res.user.full_name;
+  return res;
+}
+
 export async function create (user) {
   const res = await fetchURL(`/api/users`, {
     method: 'POST',
@@ -62,3 +70,5 @@ export async function remove (id) {
     throw new Error(res.status)
   }
 }
+
+

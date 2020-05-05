@@ -161,7 +161,7 @@ export default {
         }
 
         this.$store.commit("updateRequest", res);
-        document.title = res.name || "Files";
+        document.title = res.name || "Drive";
 
         const quota = await quotaApi.getQuota();
         this.$store.commit("setQuota", quota);
@@ -178,7 +178,7 @@ export default {
       let folder = this.$store.getters.currentFolder.id;
       if (this.shares && folder === "") {
         // io(`${baseURL}/shared-folders`).emit("joinRoom", this.userID).on("refresh", () => {
-        io(`http://localhost:3000/shared-folders`)
+        io(`http://localhost:3000/shared-page`)
           .emit("joinRoom", this.userID)
           .on("refresh", async () => {
             res = await api.getSharedWithMe();

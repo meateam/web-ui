@@ -30,6 +30,9 @@ const state = {
   showConfirm: null,
   shares: false,
   search: false,
+  globalExternalUsers: [],
+  approvers: [],
+  stepThreeRes: {},
 }
 
 export default new Vuex.Store({
