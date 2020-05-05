@@ -19,6 +19,7 @@ import Sidebar from "@/components/Sidebar";
 import Prompts from "@/components/prompts/Prompts";
 import SiteHeader from "@/components/Header";
 import PlusButton from "@/components/buttons/Plus";
+import { plusURL } from "@/utils/constants";
 
 export default {
   name: "layout",
@@ -30,15 +31,22 @@ export default {
   },
   computed: {
     ...mapGetters(["isLogged", "direction"]),
-    ...mapState(["user"])
+    ...mapState(["user"]),
+    plusURL: () => plusURL
   },
   watch: {
     $route: function() {
       this.$store.commit("resetSelected");
       this.$store.commit("multiple", false);
-      if (this.$store.state.show !== "success")
-        this.$store.commit("closeHovers");
+      if (this.$store.state.show !== "success") this.$store.commit("closeHovers");
+    }
+  },
+  methods: {
+    upload: function() {
+      document.getElementById("upload-input").click();
     }
   }
 };
 </script>
+<style scoped>
+</style>>
