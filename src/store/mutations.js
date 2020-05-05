@@ -16,6 +16,9 @@ const mutations = {
     state.showMessage = value.message
     state.showConfirm = value.confirm
   },
+  togglePreview: (state, value) => {
+    state.preview = value;
+  },
   showError: (state, value) => {
     state.show = 'error'
     state.showMessage = value
@@ -117,11 +120,11 @@ const mutations = {
   },
   // ************************** Global External Users ************************** //
   addGlobalExternalUser: (state, exUser) => {
-    if(!exUser) return;
+    if (!exUser) return;
     state.globalExternalUsers.push(exUser);
   },
   removeGlobalExternalUser: (state, exUserID) => {
-    if(!exUserID) return;
+    if (!exUserID) return;
     state.globalExternalUsers = state.globalExternalUsers.filter(exUser => {
       exUser.id != exUserID;
     });
@@ -132,15 +135,15 @@ const mutations = {
 
   // ************************** Global Approvers ************************** //
   addApprover: (state, approver) => {
-    if(!approver) return;
+    if (!approver) return;
     state.approvers.push(approver);
   },
 
   removeApprover: (state, approverID) => {
-    if(!approverID) return;
+    if (!approverID) return;
     const newApprovers = [];
-    state.approvers.forEach(approver =>{
-      if(approver.id !=approverID){
+    state.approvers.forEach(approver => {
+      if (approver.id != approverID) {
         newApprovers.push(approver);
       }
     });
@@ -153,7 +156,7 @@ const mutations = {
   // ************************** Steps Results ************************** //
 
   setStepThreeRes: (state, stepThreeResx) => {
-    if(!stepThreeResx) return;
+    if (!stepThreeResx) return;
     state.stepThreeRes = stepThreeResx;
   },
 

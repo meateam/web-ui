@@ -13,7 +13,7 @@
 <script>
 import fab from "vue-fab";
 import { UploadRole } from "@/utils/constants";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   name: "plus-button",
@@ -48,8 +48,9 @@ export default {
   },
   computed: {
     ...mapState([ 'req']),
+    ...mapGetters(["isPreview"]),
     showPlus() {
-      return UploadRole(this.req.role);
+      return UploadRole(this.req.role) && !this.isPreview;
     }
   }
 };
