@@ -148,6 +148,7 @@ export default {
   },
   async mounted() {
     window.addEventListener('keyup', this.key);
+    this.$store.commit("togglePreview", true);
 
     if (this.req.subtitles) {
       this.subtitles = this.req.subtitles.map(
@@ -169,6 +170,7 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('keyup', this.key);
+    this.$store.commit("togglePreview", false);
   },
   methods: {
     back() {

@@ -55,9 +55,7 @@ export default {
     ...mapGetters(["selectedCount", "isListing", "isEditor", "isFiles", "isActiveDialog", "shares", "direction", "isSearch"]),
     ...mapState(["req", "user", "reload", "multiple", "loading", "path"]),
     isPreview() {
-      let preview = !this.loading && !this.isListing && !this.isEditor;
-      this.$store.commit("togglePreview", preview);
-      return preview;
+      return !this.loading && !this.isListing && !this.isEditor;
     },
     breadcrumbs() {
       let parts = this.path;
