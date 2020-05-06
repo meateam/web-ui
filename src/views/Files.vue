@@ -52,12 +52,10 @@ export default {
     Preview
   },
   computed: {
-    ...mapGetters(["selectedCount", "isListing", "isEditor", "isFiles", "isActiveDialog", "shares", "direction", "isSearch"]),
+    ...mapGetters(["isPreivew", "selectedCount", "isListing", "isEditor", "isFiles", "isActiveDialog", "shares", "direction", "isSearch"]),
     ...mapState(["req", "user", "reload", "multiple", "loading", "path"]),
     isPreview() {
-      let preview = !this.loading && !this.isListing && !this.isEditor;
-      this.$store.commit("togglePreview", preview);
-      return preview;
+      return this.isPreivew;
     },
     breadcrumbs() {
       let parts = this.path;
