@@ -16,12 +16,12 @@ const mutations = {
     state.showMessage = value.message
     state.showConfirm = value.confirm
   },
-  togglePreview: (state, value) => {
-    state.preview = value;
-  },
   showError: (state, value) => {
     state.show = 'error'
     state.showMessage = value
+  },
+  togglePreview: (state, value) => {
+    state.preview = value
   },
   showSuccess: (state, value) => {
     state.show = 'success'
