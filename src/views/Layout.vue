@@ -9,6 +9,7 @@
       <router-view></router-view>
     </main>
     <prompts></prompts>
+    <plus-button></plus-button>
   </div>
 </template>
 
@@ -17,6 +18,7 @@ import { mapState, mapGetters } from "vuex";
 import Sidebar from "@/components/Sidebar";
 import Prompts from "@/components/prompts/Prompts";
 import SiteHeader from "@/components/Header";
+import PlusButton from "@/components/buttons/Plus";
 import { plusURL } from "@/utils/constants";
 
 export default {
@@ -24,7 +26,8 @@ export default {
   components: {
     Sidebar,
     SiteHeader,
-    Prompts
+    Prompts,
+    PlusButton
   },
   computed: {
     ...mapGetters(["isLogged", "direction"]),

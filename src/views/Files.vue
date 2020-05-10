@@ -145,7 +145,7 @@ export default {
         if (this.shares && url === "") {
           res = await api.getSharedWithMe();
           // io(`${baseURL}/shared-folders`).emit("joinRoom", this.userID).on("refresh", () => {
-          io(`http://localhost:3000/shared-folders`)
+          io(`http://localhost:3000/shared-page`)
             .emit("joinRoom", this.userID)
             .on("refresh", async () => {
               res = await api.getSharedWithMe();
