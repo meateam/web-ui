@@ -138,7 +138,7 @@ export default {
       this.setLoading(true);
       this.error = null;
 
-      let url = this.$store.getters.currentFolder.id;
+      const url = this.$store.getters.currentFolder.id;
 
       try {
         let res = null;
