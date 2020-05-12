@@ -1,6 +1,7 @@
 const name = 'KDrive';
 const disableExternal = false;
-const baseURL = '';
+const baseURL = 'http://localhost:8080';
+const socketURL = 'http://localhost:3000'
 const signup = false;
 const version = '2';
 const logoURL = `/img/drive_logo.svg`;
@@ -121,6 +122,7 @@ export {
 	version,
 	noAuth,
 	loginPage,
+	socketURL,
 	folderContentType,
 	config
 }

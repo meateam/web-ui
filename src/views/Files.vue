@@ -107,14 +107,12 @@ export default {
   },
   created() {
     this.fetchData();
-    this.connectSocket();
   },
   watch: {
     $route: "fetchData",
     reload: function() {
       this.fetchData();
-      this.connectSocket();
-    },
+    }
   },
   mounted() {
     window.addEventListener("keydown", this.keyEvent);
@@ -161,6 +159,7 @@ export default {
         this.error = e;
       } finally {
         this.setLoading(false);
+        this.connectSocket();
       }
     },
     async connectSocket() {
