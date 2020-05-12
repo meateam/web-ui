@@ -139,7 +139,7 @@ export default {
         }
 
         this.$store.commit("updateRequest", res);
-        document.title = res.name || "Files";
+        document.title = res.name || "Drive";
 
         const quota = await quotaApi.getQuota();
         this.$store.commit("setQuota", quota);

@@ -126,9 +126,11 @@
     "scheduleMessage": "Pick a date and time to schedule the publication of this post.",
     "newArchetype": "Create a new post based on an archetype. Your file will be created on content folder.",
     "permissions": "Permissions",
+    "permits": "External Shares",
     "searchUser": "Search user"
   },
   "settings": {
+    "langName": "en",
     "instanceName": "Instance name",
     "brandingDirectoryPath": "Branding directory path",
     "documentation": "documentation",
@@ -198,6 +200,7 @@
   },
   "sidebar": {
     "contactUs": "Contact Us",
+    "myShares": "My Shares",
     "help": "Help",
     "login": "Login",
     "signup": "Signup",
@@ -257,8 +260,61 @@
     "owner": "Owner",
     "permission": "user {user} has {role} permission"
   },
+  "status": {
+    "pending": "Pending",
+    "waiting for approval": "waiting for approval",
+    "denied": "denied",
+    "failed": "failed",
+    "bad suffix": "bad suffix",
+    "passed": "passed",
+    "sending": "sending",
+    "message": "user {user} has status {status}"
+  },
   "download": {
     "downloadFile": "Download File",
     "downloadFolder": "Download Folder"
+  },
+  "exShare": {
+    "approversInfo": "Choose the person who will approve your external share request.\nNot every person is a valid approver, check who are the approvers in your unit\nNotice! The approver will get read permission on the file.",
+    "addInfoInfo": "The information will aid the approver with approving the share",
+    "chooseExUsersInfo": "The users are taken from the other domain",
+    "badFileType": "This file type cannot be shared exterrnally",
+    "allowedFileTypes": "Allowed file types:",
+    "classifications": ["Limited", "Secret", "Top Secret" ],
+    "classTopSecret": "Top Secret",
+    "changeShare": "Change Share",
+    "addMeAsApprover": "Add me as an approver",
+    "changeToExShare": "Share External",
+    "changeToRegShare": "Share Internal",
+    "serviceUnavailable": "The service is under maintenance",
+    "tryAgainLater": "Please try again later",
+    "dangerAlert": {
+      "header": "Alert!",
+      "terms": "I agree to the terms above",
+      "message": {
+        "line1": "You are sharing a file with a low-classification network.",
+        "line2": "Please make sure the contents of the file ",
+        "line3": "are Secret at most."
+      },
+      "finish": "By pressing 'Agree' I declare that I have read the above and that my request meets the requirements",
+      "agree": "I Agree",
+      "disagree": "Dismiss Request"
+    },
+    "header": "Share external user",
+    "STwoHeader": "Choose Approvers",
+    "fsInfo": "The approvers selected will have reading permission on the file",
+    "SOHeader": "Choose the external users you want to share with",
+    "classErrMessage": "You cannot share a super secret classified file!",
+    "rmButton": "remove",
+    "headerTS": "Add info",
+    "TSInfo": "Last step - Add file info",
+    "chooseClass": "Choose classification:",
+    "searchUser": "John Doe",
+    "reqShare": "Request Share",
+    "prevBtn": "Previous",
+    "nextBtn": "Next",
+    "resetBtn": "Reset",
+    "finalErrorMsg": "An error has occured. If the error repeats itself, please contact us",
+    "finalSuccessMsg": "Your request was sent for processing. You may view it on approval service."
   }
 }

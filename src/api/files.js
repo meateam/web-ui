@@ -316,6 +316,11 @@ export async function getPermissions(id) {
 	return response.data;
 }
 
+export async function getPermits(id) {
+	const response = await axios.get(`${baseURL}/api/files/${id}/permits`, { headers: {Authorization: 'Bearer ' + store.state.jwt} });
+	return response.data;
+}
+
 export async function getSharedWithMe() {
 	const response = await axios.get(`${baseURL}/api/files?shares`, { headers: {Authorization: 'Bearer ' + store.state.jwt} });
 
