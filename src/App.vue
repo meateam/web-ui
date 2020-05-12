@@ -7,7 +7,7 @@
 <script>
 import { mapGetters } from "vuex";
 import io from "socket.io-client";
-// import { baseURL } from "@/utils/constants";
+import { socketURL } from "@/utils/constants";
 
 export default {
   name: "app",
@@ -17,8 +17,7 @@ export default {
   mounted() {
     const loading = document.getElementById("loading");
     loading.classList.add("done");
-    // io(`${baseURL}/configuration`).on("refresh", () => {
-    io(`http://localhost:3000/configuration`).on("refresh", () => {
+    io(`${socketURL}/configuration`).on("refresh", () => {
       location.reload();
     });
 

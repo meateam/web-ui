@@ -31,7 +31,7 @@
 
 <script>
 import io from "socket.io-client";
-// import { baseURL } from "@/utils/constants";
+import { socketURL } from "@/utils/constants";
 import Forbidden from "./errors/403";
 import NotFound from "./errors/404";
 import InternalError from "./errors/500";
@@ -107,12 +107,14 @@ export default {
   },
   created() {
     this.fetchData();
+    this.connectSocket();
   },
   watch: {
     $route: "fetchData",
     reload: function() {
       this.fetchData();
-    }
+      this.connectSocket();
+    },
   },
   mounted() {
     window.addEventListener("keydown", this.keyEvent);
@@ -144,20 +146,8 @@ export default {
         let res = null;
         if (this.shares && url === "") {
           res = await api.getSharedWithMe();
-          // io(`${baseURL}/shared-folders`).emit("joinRoom", this.userID).on("refresh", () => {
-          io(`http://localhost:3000/shared-page`)
-            .emit("joinRoom", this.userID)
-            .on("refresh", async () => {
-              res = await api.getSharedWithMe();
-            });
         } else {
           res = await api.fetch(url);
-          // io(`${baseURL}/folder`).emit("joinRoom", url).on("refresh", () => {
-          io(`http://localhost:3000/folder`)
-            .emit("joinRoom", url)
-            .on("refresh", async () => {
-              res = await api.fetch();
-            });
         }
 
         this.$store.commit("updateRequest", res);
@@ -173,25 +163,21 @@ export default {
         this.setLoading(false);
       }
     },
-    connectSocket() {
-      let res = null;
-      let folder = this.$store.getters.currentFolder.id;
-      if (this.shares && folder === "") {
-        // io(`${baseURL}/shared-folders`).emit("joinRoom", this.userID).on("refresh", () => {
-        io(`http://localhost:3000/shared-page`)
+    async connectSocket() {
+      const folder = this.$store.getters.currentFolder.id;
+      if (this.shares && !folder) {
+        io(`${socketURL}/shared-page`)
           .emit("joinRoom", this.userID)
           .on("refresh", async () => {
-            res = await api.getSharedWithMe();
+            this.$store.commit("updateRequest", await api.getSharedWithMe());
           });
-      } else {
-        // io(`${baseURL}/folder`).emit("joinRoom", url).on("refresh", () => {
-        io(`http://localhost:3000/folder`)
+      } else if (this.shares && folder) {
+        io(`${socketURL}/folder`)
           .emit("joinRoom", folder)
           .on("refresh", async () => {
-            res = await api.fetch();
+            this.$store.commit("updateRequest", await api.fetch(folder));
           });
       }
-      this.$store.commit("updateRequest", res);
     },
     keyEvent(event) {
       // Shortcuts on files shouldn't work when a dialog is active
@@ -255,11 +241,7 @@ export default {
       }
     },
     scroll() {
-      if (
-        this.req.kind !== "listing" ||
-        this.$store.state.user.viewMode === "mosaic"
-      )
-        return;
+      if (this.req.kind !== "listing" || this.$store.state.user.viewMode === "mosaic") return;
 
       let top = 112 - window.scrollY;
 
@@ -267,8 +249,7 @@ export default {
         top = 64;
       }
 
-      document.querySelector("#listing.list .item.header").style.top =
-        top + "px";
+      document.querySelector("#listing.list .item.header").style.top = top + "px";
     },
     openSidebar() {
       this.$store.commit("showHover", "sidebar");
