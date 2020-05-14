@@ -19,7 +19,16 @@ Vue.prototype.$noty = (opts) => {
 Vue.prototype.$showSuccess = (message) => {
   new Noty(Object.assign({}, notyDefault, {
     text: message,
-    type: 'success'
+    type: 'success',
+    timeout: 3000,
+  })).show()
+}
+
+Vue.prototype.$showLongSuccess = (message) => {
+  new Noty(Object.assign({}, notyDefault, {
+    text: message,
+    type: 'success',
+    timeout: 6000,
   })).show()
 }
 

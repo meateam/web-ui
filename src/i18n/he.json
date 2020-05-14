@@ -126,9 +126,12 @@
     "scheduleMessage": "Pick a date and time to schedule the publication of this post.",
     "newArchetype": "Create a new post based on an archetype. Your file will be created on content folder.",
     "permissions": "הרשאות",
-    "searchUser": "חפש משתמש"
+    "permits": "שיתופים חיצוניים",
+    "searchUser": "חפש משתמש",
+    "searchApprover": "חפש מאשר"
   },
   "settings": {
+    "langName": "he",
     "instanceName": "Instance name",
     "brandingDirectoryPath": "Branding directory path",
     "documentation": "documentation",
@@ -198,6 +201,7 @@
   },
   "sidebar": {
     "contactUs": "צור קשר",
+    "myShares": "השיתופים שלי",
     "help": "עזרה",
     "login": "Login",
     "signup": "Signup",
@@ -257,8 +261,61 @@
     "owner": "בעלים",
     "permission": "למשתמש {user} יש הרשאות {role}"
   },
+  "status": {
+    "pending": "בתהליך",
+    "waiting for approval": "ממתין לאישור",
+    "denied": "הבקשה נדחתה",
+    "failed": "נכשל",
+    "bad suffix": "סוג הקובץ אינו נתמך",
+    "passed": "נשלח",
+    "sending": "בתהליך",
+    "message": "{user} - {status}"
+  },
   "download": {
     "downloadFile": "Download File",
     "downloadFolder": "Download Folder"
+  },
+  "exShare": {
+    "approversInfo": ".בחר אנשים שיאשרו את בקשת השיתוף שלך\n.לא כל משתמש יכול לאשר בקשה, בדוק מראש מי המאשרים ביחידתך \n.שים לב! המאשרים יקבלו הרשאות כתיבה על הקובץ",
+    "addInfoInfo": "המידע יעזור למאשר לקבל החלטה לגבי אישור השיתוף",
+    "chooseExUsersInfo": "המשתמשים נלקחים מהדומיין החיצוני",
+    "badFileType": "לא ניתן לשתף החוצה את סוג קובץ זה",
+    "allowedFileTypes": "סוגי קבצים מאושרים:",
+    "classifications": ["שמור", "סודי", "סודי ביותר" ],
+    "classTopSecret": "סודי ביותר",
+    "changeShare": "שנה שיתוף",
+    "addMeAsApprover": "אני מוסמך לאשר ואין צורך בבחירת מאשרים נוספים",
+    "changeToExShare": "שיתוף חיצוני",
+    "changeToRegShare": "שיתוף פנימי",
+    "serviceUnavailable": "השירות נמצא בתחזוקה כעת",
+    "tryAgainLater": "אנא נסו שוב מאוחר יותר",
+    "dangerAlert": {
+      "header": "שים לב!",
+      "terms": "הנני מצהיר כי קראתי את האמור לעיל וכי בקשתי עומדת בתנאים, \nכמו כן ידוע לי כי התוכן מנוטר ומבוקר ע\"י יחב\"ם.",
+      "message": {
+        "line1": "הנך משתף קובץ עם רשת בסיווג נמוך.",
+        "line2": "אנא וודא כי תוכן הקובץ הינו עד סיווג סודי לכל היותר",
+        "line3": "ואינו מכיל *תוכן מודיעיני!*"
+      },
+      "finish": "הנני מצהיר כי קראתי את האמור לעיל וכי בקשתי עומדת בתנאים, וכי אני מודע שהבקשה תנוטר ע\"י יחב\"ם",
+      "agree": "המשך",
+      "disagree": "בטל בקשה"
+    },
+    "header": "שיתוף משתמש חיצוני",
+    "STwoHeader": "בחר מאשרים",
+    "fsInfo": "המאשרים שנבחרו יקבלו זכויות קריאה על הקובץ",
+    "SOHeader": "בחר את המשתמשים החיצוניים לשיתוף",
+    "rmButton": "הסר",
+    "headerTS": "הוסף מידע",
+    "TSInfo": "שלב אחרון - הוסף מידע על הקובץ",
+    "classErrMessage": "אין לשתף משתמש חיצוני עם קובץ ברמת סיווג זו!",
+    "searchUser": "ישראל ישראלי",
+    "chooseClass": "בחר סיווג",
+    "reqShare": "שלח בקשה",
+    "prevBtn": "הקודם",
+    "nextBtn": "הבא",
+    "resetBtn": "אפס",
+    "finalErrorMsg": "שגיאה התרחשה במהלך השליחה. אם השגיאה חוזרת על עצמה, אנא צור עמנו קשר",
+    "finalSuccessMsg": "בקשתך נשלחה לאישור. תוכל לראות את הסטטוס תחת לשונית ה info של הקובץ"
   }
 }
