@@ -1,6 +1,11 @@
 <template>
   <div class="card floating" id="share">
-    <tabs v-if="!finishedExShare" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}">
+    <div id="share-header-container">
+      <img id="share-icon" src="../../assets/images/share.svg" />
+      <h2 id="share-header">{{$t('exShare.shareFile')}}</h2>
+      <p id="file-name">{{selectedItem.name}}</p>
+    </div>
+    <tabs id="tabs" v-if="!finishedExShare" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}">
       <tab :name="$t('exShare.changeToRegShare')" id="firstTab" class="regular-share tab-content">
         <share-first-tab></share-first-tab>
       </tab>
@@ -64,7 +69,7 @@ export default {
     this.$store.commit("resetStepsRes");
   },
   methods: {
-    // Wrap up the external share and send the request 
+    // Wrap up the external share and send the request
     // in the correct format.
     async onStepperFinished(payload) {
       if (!payload.value) {
@@ -112,6 +117,10 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+  font-family: Rubik;
+  src: url("../../assets/fonts/Rubik/Rubik-Regular.ttf");
+}
 .tab-content {
   stroke: #000000;
   stroke-width: 10px;
@@ -123,5 +132,22 @@ export default {
 
 #share {
   padding: 0px;
+}
+#share-header {
+  font-family: Rubik;
+  text-align: center;
+  font-size: 30px;
+}
+#share-icon {
+  width: 80px;
+  margin: auto;
+  display: block;
+  margin-top: 20px;
+}
+#file-name {
+  text-align: center;
+  padding-bottom: 40px;
+  margin-top: -10px;
+  font-family: Rubik;
 }
 </style>

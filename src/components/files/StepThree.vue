@@ -2,7 +2,7 @@
   <div class="step3">
     <div>
       <div>
-        <i class="material-icons blink" :title="$t('exShare.addInfoInfo')">info</i>
+        <i class="material-icons blink" v-tooltip="$t('exShare.addInfoInfo')">info</i>
       </div>
       <h3>{{ $t("exShare.headerTS") }}</h3>
     </div>
@@ -67,5 +67,8 @@ textarea {
   padding: 5px;
   background-color: aliceblue;
   border-radius: 5px;
+}
+i {
+  cursor: default;
 }
 </style>

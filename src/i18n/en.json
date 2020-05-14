@@ -284,6 +284,7 @@
     "classTopSecret": "Top Secret",
     "changeShare": "Change Share",
     "addMeAsApprover": "Add me as an approver",
+    "shareFile": "Share File",
     "changeToExShare": "Share External",
     "changeToRegShare": "Share Internal",
     "serviceUnavailable": "The service is under maintenance",

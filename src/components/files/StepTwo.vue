@@ -1,31 +1,21 @@
 <template>
   <div class="step2">
     <span>
-      <i 
-        class="material-icons blink"
-        :title="$t('exShare.approversInfo')"
-       >info</i>
+      <i class="material-icons blink" v-tooltip="$t('exShare.approversInfo')">info</i>
       <p>{{ $t("exShare.STwoHeader") }}:</p>
     </span>
     <div class="myCheckbox">
-      <input
-        @click="onChecked($event)"
-        type="checkbox"
-        id="checkboxID"
-        v-model="checked"
-      />{{ $t("exShare.addMeAsApprover") }}<br />
+      <input @click="onChecked($event)" type="checkbox" id="checkboxID" v-model="checked" />
+      {{ $t("exShare.addMeAsApprover") }}
+      <br />
     </div>
-    <my-autosuggestor
-      :isExternal="external"
-      @select="submitApprover"
-    ></my-autosuggestor>
+    <my-autosuggestor :isExternal="external" @select="submitApprover"></my-autosuggestor>
 
     <edit-approvers-list
       :id="selectedItem.id"
       @list-empty="emitCanContinue"
       ref="editApproversList"
-    >
-    </edit-approvers-list>
+    ></edit-approvers-list>
   </div>
 </template>
 
@@ -54,13 +44,13 @@ export default {
     }
   },
   activated: function() {
-    this.emitCanContinue()
+    this.emitCanContinue();
   },
   methods: {
     // check if user can continue to the next step, and emit accordingly.
     emitCanContinue() {
       const approversLength = this.$store.getters.getApprovers.length;
-      if ( this.checked || (approversLength >= 1) ) {
+      if (this.checked || approversLength >= 1) {
         this.$emit("can-continue", { value: true });
         return;
       }
@@ -68,16 +58,11 @@ export default {
     },
     onChecked(event) {
       this.checked = event.target.checked;
-      this.emitCanContinue()
+      this.emitCanContinue();
     },
     submitApprover: async function(approver) {
       try {
-        await shareApi.create(
-          this.selectedItem.id,
-          approver.value.id,
-          "READ",
-          false
-        );
+        await shareApi.create(this.selectedItem.id, approver.value.id, "READ", false);
         this.$refs.editApproversList.addUser(approver.value);
         this.$showSuccess(this.$t("success.shared", { user: approver.value.fullName }));
         this.$emit("can-continue", { value: true });
@@ -103,7 +88,6 @@ export default {
 };
 </script>
 <style>
-
 .step2 {
   margin: 10px;
   min-height: 400px;
@@ -113,26 +97,29 @@ export default {
 }
 input {
   width: 25px;
-  margin:10px;
+  margin: 10px;
 }
-
 .blink {
   text-align: center;
   position: absolute;
   left: 10px;
-  color:rgb(55, 146, 202);
-  animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+  color: rgb(55, 146, 202);
+  animation: blinker 1.5s cubic-bezier(0.5, 0, 1, 1) infinite alternate;
 }
-
-
+i {
+  cursor: default;
+}
 .blink:hover {
-  animation:none;
-  color:rgb(9, 107, 168);
+  animation: none;
+  color: rgb(9, 107, 168);
 }
 
-@keyframes blinker {  
-  from { opacity: 1; }
-  to { opacity: 0.6; }
+@keyframes blinker {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.6;
+  }
 }
-
 </style>
