@@ -5,15 +5,20 @@
       <h2 id="share-header">{{$t('exShare.shareFile')}}</h2>
       <p id="file-name">{{selectedItem.name}}</p>
     </div>
-    <tabs id="tabs" v-if="!finishedExShare" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}">
-      <tab :name="$t('exShare.changeToRegShare')" id="firstTab" class="regular-share tab-content">
-        <share-first-tab></share-first-tab>
-      </tab>
-
-      <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir">
-        <share-second-tab @finished-second-tab="finishExShare"></share-second-tab>
-      </tab>
-    </tabs>
+    <section>
+      <b-tabs position="is-centered" v-if="!finishedExShare">
+        <b-tab-item :label="$t('exShare.changeToRegShare')" :name="$t('exShare.changeToRegShare')">
+          <share-first-tab></share-first-tab>
+        </b-tab-item>
+        <b-tab-item
+          :label="externalShareName"
+          :name="externalShareName"
+          v-if="regularShare && !selectedItem.isDir"
+        >
+          <share-second-tab @finished-second-tab="finishExShare"></share-second-tab>
+        </b-tab-item>
+      </b-tabs>
+    </section>
 
     <alertDialog v-if="finishedExShare" style="pading:0px" @finish-agree="onStepperFinished"></alertDialog>
   </div>
@@ -21,10 +26,8 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
-import { Tabs, Tab } from "vue-tabs-component";
 import { exShare } from "@/api";
 import { allowedFileTypes, config } from "@/utils/constants";
-
 import AlertDialog from "../files/AlertDialog";
 import ShareFirstTab from "../files/ShareFirstTab";
 import ShareSecondTab from "../files/ShareSecondTab";
@@ -34,9 +37,7 @@ export default {
   components: {
     ShareFirstTab,
     ShareSecondTab,
-    alertDialog: AlertDialog,
-    tabs: Tabs,
-    tab: Tab
+    alertDialog: AlertDialog
   },
   data: function() {
     return {
@@ -147,7 +148,6 @@ export default {
 #file-name {
   text-align: center;
   padding-bottom: 40px;
-  margin-top: -10px;
   font-family: Rubik;
 }
 </style>

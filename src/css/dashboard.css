@@ -138,6 +138,10 @@ table tr>*:last-child {
 .card .card-content.full {
   padding-bottom: 0;
 }
+.card .card-content {
+  background-color: transparent;
+  padding: 0 !important;
+}
 
 .card h2 {
   font-weight: 500;

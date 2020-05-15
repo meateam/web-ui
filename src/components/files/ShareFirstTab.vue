@@ -22,11 +22,14 @@
               </template>
             </autocomplete>
           </div>
+          <!-- <b-select class="space-div" v-model="role" :aria-label="$t('role.input')" rounded>
+            <option value="READ">{{ $t("role.read") }}</option>
+            <option value="WRITE">{{ $t("role.write") }}</option>
+          </b-select> -->
           <select class="space-div" v-model="role" :aria-label="$t('role.input')">
             <option value="READ">{{ $t("role.read") }}</option>
             <option value="WRITE">{{ $t("role.write") }}</option>
           </select>
-          <i class="material-icons select-icon">{{roleToIconName(role)}}</i>
           <button
             class="action blink add-button"
             @click="submit"
@@ -100,14 +103,12 @@ export default {
 
       try {
         await shareApi.create(this.selectedItem.id, this.user.id, this.role);
-        this.$showSuccess(
-          this.$t("success.shared", { user: this.getResultValue(this.user) })
-        );
+        this.$showSuccess(this.$t("success.shared", { user: this.getResultValue(this.user) }));
         this.$refs.editPermissionList.addUser(this.user);
       } catch (e) {
         this.$showError(e);
       }
-      this.$refs.autocomplete.value = '';
+      this.$refs.autocomplete.value = "";
     },
     saveUser(user) {
       this.user = user;
@@ -192,5 +193,4 @@ button.add-button:hover {
   color: rgb(16, 74, 100);
   background-color: rgb(173, 214, 255);
 }
-
 </style>

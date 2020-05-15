@@ -22,6 +22,10 @@
  *            ACTION           *
  * * * * * * * * * * * * * * * */
 
+html {
+  overflow-y: auto;
+}
+
 .action {
   display: inline-block;
   cursor: pointer;

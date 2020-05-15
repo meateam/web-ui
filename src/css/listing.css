@@ -128,6 +128,7 @@ a.pointer {
 #listing.list {
   flex-direction: column;
   width: 100%;
+  box-shadow: none;
   max-width: 100%;
   margin: 0;
 }
@@ -186,6 +187,7 @@ a.pointer {
   display: flex !important;
   background: #fafafa;
   z-index: 1;
+  border-left: none !important;
   padding: .85em;
   border: 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);

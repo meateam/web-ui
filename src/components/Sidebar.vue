@@ -1,5 +1,5 @@
 <template>
-  <nav :class="{active}">
+  <nav class="sidebar" :class="{active}">
     <template v-if="isLogged">
       <div
         @click="onMyFilesClick"
