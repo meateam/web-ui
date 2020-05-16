@@ -1,5 +1,5 @@
 @media (max-width: 1024px) {
-  nav {
+  .sidebar {
     width: 10em
   }
 }

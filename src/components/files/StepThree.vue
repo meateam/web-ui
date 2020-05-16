@@ -1,10 +1,8 @@
 <template>
   <div class="step3">
-    <div>
-      <div>
-        <i class="material-icons blink" v-tooltip="$t('exShare.addInfoInfo')">info</i>
-      </div>
-      <h3>{{ $t("exShare.headerTS") }}</h3>
+    <div class="space-between">
+      <p>{{ $t("exShare.headerTS") }}</p>
+      <i class="material-icons blink" v-tooltip="$t('exShare.addInfoInfo')">info</i>
     </div>
     <div class="card-content">
       <textarea @input="onInput" id="infoText" class="textbox" rows="4" cols="50"></textarea>

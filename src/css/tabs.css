@@ -12,6 +12,14 @@
     }
 }
 
+.tab-content {
+  background-color: #f0f4f7;
+  border: none;
+}
+.tabs ul {
+  border-bottom-color: transparent;
+}
+
 .tabs-component-tab {
     color: #999;
     font-size: 14px;

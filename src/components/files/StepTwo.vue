@@ -1,9 +1,9 @@
 <template>
   <div class="step2">
-    <span>
-      <i class="material-icons blink" v-tooltip="$t('exShare.approversInfo')">info</i>
+    <div class="space-between">
       <p>{{ $t("exShare.STwoHeader") }}:</p>
-    </span>
+      <i class="material-icons blink" v-tooltip="$t('exShare.approversInfo')">info</i>
+    </div>
     <div class="myCheckbox">
       <input @click="onChecked($event)" type="checkbox" id="checkboxID" v-model="checked" />
       {{ $t("exShare.addMeAsApprover") }}
@@ -101,8 +101,6 @@ input {
 }
 .blink {
   text-align: center;
-  position: absolute;
-  left: 10px;
   color: rgb(55, 146, 202);
   animation: blinker 1.5s cubic-bezier(0.5, 0, 1, 1) infinite alternate;
 }

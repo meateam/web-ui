@@ -1,45 +1,39 @@
 <template>
   <div class="card-content">
     <div class="user-role-select">
-      <ul id="user-role-list">
-        <li>
-          <div class="autocomplete">
-            <autocomplete
-              ref="autocomplete"
-              :search="search"
-              :autoSelect="true"
-              @submit="saveUser"
-              :get-result-value="getResultValue"
-              :placeholder="$t('prompts.searchUser')"
-            >
-              <template v-slot:result="{ result, props }">
-                <li v-bind="props" class="share-result">
-                  <div>
-                    <div class="share-title">{{ getResultValue(result) }}</div>
-                    <div class="share-snippet">{{ result.hierarchyFlat }}</div>
-                  </div>
-                </li>
-              </template>
-            </autocomplete>
-          </div>
-          <!-- <b-select class="space-div" v-model="role" :aria-label="$t('role.input')" rounded>
-            <option value="READ">{{ $t("role.read") }}</option>
-            <option value="WRITE">{{ $t("role.write") }}</option>
-          </b-select> -->
-          <select class="space-div" v-model="role" :aria-label="$t('role.input')">
-            <option value="READ">{{ $t("role.read") }}</option>
-            <option value="WRITE">{{ $t("role.write") }}</option>
-          </select>
-          <button
-            class="action blink add-button"
-            @click="submit"
-            :aria-label="$t('buttons.create')"
-            :title="$t('buttons.create')"
-          >
-            <i class="material-icons">add</i>
-          </button>
-        </li>
-      </ul>
+      <div class="autocomplete">
+        <autocomplete
+          ref="autocomplete"
+          :search="search"
+          :autoSelect="true"
+          @submit="saveUser"
+          :get-result-value="getResultValue"
+          :placeholder="$t('prompts.searchUser')"
+        >
+          <template v-slot:result="{ result, props }">
+            <li v-bind="props" class="share-result">
+              <div>
+                <div class="share-title">{{ getResultValue(result) }}</div>
+                <div class="share-snippet">{{ result.hierarchyFlat }}</div>
+              </div>
+            </li>
+          </template>
+        </autocomplete>
+        <b-select class="space-div" v-model="role" :aria-label="$t('role.input')" rounded>
+          <option value="READ">{{ $t("role.read") }}</option>
+          <option value="WRITE">{{ $t("role.write") }}</option>
+        </b-select>
+      </div>
+      <b-button
+        type="is-dark"
+        rounded
+        class="add-button"
+        @click="submit"
+        :aria-label="$t('buttons.create')"
+        :title="$t('buttons.create')"
+      >
+        <p>{{$t("buttons.share")}}</p>
+      </b-button>
     </div>
     <edit-permission-list :id="selectedItem.id" ref="editPermissionList"></edit-permission-list>
   </div>
@@ -138,7 +132,7 @@ function asyncDebouncer(func, interval) {
   };
 }
 </script>
-<style>
+<style scoped>
 .space-div {
   margin: 10px;
   margin-left: 2px;
@@ -159,7 +153,8 @@ function asyncDebouncer(func, interval) {
 }
 
 .autocomplete {
-  flex-grow: 1;
+  display: flex;
+  justify-content: stretch;
 }
 
 .select-icon {
@@ -183,14 +178,18 @@ function asyncDebouncer(func, interval) {
   font-size: 90px;
 }
 
-button.add-button {
-  color: rgb(16, 74, 100);
-  background-color: rgb(173, 214, 233);
-  margin-right: 15px;
+.add-button {
+  margin-top: 20px;
+  float: left;
+  width: 114px;
+  height: 44px;
+  border-radius: 22px;
+  box-shadow: 0px 3px 8px 0 rgba(44, 52, 72, 0.4);
+  background-color: #2c3448;
 }
 
-button.add-button:hover {
+/* .add-button:hover {
   color: rgb(16, 74, 100);
   background-color: rgb(173, 214, 255);
-}
+} */
 </style>
