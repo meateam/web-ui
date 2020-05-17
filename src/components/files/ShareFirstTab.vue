@@ -2,23 +2,7 @@
   <div class="card-content">
     <div class="user-role-select">
       <div class="autocomplete">
-        <autocomplete
-          ref="autocomplete"
-          :search="search"
-          :autoSelect="true"
-          @submit="saveUser"
-          :get-result-value="getResultValue"
-          :placeholder="$t('prompts.searchUser')"
-        >
-          <template v-slot:result="{ result, props }">
-            <li v-bind="props" class="share-result">
-              <div>
-                <div class="share-title">{{ getResultValue(result) }}</div>
-                <div class="share-snippet">{{ result.hierarchyFlat }}</div>
-              </div>
-            </li>
-          </template>
-        </autocomplete>
+        <autocomplete v-on:onSelect="saveUser($event)"></autocomplete>
         <b-select class="space-div" v-model="role" :aria-label="$t('role.input')" rounded>
           <option value="READ">{{ $t("role.read") }}</option>
           <option value="WRITE">{{ $t("role.write") }}</option>
@@ -46,7 +30,7 @@ import { Roles, minAutoComplete } from "@/utils/constants";
 import { share as shareApi, users as usersApi } from "@/api";
 
 import EditPermissionList from "../common/EditPermissionList";
-import Autocomplete from "@trevoreyre/autocomplete-vue";
+import Autocomplete from "../shared/Autocomplete";
 
 export default {
   name: "share-first-tab",
@@ -133,33 +117,8 @@ function asyncDebouncer(func, interval) {
 }
 </script>
 <style scoped>
-.space-div {
-  margin: 10px;
-  margin-left: 2px;
-  padding-left: 30px;
-  height: 35px;
-}
-.title {
-  text-align: center;
-}
-
-.share-result {
-  padding: 5px;
-  background: transparent;
-}
-
-.share-result:hover {
-  background: #bdddf0;
-}
-
 .autocomplete {
   display: flex;
-  justify-content: stretch;
-}
-
-.select-icon {
-  margin-right: -45px;
-  margin-left: 28px;
 }
 
 .service-unavailable {
@@ -179,7 +138,7 @@ function asyncDebouncer(func, interval) {
 }
 
 .add-button {
-  margin-top: 20px;
+  margin-top: 15px;
   float: left;
   width: 114px;
   height: 44px;
@@ -187,9 +146,4 @@ function asyncDebouncer(func, interval) {
   box-shadow: 0px 3px 8px 0 rgba(44, 52, 72, 0.4);
   background-color: #2c3448;
 }
-
-/* .add-button:hover {
-  color: rgb(16, 74, 100);
-  background-color: rgb(173, 214, 255);
-} */
 </style>

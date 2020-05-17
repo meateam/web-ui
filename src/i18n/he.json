@@ -232,7 +232,8 @@
     "search": "חיפוש",
     "typeToSearch": "הקלד כדי לחפש",
     "pressToSearch": "לחץ ENTER כדי לחפש",
-    "results": "תוצאות חיפוש"
+    "results": "תוצאות חיפוש",
+    "noResults": "לא נמצאו תוצאות"
   },
   "languages": {
     "ar": "العربية",

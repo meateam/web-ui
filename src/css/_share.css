@@ -27,3 +27,25 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.blink {
+  text-align: center;
+  color: rgb(55, 146, 202);
+  animation: blinker 1.5s cubic-bezier(0.5, 0, 1, 1) infinite alternate;
+}
+i {
+  cursor: default;
+}
+.blink:hover {
+  animation: none;
+  color: rgb(9, 107, 168);
+}
+
+@keyframes blinker {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.6;
+  }
+}

@@ -6,16 +6,12 @@
     @close-share="$store.commit('closeHovers')"
   ></shareEx>
   <div v-else-if="!isAllowedFileType" class="service-unavailable">
-    <div>
-      <i class="material-icons tab-content">insert_drive_file</i>
+    <div class="bad-file-type">
+      <b>{{$t('exShare.badFileType')}}</b>
+      <p>{{$t('exShare.allowedFileTypes')}}</p>
     </div>
-    <div>
-      <p>{{$t('exShare.badFileType')}}</p>
-      <b>{{$t('exShare.allowedFileTypes')}}</b>
-      <br />
-      <br />
-      <b>{{ allowedTypes() }}</b>
-    </div>
+    <br />
+    <p>{{ allowedTypes() }}</p>
   </div>
   <div v-else class="service-unavailable tab-content">
     <div>
@@ -40,7 +36,7 @@ export default {
   },
   data() {
     return {
-              enableExternalShare: config.enableExternalShare
+      enableExternalShare: config.enableExternalShare
     };
   },
   computed: {
@@ -65,11 +61,19 @@ export default {
         .join(", ");
     },
     finishSecondTab() {
-      this.$emit('finished-second-tab');
+      this.$emit("finished-second-tab");
     }
   }
 };
 </script>
 
 <style>
+.bad-file-type {
+  text-align: center;
+  width: fit-content;
+  color: #353446;
+  padding: 8px;
+  margin: auto;
+  border: 0.5px solid #353446;
+}
 </style>

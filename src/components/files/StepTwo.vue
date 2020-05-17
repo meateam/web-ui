@@ -4,7 +4,7 @@
       <p>{{ $t("exShare.STwoHeader") }}:</p>
       <i class="material-icons blink" v-tooltip="$t('exShare.approversInfo')">info</i>
     </div>
-    <div class="myCheckbox">
+    <div>
       <input @click="onChecked($event)" type="checkbox" id="checkboxID" v-model="checked" />
       {{ $t("exShare.addMeAsApprover") }}
       <br />
@@ -87,37 +87,13 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .step2 {
   margin: 10px;
   min-height: 400px;
 }
-.myCheckbox {
-  margin: 2%;
-}
 input {
   width: 25px;
   margin: 10px;
-}
-.blink {
-  text-align: center;
-  color: rgb(55, 146, 202);
-  animation: blinker 1.5s cubic-bezier(0.5, 0, 1, 1) infinite alternate;
-}
-i {
-  cursor: default;
-}
-.blink:hover {
-  animation: none;
-  color: rgb(9, 107, 168);
-}
-
-@keyframes blinker {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0.6;
-  }
 }
 </style>

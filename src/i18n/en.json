@@ -231,7 +231,8 @@
     "search": "Search",
     "typeToSearch": "Type to search...",
     "pressToSearch": "Press enter to search...",
-    "results": "Search Results"
+    "results": "Search Results",
+    "noResults": "No results found"
   },
   "languages": {
     "ar": "العربية",

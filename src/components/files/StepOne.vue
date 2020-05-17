@@ -5,7 +5,7 @@
       <i class="material-icons blink" v-tooltip="$t('exShare.chooseExUsersInfo')">info</i>
     </div>
 
-    <my-autosuggestor :isExternal="external" @select="addExUser"></my-autosuggestor>
+    <autocomplete :isExternal="external" v-on:onSelect="addExUser($event)"></autocomplete>
 
     <ul>
       <li v-bind:key="exUser.id" v-for="exUser in externalUsers" class="user-exshare">
@@ -19,12 +19,12 @@
 </template>
 
 <script>
-import AutoSuggestor from "./AutoSuggestor";
 import { mapState, mapMutations, mapGetters } from "vuex";
+import Autocomplete from "../shared/Autocomplete";
 
 export default {
   components: {
-    "my-autosuggestor": AutoSuggestor
+    Autocomplete
   },
   props: ["clickedNext", "currentStep"],
   data() {
@@ -87,9 +87,5 @@ export default {
 .step1 {
   margin: 10px;
   min-height: 200px;
-}
-
-i {
-  cursor: default;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="list permission-list">
+  <div class="permission-list">
     <div v-for="user in users" :key="user.userID" class="item">
       <span class="user-info">
         <span>{{user.fullName}}</span>
