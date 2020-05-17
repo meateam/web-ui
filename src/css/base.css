@@ -51,13 +51,13 @@ i.spin {
   padding-bottom: 4em;
 }
 
-nav {
+.sidebar {
   width: 16em;
   position: fixed;
   top: 4em;
 }
 
-nav .action {
+.sidebar .action {
   width: 100%;
   display: block;
   border-radius: 0;
@@ -68,11 +68,11 @@ nav .action {
   text-overflow: ellipsis;
 }
 
-nav>div {
+.sidebar>div {
   border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-nav .action>* {
+.sidebar .action>* {
   vertical-align: middle;
 }
 

@@ -1,14 +1,24 @@
 <template>
   <div class="card floating" id="share">
-    <tabs v-if="!finishedExShare" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}">
-      <tab :name="$t('exShare.changeToRegShare')" id="firstTab" class="regular-share tab-content">
-        <share-first-tab></share-first-tab>
-      </tab>
-
-      <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir">
-        <share-second-tab @finished-second-tab="finishExShare"></share-second-tab>
-      </tab>
-    </tabs>
+    <div id="share-header-container">
+      <img id="share-icon" src="../../assets/images/share.svg" />
+      <h2 id="share-header">{{$t('exShare.shareFile')}}</h2>
+      <p id="file-name">{{selectedItem.name}}</p>
+    </div>
+    <section>
+      <b-tabs position="is-centered" v-if="!finishedExShare">
+        <b-tab-item :label="$t('exShare.changeToRegShare')" :name="$t('exShare.changeToRegShare')">
+          <share-first-tab></share-first-tab>
+        </b-tab-item>
+        <b-tab-item
+          :label="externalShareName"
+          :name="externalShareName"
+          v-if="regularShare && !selectedItem.isDir"
+        >
+          <share-second-tab @finished-second-tab="finishExShare"></share-second-tab>
+        </b-tab-item>
+      </b-tabs>
+    </section>
 
     <alertDialog v-if="finishedExShare" style="pading:0px" @finish-agree="onStepperFinished"></alertDialog>
   </div>
@@ -16,10 +26,8 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
-import { Tabs, Tab } from "vue-tabs-component";
 import { exShare } from "@/api";
 import { allowedFileTypes, config } from "@/utils/constants";
-
 import AlertDialog from "../files/AlertDialog";
 import ShareFirstTab from "../files/ShareFirstTab";
 import ShareSecondTab from "../files/ShareSecondTab";
@@ -29,9 +37,7 @@ export default {
   components: {
     ShareFirstTab,
     ShareSecondTab,
-    alertDialog: AlertDialog,
-    tabs: Tabs,
-    tab: Tab
+    alertDialog: AlertDialog
   },
   data: function() {
     return {
@@ -64,7 +70,7 @@ export default {
     this.$store.commit("resetStepsRes");
   },
   methods: {
-    // Wrap up the external share and send the request 
+    // Wrap up the external share and send the request
     // in the correct format.
     async onStepperFinished(payload) {
       if (!payload.value) {
@@ -112,6 +118,10 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+  font-family: Rubik;
+  src: url("../../assets/fonts/Rubik/Rubik-Regular.ttf");
+}
 .tab-content {
   stroke: #000000;
   stroke-width: 10px;
@@ -123,5 +133,21 @@ export default {
 
 #share {
   padding: 0px;
+}
+#share-header {
+  font-family: Rubik;
+  text-align: center;
+  font-size: 30px;
+}
+#share-icon {
+  width: 80px;
+  margin: auto;
+  display: block;
+  margin-top: 20px;
+}
+#file-name {
+  text-align: center;
+  padding-bottom: 40px;
+  font-family: Rubik;
 }
 </style>

@@ -22,6 +22,14 @@
  *            ACTION           *
  * * * * * * * * * * * * * * * */
 
+html {
+  overflow-y: auto;
+}
+.space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
 .action {
   display: inline-block;
   cursor: pointer;

@@ -1,7 +1,10 @@
 <template>
   <div class="step1">
-    <i class="material-icons blink" :title="$t('exShare.chooseExUsersInfo')">info</i>
-    <p>{{ $t("exShare.SOHeader") }}:</p>
+    <div class="space-between">
+      <p>{{ $t("exShare.SOHeader") }}:</p>
+      <i class="material-icons blink" v-tooltip="$t('exShare.chooseExUsersInfo')">info</i>
+    </div>
+
     <my-autosuggestor :isExternal="external" @select="addExUser"></my-autosuggestor>
 
     <ul>
@@ -84,5 +87,9 @@ export default {
 .step1 {
   margin: 10px;
   min-height: 200px;
+}
+
+i {
+  cursor: default;
 }
 </style>

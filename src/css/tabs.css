@@ -1,7 +1,3 @@
-
-.tabs-component {
-}
-
 .tabs-component-tabs {
     border: solid 1px #ddd;
     border-radius: 6px;
@@ -14,6 +10,14 @@
         display: flex;
         justify-content: flex-start;
     }
+}
+
+.tab-content {
+  background-color: #f0f4f7;
+  border: none;
+}
+.tabs ul {
+  border-bottom-color: transparent;
 }
 
 .tabs-component-tab {
