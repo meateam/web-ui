@@ -80,6 +80,7 @@ a.pointer {
   font-size: 2em;
   margin: 1em auto;
   display: block !important;
+  background-color: transparent;
   width: 95%;
   color: rgba(0, 0, 0, 0.3);
   font-weight: 500;

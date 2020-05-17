@@ -24,6 +24,7 @@
 
 html {
   overflow-y: auto;
+  background-color: transparent;
 }
 .space-between {
   display: flex;
@@ -32,7 +33,7 @@ html {
 
 .action {
   display: inline-block;
-  cursor: pointer;
+  cursor: pointer !important;
   transition: 0.2s ease all;
   border: 0;
   margin: 0;

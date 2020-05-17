@@ -84,8 +84,7 @@ export default {
             return true;
           });
         this.users.forEach(user => {
-          const isDirectPermission =
-            permissions.find(e => e.userID == user.id).fileID == this.id;
+          const isDirectPermission = permissions.find(e => e.userID == user.id).fileID == this.id;
           this.userPermissions[user.id] = isDirectPermission;
         });
         // eslint-disable-next-line
@@ -119,8 +118,9 @@ export default {
   overflow-y: auto;
 }
 
-.material-icons:hover{
+.material-icons:hover {
   color: crimson;
+  cursor: pointer;
 }
 
 .user-info {

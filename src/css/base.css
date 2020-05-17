@@ -20,6 +20,10 @@ a {
   text-decoration: none;
 }
 
+i {
+  cursor: pointer !important;
+}
+
 img {
   max-width: 100%;
 }

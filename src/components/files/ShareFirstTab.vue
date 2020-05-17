@@ -8,18 +8,18 @@
           <option value="WRITE">{{ $t("role.write") }}</option>
         </b-select>
       </div>
-      <b-button
-        type="is-dark"
-        rounded
-        class="add-button"
-        @click="submit"
-        :aria-label="$t('buttons.create')"
-        :title="$t('buttons.create')"
-      >
-        <p>{{$t("buttons.share")}}</p>
-      </b-button>
     </div>
     <edit-permission-list :id="selectedItem.id" ref="editPermissionList"></edit-permission-list>
+    <b-button
+      type="is-dark"
+      rounded
+      class="add-button"
+      @click="submit"
+      :aria-label="$t('buttons.create')"
+      :title="$t('buttons.create')"
+    >
+      <p>{{$t("buttons.share")}}</p>
+    </b-button>
   </div>
 </template>
 
@@ -86,7 +86,6 @@ export default {
       } catch (e) {
         this.$showError(e);
       }
-      this.$refs.autocomplete.value = "";
     },
     saveUser(user) {
       this.user = user;
@@ -138,7 +137,7 @@ function asyncDebouncer(func, interval) {
 }
 
 .add-button {
-  margin-top: 15px;
+  margin-bottom: 15px;
   float: left;
   width: 114px;
   height: 44px;

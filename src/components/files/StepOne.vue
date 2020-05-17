@@ -52,6 +52,8 @@ export default {
   },
   methods: {
     addExUser(user) {
+      // eslint-disable-next-line no-console
+      console.log(user)
       if (user.value && user.value.id) {
         if (this.checkExists(user.value.id)) {
           return;
