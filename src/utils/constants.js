@@ -3,7 +3,8 @@ const disableExternal = false;
 const baseURL = '';
 const signup = false;
 const version = '2';
-const logoURL = `/img/logo.svg`;
+const logoURL = `/img/drive_logo.svg`;
+const plusURL = `/img/plus.png`;
 const minAutoComplete = 2;
 const noAuth = false;
 const loginPage = false;
@@ -26,8 +27,16 @@ const config = {
 	apmServerUrl: '',
 	authUrl: '',
 	environment: '',
-	supportLink: ''
+	supportLink: '',
+	approvalServiceUrl: '',
+	externalShareName: 'שיתוף חיצוני',
+	myExternalSharesName: 'השיתופים החיצוניים שלי',
+	enableExternalShare: false,
 };
+
+const allowedFileTypes = ['png', 'xlsx', 'docx', 'jpg', 'pptx', 'txt', 'jpeg', 'mp4', 'mpg', 'mpeg', 'bmp', 'gif', 'wav', 'wave', 'pdf'];
+
+export const debounceTime = 200;
 
 export const Roles = {
 	owner: "OWNER",
@@ -94,17 +103,23 @@ export async function fetchConfig() {
 	config.authUrl = conf.authUrl;
 	config.environment = conf.environment;
 	config.supportLink = conf.supportLink;
+	config.approvalServiceUrl = conf.approvalServiceUrl || config.supportLink;
+	config.externalShareName = conf.externalShareName;
+	config.myExternalSharesName = conf.myExternalSharesName;
+	config.enableExternalShare = conf.enableExternalShare === "true";
 }
 
 export {
-  name,
-  disableExternal,
-  baseURL,
-  minAutoComplete,
-  logoURL,
-  signup,
-  version,
-  noAuth,
+	allowedFileTypes,
+	name,
+	disableExternal,
+	baseURL,
+	minAutoComplete,
+	logoURL,
+	plusURL,
+	signup,
+	version,
+	noAuth,
 	loginPage,
 	folderContentType,
 	config
