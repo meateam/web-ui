@@ -4,12 +4,12 @@
       <p>{{ $t("exShare.STwoHeader") }}:</p>
       <i class="material-icons blink" v-tooltip="$t('exShare.approversInfo')">info</i>
     </div>
-    <div>
+    <div class="myCheckbox">
       <input @click="onChecked($event)" type="checkbox" id="checkboxID" v-model="checked" />
       {{ $t("exShare.addMeAsApprover") }}
       <br />
     </div>
-    <my-autosuggestor :isExternal="external" @select="submitApprover"></my-autosuggestor>
+    <autocomplete :isExternal="external" v-on:onSelect="submitApprover($event)"></autocomplete>
 
     <edit-approvers-list
       :id="selectedItem.id"
@@ -21,13 +21,13 @@
 
 <script>
 import { mapState } from "vuex";
-import AutoSuggestor from "./AutoSuggestor";
+import Autocomplete from "../shared/Autocomplete";
 import EditApproversList from "../common/EditApproversList";
 import { share as shareApi } from "@/api";
 
 export default {
   components: {
-    "my-autosuggestor": AutoSuggestor,
+    Autocomplete,
     EditApproversList
   },
   props: ["currentStep"],
@@ -87,10 +87,12 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style>
 .step2 {
   margin: 10px;
-  min-height: 400px;
+}
+.myCheckbox {
+  margin: 2%;
 }
 input {
   width: 25px;

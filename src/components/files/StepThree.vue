@@ -5,13 +5,13 @@
       <i class="material-icons blink" v-tooltip="$t('exShare.addInfoInfo')">info</i>
     </div>
     <div class="card-content">
-      <textarea @input="onInput" id="infoText" class="textbox" rows="4" cols="50"></textarea>
+      <b-input @input="onInput" id="infoText" maxlength="200" type="textarea"></b-input>
     </div>
     <form>
       <p>{{ $t("exShare.chooseClass") }}</p>
-      <select @change="onInput" id="classSelect">
+      <b-select class="select" @change="onInput" id="classSelect">
         <option v-bind:key="c" v-for="c in classifications">{{ c }}</option>
-      </select>
+      </b-select>
       <p v-if="isTopSecret === true" style="color: red">{{ $t("exShare.classErrMessage") }}</p>
     </form>
   </div>
@@ -53,20 +53,8 @@ export default {
 .step3 {
   margin: 10px;
 }
-
-select {
+.select {
   background-color: aliceblue;
-}
-textarea {
-  max-height: 500px;
-  min-height: 50px;
-  min-width: 300px;
-  max-width: 100%;
-  padding: 5px;
-  background-color: aliceblue;
-  border-radius: 5px;
-}
-i {
-  cursor: default;
+  float: right;
 }
 </style>

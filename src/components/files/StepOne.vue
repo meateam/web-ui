@@ -7,14 +7,12 @@
 
     <autocomplete :isExternal="external" v-on:onSelect="addExUser($event)"></autocomplete>
 
-    <ul>
-      <li v-bind:key="exUser.id" v-for="exUser in externalUsers" class="user-exshare">
-        {{ exUser.hierarchy }} : {{ exUser.full_name }}
-        <button
-          @click="removeExUser(exUser.id)"
-        >{{ $t("exShare.rmButton") }}</button>
-      </li>
-    </ul>
+    <div v-bind:key="exUser.id" v-for="exUser in externalUsers" class="user-exshare">
+      <div>{{ exUser.hierarchy }} : {{ exUser.full_name }}</div>
+      <div @click="removeExUser(exUser.id)">
+        <i class="material-icons">delete</i>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -52,15 +50,13 @@ export default {
   },
   methods: {
     addExUser(user) {
-      // eslint-disable-next-line no-console
-      console.log(user)
       if (user.value && user.value.id) {
         if (this.checkExists(user.value.id)) {
           return;
         }
       }
       this.$store.commit("addGlobalExternalUser", user.value);
-      this.externalUsers.push(user.value);
+      this.externalUsers.push(user);
       this.$emit("can-continue", { value: true });
     },
     removeExUser(id) {
@@ -83,11 +79,17 @@ export default {
 </script>
 <style>
 .user-exshare {
-  margin-bottom: 5px;
+  display: flex;
+  margin: 10px;
+  justify-content: space-between;
 }
 
 .step1 {
   margin: 10px;
-  min-height: 200px;
+}
+
+.material-icons:hover {
+  color: crimson;
+  cursor: pointer;
 }
 </style>
