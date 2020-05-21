@@ -65,6 +65,7 @@ export default {
             this.isFetching = false;
           });
       } else {
+        // eslint-disable-next-line no-console
         delegatorsApi
           .searchUserByName(name)
           .then(res => {

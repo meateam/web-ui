@@ -77,7 +77,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .user-exshare {
   display: flex;
   margin: 10px;

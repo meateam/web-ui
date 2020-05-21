@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div v-if="isSearch" id="breadcrumbs">
-      {{ $t('search.results') }}
-    </div>
+    <div v-if="isSearch" id="breadcrumbs">{{ $t('search.results') }}</div>
     <div v-else id="breadcrumbs">
       <div @click="onBreadcrumbsClick('')" :aria-label="$t('files.home')" :title="$t('files.home')">
         <i class="material-icons">home</i>
@@ -52,7 +50,16 @@ export default {
     Preview
   },
   computed: {
-    ...mapGetters(["selectedCount", "isListing", "isEditor", "isFiles", "isActiveDialog", "shares", "direction", "isSearch"]),
+    ...mapGetters([
+      "selectedCount",
+      "isListing",
+      "isEditor",
+      "isFiles",
+      "isActiveDialog",
+      "shares",
+      "direction",
+      "isSearch"
+    ]),
     ...mapState(["req", "user", "reload", "multiple", "loading", "path"]),
     isPreview() {
       return !this.loading && !this.isListing && !this.isEditor;
@@ -127,12 +134,12 @@ export default {
       // Set loading to true and reset the error.
       this.setLoading(true);
       this.error = null;
-      
+
       let url = this.$store.getters.currentFolder.id;
 
       try {
         let res = null;
-        if (this.shares && url === '') {
+        if (this.shares && url === "") {
           res = await api.getSharedWithMe();
         } else {
           res = await api.fetch(url);
@@ -153,7 +160,7 @@ export default {
     },
     keyEvent(event) {
       // Shortcuts on files shouldn't work when a dialog is active
-      if(this.$store.getters.isActiveDialog) return;
+      if (this.$store.getters.isActiveDialog) return;
 
       // Esc!
       if (event.keyCode === 27) {
@@ -213,11 +220,7 @@ export default {
       }
     },
     scroll() {
-      if (
-        this.req.kind !== "listing" ||
-        this.$store.state.user.viewMode === "mosaic"
-      )
-        return;
+      if (this.req.kind !== "listing" || this.$store.state.user.viewMode === "mosaic") return;
 
       let top = 112 - window.scrollY;
 
@@ -225,8 +228,7 @@ export default {
         top = 64;
       }
 
-      document.querySelector("#listing.list .item.header").style.top =
-        top + "px";
+      document.querySelector("#listing.list .item.header").style.top = top + "px";
     },
     openSidebar() {
       this.$store.commit("showHover", "sidebar");

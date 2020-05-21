@@ -46,7 +46,8 @@
     "general": "משהו השתשבש.",
     "forbidden": "לא קיימות הרשאות לגשת לפריט זה.",
     "internal": "משהו ממש השתבש.",
-    "notFound": "לא נמצא."
+    "notFound": "לא נמצא.",
+    "unauthorized": "שגיאת התחברות"
   },
   "files": {
     "folders": "תיקיות",
