@@ -147,6 +147,7 @@ services:
       SHRAGA_URL: http://shrugshrug
       STRATEGY: shraga
       MONGODB_NAME: shraga-proxy
+      UNAUTHORIZED_SUPPORT_URL: 'https://open.rocket.chat'
     depends_on:
       - saml-idp
       - user-service
