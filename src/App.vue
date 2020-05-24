@@ -17,9 +17,12 @@ export default {
   mounted() {
     const loading = document.getElementById("loading");
     loading.classList.add("done");
-    io(`${socketURL}/configuration`).on("refresh", () => {
-      location.reload();
-    });
+    io(`${socketURL}/configuration`, { query: { token: this.$store.state.jwt } }).on(
+      "refresh",
+      () => {
+        location.reload();
+      }
+    );
 
     setTimeout(function() {
       loading.parentNode.removeChild(loading);

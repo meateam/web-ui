@@ -165,13 +165,13 @@ export default {
     async connectSocket() {
       const folder = this.$store.getters.currentFolder.id;
       if (this.shares && !folder) {
-        io(`${socketURL}/shared-page`)
+        io(`${socketURL}/shared-page`, { query: { token: this.$store.state.jwt } })
           .emit("joinRoom", this.userID)
           .on("refresh", async () => {
             this.$store.commit("updateRequest", await api.getSharedWithMe());
           });
       } else if (this.shares && folder) {
-        io(`${socketURL}/folder`)
+        io(`${socketURL}/folder`, { query: { token: this.$store.state.jwt } })
           .emit("joinRoom", folder)
           .on("refresh", async () => {
             this.$store.commit("updateRequest", await api.fetch(folder));
