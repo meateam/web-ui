@@ -87,3 +87,14 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.stepper {
+  overflow: visible;
+  background-color: transparent;
+  box-shadow: none;
+}
+.circle {
+  background-color: transparent;
+}
+</style>

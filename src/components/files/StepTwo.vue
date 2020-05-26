@@ -9,7 +9,7 @@
       {{ $t("exShare.addMeAsApprover") }}
       <br />
     </div>
-    <autocomplete :isExternal="external" v-on:onSelect="submitApprover($event)"></autocomplete>
+    <autocomplete :isExternal="true" v-on:onSelect="submitApprover($event)"></autocomplete>
 
     <edit-approvers-list
       :id="selectedItem.id"

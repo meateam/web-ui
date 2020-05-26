@@ -80,6 +80,14 @@ i.spin {
   vertical-align: middle;
 }
 
+.stepper-box .content {
+  overflow: visible !important;
+}
+
+.stepper-box .top .steps-wrapper .step .circle {
+  background-color: transparent !important;
+}
+
 main.ltr {
   min-height: 1em;
   margin: 0 1em 1em auto;

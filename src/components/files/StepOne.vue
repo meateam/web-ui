@@ -5,7 +5,9 @@
       <i class="material-icons blink" v-tooltip="$t('exShare.chooseExUsersInfo')">info</i>
     </div>
 
-    <autocomplete :isExternal="external" v-on:onSelect="addExUser($event)"></autocomplete>
+    <div class="autocomplete">
+      <autocomplete :isExternal="true" v-on:onSelect="addExUser($event)"></autocomplete>
+    </div>
 
     <div v-bind:key="exUser.id" v-for="exUser in externalUsers" class="user-exshare">
       <div>{{ exUser.hierarchy }} : {{ exUser.full_name }}</div>
@@ -86,6 +88,10 @@ export default {
 
 .step1 {
   margin: 10px;
+}
+
+.autocomplete {
+  overflow: visible;
 }
 
 .material-icons:hover {

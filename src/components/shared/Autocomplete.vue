@@ -59,7 +59,10 @@ export default {
           .searchUserByName(name)
           .then(res => {
             this.data = [];
-            res.data.users.forEach(item => this.data.push(item));
+            if (res.data.users)
+              res.data.users.forEach(item => {
+                this.data.push(item);
+              });
           })
           .finally(() => {
             this.isFetching = false;
@@ -70,7 +73,10 @@ export default {
           .searchUserByName(name)
           .then(res => {
             this.data = [];
-            res.data.users.forEach(item => this.data.push(item));
+            if (res.data.users)
+              res.data.users.forEach(item => {
+                this.data.push(item);
+              });
           })
           .finally(() => {
             this.isFetching = false;
