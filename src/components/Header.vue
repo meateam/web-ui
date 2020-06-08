@@ -98,7 +98,8 @@ import {
   DeleteRole,
   RenameRole,
   ShareRole,
-  MoveRole
+  MoveRole,
+  allowedAppIDs
 } from "@/utils/constants";
 import * as api from "@/api";
 import buttons from "@/utils/buttons";
@@ -167,6 +168,9 @@ export default {
       );
     },
     showDeleteButton() {
+      if(!this.isAllowedAppID()) {
+        return false;
+      }
       if (this.isFiles) {
         if (this.isListing) {
           if (this.selectedCount === 0) {
@@ -178,16 +182,16 @@ export default {
             return this.req.id && DeleteRole(this.req.role);
           } else {
             for (let i = 0; i < this.selected.length; i++) {
+              let currFile = this.req.items[this.selected[i]];
               // Can't delete a file that is being shared with you directly.
               if (
-                this.req.items[this.selected[i]].permission &&
-                this.req.items[this.selected[i]].permission.id !==
-                  this.req.items[this.selected[i]].id
+                currFile.permission &&
+                currFile.permission.id !== currFile.id
               ) {
                 return false;
               }
 
-              if (!DeleteRole(this.req.items[this.selected[i]].role)) {
+              if (!DeleteRole(currFile.role)) {
                 return false;
               }
             }
@@ -200,7 +204,8 @@ export default {
           }
 
           for (let i = 0; i < this.selected.length; i++) {
-            if (!DeleteRole(this.req.items[this.selected[i]].role)) {
+            let currFile = this.req.items[this.selected[i]];
+            if (!DeleteRole(currFile.role)) {
               return false;
             }
           }
@@ -212,6 +217,9 @@ export default {
       return false;
     },
     showRenameButton() {
+      if(!this.isAllowedAppID()) {
+        return false;
+      }
       if (this.isFiles) {
         if (this.isListing) {
           if (this.selectedCount === 0) {
@@ -227,6 +235,9 @@ export default {
       return false;
     },
     showShareButton() {
+      if(!this.isAllowedAppID()) {
+        return false;
+      }
       if (this.isFiles) {
         if (this.isListing) {
           if (this.selectedCount === 0) {
@@ -242,6 +253,9 @@ export default {
       return false;
     },
     showMoveButton() {
+      if(!this.isAllowedAppID()) {
+        return false;
+      }
       if (this.isFiles) {
         if (this.isListing) {
           if (this.selectedCount === 0) {
@@ -267,6 +281,18 @@ export default {
     }
   },
   methods: {
+    isAllowedAppID() {
+      if(this.selectedCount) {
+        for (let i = 0; i < this.selected.length; i++) {
+              let currFile = this.req.items[this.selected[i]];
+              if (!allowedAppIDs.includes(currFile.appID)){
+                return false;
+              }
+        }
+        return true;
+      }
+      return false;
+    },
     openSidebar() {
       this.$store.commit("showHover", "sidebar");
     },

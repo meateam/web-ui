@@ -95,7 +95,9 @@ export async function getAncestors(file) {
 	return ancestors ? ancestors.data : [];
 }
 
-export async function upload(url, file, headers, onupload) {
+// used for the 'post' function.
+// sends the upload file request to api-agteway.
+async function upload(url, file, headers, onupload) {
 	return new Promise((resolve, reject) => {
 		let request = new XMLHttpRequest();
 		request.open('POST', url, true);
@@ -132,7 +134,9 @@ export async function upload(url, file, headers, onupload) {
 	}).finally(() => { window.onbeforeunload = null })
 }
 
-export async function uploadInit(file) {
+// used for the 'post' function. initiates the stream for large files.
+// returns the uploadId received from file-service.
+async function uploadInit(file) {
 	return new Promise((resolve, reject) => {
 		const fileMetadata = { title: file.name, mimeType: file.type };
 		const url = `${baseURL}/api/upload`;
@@ -161,6 +165,7 @@ export async function uploadInit(file) {
 	}).finally(() => { window.onbeforeunload = null });
 }
 
+// uploads a file, using the 'uploadInit' and 'upload' functions above.
 export async function post(base, file, onupload) {
 	return new Promise(async (resolve, reject) => {
 		const requestUploadIdHeader = 'uploadId';
@@ -172,7 +177,7 @@ export async function post(base, file, onupload) {
 		if (file.size <= 5 << 20) {
 			url += '?uploadType=multipart';
 		} else {
-			const uploadId = await this.uploadInit(file);
+			const uploadId = await uploadInit(file);
 			headers['Content-Range'] = `bytes 0-${file.size - 1}/${file.size}`;
 			url += `?uploadType=resumable&${requestUploadIdHeader}=${uploadId}`;
 		}
@@ -181,7 +186,7 @@ export async function post(base, file, onupload) {
 			url += `&parent=${base}`;
 		}
 
-		this.upload(url, file, headers, onupload).then(resolve).catch(reject);
+		upload(url, file, headers, onupload).then(resolve).catch(reject);
 	}).finally(() => { window.onbeforeunload = null });
 }
 

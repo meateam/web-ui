@@ -144,7 +144,8 @@ import {
   DeleteRole,
   RenameRole,
   ShareRole,
-  MoveRole
+  MoveRole,
+  allowedAppIDs
 } from '@/utils/constants';
 
 export default {
@@ -492,20 +493,20 @@ export default {
     },
     showDeleteButton (file) {
       // Can't delete a file that is being shared with you directly.
-      if (file.permission && file.permission.fileID !== file.id) {
+      if (file.permission && file.permission.fileID !== file.id){
         return false;
       }
 
-      return DeleteRole(file.role);
+      return DeleteRole(file.role) && this.isAllowedAppID(file);
     },
     showRenameButton (file) {
-      return RenameRole(file.role);
+      return RenameRole(file.role) && this.isAllowedAppID(file);
     },
     showShareButton (file) {
-      return ShareRole(file.role);
+      return ShareRole(file.role) && this.isAllowedAppID(file);
     },
     showMoveButton (file) {
-      return MoveRole(file.role);
+      return MoveRole(file.role) && this.isAllowedAppID(file);
     },
     download: function (file) {
       api.download([file.id]);
@@ -538,6 +539,9 @@ export default {
       this.$store.commit('setReload', true);
 
       return;
+    },
+    isAllowedAppID(file) {
+      return allowedAppIDs.includes(file.appID);
     }
   }
 }

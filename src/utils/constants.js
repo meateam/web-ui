@@ -35,6 +35,7 @@ const config = {
 };
 
 const allowedFileTypes = ['png', 'xlsx', 'docx', 'jpg', 'pptx', 'txt', 'jpeg', 'mp4', 'mpg', 'mpeg', 'bmp', 'gif', 'wav', 'wave', 'pdf'];
+const allowedAppIDs = ['drive', 'dropbox'];
 
 export const debounceTime = 200;
 
@@ -110,6 +111,7 @@ export async function fetchConfig() {
 }
 
 export {
+	allowedAppIDs,
 	allowedFileTypes,
 	name,
 	disableExternal,
