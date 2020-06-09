@@ -4,7 +4,7 @@
       <div
         @click="onMyFilesClick"
         class="action"
-        :class="{ selected: !shares && !isSearch}"
+        :class="{ selected: !shares && !isSearch }"
         to="/files"
         :aria-label="$t('sidebar.myFiles.title')"
         :title="$t('sidebar.myFiles.title')">
@@ -14,7 +14,7 @@
       </div>
       <div
         @click="onSharedWithMeClick"
-        :class="{ selected: shares && !isSearch}"
+        :class="{ selected: shares && !isSearch }"
         class="action" to="/shares"
         :aria-label="$t('sidebar.sharedFiles')"
         :title="$t('sidebar.sharedFiles')">
@@ -26,6 +26,12 @@
           <i class="material-icons">create_new_folder</i>
           <span>{{ $t('sidebar.newFolder') }}</span>
         </button>
+      </div>
+      <div>
+        <a v-bind:href="approvalServiceUrl" class="action" target="_blank" :aria-label="myExternalSharesName" :title="myExternalSharesName">
+          <i class="material-icons">info</i>
+          <span>{{myExternalSharesName}}</span>
+        </a>
       </div>
       <div>
         <a v-bind:href="supportLink" class="action" target="_blank" :aria-label="$t('sidebar.contactUs')" :title="$t('sidebar.contactUs')">
@@ -55,6 +61,11 @@ export default {
   components: {
     Quota
   },
+  data: function () {
+    return {
+      myExternalSharesName: config.myExternalSharesName  
+    }
+  },
   computed: {
     ...mapState([ 'req', 'user', 'quota' ]),
     ...mapGetters([ 'isLogged', 'shares', 'isSearch' ]),
@@ -63,6 +74,7 @@ export default {
     },
     signup: () => signup,
     supportLink: () => config.supportLink,
+    approvalServiceUrl: () => config.approvalServiceUrl,
     disableExternal: () => disableExternal,
     noAuth: () => noAuth,
     nameExists: function () {

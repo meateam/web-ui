@@ -1,156 +1,127 @@
 <template>
   <div class="card floating" id="share">
-    <div class="card-title">
-      <h2>{{ $t('buttons.share') }}</h2>
-    </div>
+    <tabs v-if="!finishedExShare" :options="{ useUrlFragment: false, defaultTabHash: 'firstTab'}">
+      <tab :name="$t('exShare.changeToRegShare')" id="firstTab" class="regular-share tab-content">
+        <share-first-tab></share-first-tab>
+      </tab>
 
-    <div class="card-content">
-      <div class="user-role-select">
-        <ul id="user-role-list">
-          <li>
-            <autocomplete :search="search"
-              :autoSelect="true"
-              @submit="saveUser"
-              :get-result-value="getResultValue"
-             :placeholder="$t('prompts.searchUser')"
-            >
-              <template v-slot:result="{ result, props }">
-                <li v-bind="props" class="share-result">
-                <div>
-                    <div class="share-title">
-                      {{ getResultValue(result) }}
-                    </div>
-                    <div class="share-snippet">{{result.hierarchyFlat}}</div>
-                    </div>
-                </li>
-              </template>
-            </autocomplete>
+      <tab id="secondTab" :name="externalShareName" v-if="regularShare && !selectedItem.isDir">
+        <share-second-tab @finished-second-tab="finishExShare"></share-second-tab>
+      </tab>
+    </tabs>
 
-            <select v-model="role" :aria-label="$t('role.input')">
-              <option value="READ" >{{ $t('role.read') }}</option>
-              <option value="WRITE" >{{ $t('role.write') }}</option>
-            </select>
-            <button class="action"
-              @click="submit"
-              :aria-label="$t('buttons.create')"
-              :title="$t('buttons.create')"><i class="material-icons">add</i></button>
-          </li>
-        </ul>
-      </div>
-      <hr/>
-      <edit-permission-list
-        :id="selectedItem.id" ref="editPermissionList">
-      </edit-permission-list>
-    </div>
-
-    <div :class="direction" class="card-action">
-      <button class="button button--flat"
-        @click="$store.commit('closeHovers')"
-        :aria-label="$t('buttons.close')"
-        :title="$t('buttons.close')">{{ $t('buttons.close') }}</button>
-    </div>
+    <alertDialog v-if="finishedExShare" style="pading:0px" @finish-agree="onStepperFinished"></alertDialog>
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-import { Roles } from '@/utils/constants';
-import { share as shareApi, users as usersApi } from '@/api'
-import Autocomplete from '@trevoreyre/autocomplete-vue'
-import { minAutoComplete } from '@/utils/constants'
-import EditPermissionList from '../common/EditPermissionList'
-import moment from 'moment'
-import '@trevoreyre/autocomplete-vue/dist/style.css'
+import { mapState, mapGetters, mapMutations } from "vuex";
+import { Tabs, Tab } from "vue-tabs-component";
+import { exShare } from "@/api";
+import { allowedFileTypes, config } from "@/utils/constants";
 
+import AlertDialog from "../files/AlertDialog";
+import ShareFirstTab from "../files/ShareFirstTab";
+import ShareSecondTab from "../files/ShareSecondTab";
 
 export default {
-  name: 'share',
+  name: "share",
   components: {
-    Autocomplete,
-    EditPermissionList
+    ShareFirstTab,
+    ShareSecondTab,
+    alertDialog: AlertDialog,
+    tabs: Tabs,
+    tab: Tab
   },
-  data: function () {
+  data: function() {
     return {
-      role: Roles.read,
-      searchText: '',
-      user:''
-    }
+      finishedExShare: false,
+      searchText: "",
+      user: "",
+      regularShare: true,
+      externalShareName: config.externalShareName,
+      enableExternalShare: config.enableExternalShare
+    };
   },
   computed: {
-    ...mapState([ 'req', 'selected' ]),
-    ...mapGetters([ 'isListing', 'selectedCount', 'direction' ]),
+    ...mapState(["req", "selected", "selectedCount"]),
+    ...mapGetters(["isListing", "selectedCount", "userID"]),
+    ...mapMutations(["emptyGlobalExternalUsers", "emptyApprovers", "resetStepsRes"]),
     selectedItem() {
-      return this.req.items && this.selectedCount !== 0 ? this.req.items[this.selected[0]] : this.req;
+      return this.req.items && this.selectedCount !== 0
+        ? this.req.items[this.selected[0]]
+        : this.req;
+    },
+    isAllowedFileType() {
+      const nameArray = this.selectedItem.name.split(".");
+      const fileType = nameArray[nameArray.length - 1];
+      return allowedFileTypes.includes(fileType.toLowerCase());
     }
   },
-  async beforeMount () {
-  },
-  mounted () {
-  },
-  beforeDestroy () {
+  destroyed() {
+    this.$store.commit("emptyGlobalExternalUsers");
+    this.$store.commit("emptyApprovers");
+    this.$store.commit("resetStepsRes");
   },
   methods: {
-    saveUser(user) {
-      this.user = user;
-    },
-    submit: async function () {
-      if (!this.role) return
-      if (!this.user) return
-      
+    // Wrap up the external share and send the request 
+    // in the correct format.
+    async onStepperFinished(payload) {
+      if (!payload.value) {
+        this.finishedExShare = false;
+        this.$store.commit("closeHovers");
+        return;
+      }
+      const users = this.$store.getters.getGlobalExternalUsers;
+      const approvers = this.$store.getters.getApprovers;
+
+      const reqUsers = [];
+      const reqApprovers = [];
+      users.forEach(user => {
+        reqUsers.push({ id: user.id, full_name: user.full_name });
+      });
+      approvers.forEach(approver => {
+        reqApprovers.push(approver.id);
+      });
+
+      const step3Res = this.$store.getters.getStepThreeRes;
+      const reqClassification = step3Res.classification;
+      const reqInfo = step3Res.info;
+
       try {
-        await shareApi.create(this.selectedItem.id, this.user.id, this.role);
-        this.$showSuccess(this.$t('success.shared', {user: this.getResultValue(this.user)}));
-        this.$refs.editPermissionList.addUser(this.user);
-      } catch (e) {
-        this.$showError(e)
+        await exShare.createExShare(
+          this.selectedItem.id,
+          reqUsers,
+          reqClassification,
+          reqInfo,
+          reqApprovers,
+          this.selectedItem.name
+        );
+      } catch (err) {
+        this.$showError({ message: this.$t("exShare.finalErrorMsg") });
+        return;
       }
+      this.$showLongSuccess(this.$t("exShare.finalSuccessMsg"));
+      this.$store.commit("closeHovers");
     },
-    async search(input) {
-      if (input.length < minAutoComplete) {
-         return [];
-      }
-      const res = await usersApi.searchUserByName(input);
-      const users = res.data.users;
-      if (users) {
-        return users;
-      }
-      return [];
-    },
-    humanTime (time) {
-      return moment(time * 1000).fromNow()
-    },
-    getResultValue(result) {
-      return `${result.firstName} ${result.lastName}`;
+    finishExShare() {
+      this.finishedExShare = true;
     }
   }
-}
+};
 </script>
 
 <style scoped>
-  #app {
-    min-width: 200px;
-    margin: 0 auto;
-  }
+.tab-content {
+  stroke: #000000;
+  stroke-width: 10px;
+}
 
-  .share-result {    
-    min-width: 100px;
-    padding: 5px;
-    background: transparent;
-  }
+.regular-share {
+  padding: 1.5em;
+}
 
-  .share-result:hover {
-    background: #bdddf0;
-  }
-
-  .share-title {
-    font-size: 20px;
-    margin-bottom: 1px;
-    margin-top: 1px;
-    margin-right: 10px;
-  }
-
-  .share-snippet {
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.54);
-  }
+#share {
+  padding: 0px;
+}
 </style>

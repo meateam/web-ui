@@ -1,23 +1,45 @@
 <template>
   <header>
     <div>
-      <button @click="openSidebar" :aria-label="$t('buttons.toggleSidebar')" :title="$t('buttons.toggleSidebar')" class="action">
+      <button
+        @click="openSidebar"
+        :aria-label="$t('buttons.toggleSidebar')"
+        :title="$t('buttons.toggleSidebar')"
+        class="action"
+      >
         <i class="material-icons">menu</i>
       </button>
-      <img @click="redirectToMain" :src="logoURL" :class="direction" alt="File Browser">
+      <img @click="redirectToMain" :src="logoURL" :class="direction" alt="File Browser" />
       <search class="search" :class="direction" v-if="isLogged"></search>
     </div>
     <div>
       <template v-if="isLogged">
-        <button @click="openSearch" :aria-label="$t('buttons.search')" :title="$t('buttons.search')" class="search-button action">
+        <button
+          @click="openSearch"
+          :aria-label="$t('buttons.search')"
+          :title="$t('buttons.search')"
+          class="search-button action"
+        >
           <i class="material-icons">search</i>
         </button>
 
-        <button v-show="showSaveButton" :aria-label="$t('buttons.save')" :title="$t('buttons.save')" class="action" id="save-button">
+        <button
+          v-show="showSaveButton"
+          :aria-label="$t('buttons.save')"
+          :title="$t('buttons.save')"
+          class="action"
+          id="save-button"
+        >
           <i class="material-icons">save</i>
         </button>
 
-        <button @click="openMore" id="more" :aria-label="$t('buttons.more')" :title="$t('buttons.more')" class="action">
+        <button
+          @click="openMore"
+          id="more"
+          :aria-label="$t('buttons.more')"
+          :title="$t('buttons.more')"
+          class="action"
+        >
           <i class="material-icons">more_vert</i>
         </button>
 
@@ -56,25 +78,33 @@
 </template>
 
 <script>
-import Search from './Search'
-import InfoButton from './buttons/Info'
-import DeleteButton from './buttons/Delete'
-import RenameButton from './buttons/Rename'
-import UploadButton from './buttons/Upload'
-import DownloadButton from './buttons/Download'
-import SwitchButton from './buttons/SwitchView'
-import MoveButton from './buttons/Move'
+import Search from "./Search";
+import InfoButton from "./buttons/Info";
+import DeleteButton from "./buttons/Delete";
+import RenameButton from "./buttons/Rename";
+import UploadButton from "./buttons/Upload";
+import DownloadButton from "./buttons/Download";
+import SwitchButton from "./buttons/SwitchView";
+import MoveButton from "./buttons/Move";
 // import CopyButton from './buttons/Copy'
-import ShareButton from './buttons/Share'
-import UserButton from './buttons/User';
-import SelectButton from './buttons/Select';
-import {mapGetters, mapState} from 'vuex'
-import { logoURL, UploadRole, DownloadRole, DeleteRole, RenameRole, ShareRole, MoveRole } from '@/utils/constants'
-import * as api from '@/api'
-import buttons from '@/utils/buttons'
+import ShareButton from "./buttons/Share";
+import UserButton from "./buttons/User";
+import SelectButton from "./buttons/Select";
+import { mapGetters, mapState } from "vuex";
+import {
+  logoURL,
+  UploadRole,
+  DownloadRole,
+  DeleteRole,
+  RenameRole,
+  ShareRole,
+  MoveRole
+} from "@/utils/constants";
+import * as api from "@/api";
+import buttons from "@/utils/buttons";
 
 export default {
-  name: 'header-layout',
+  name: "header-layout",
   components: {
     Search,
     InfoButton,
@@ -89,56 +119,54 @@ export default {
     UserButton,
     SelectButton
   },
-  data: function () {
-    return {      
+  data: function() {
+    return {
       width: window.innerWidth,
       pluginData: {
         api,
         buttons,
-        'store': this.$store,
-        'router': this.$router
+        store: this.$store,
+        router: this.$router
       }
-    }
+    };
   },
-  created () {
-    window.addEventListener('resize', () => {
-      this.width = window.innerWidth
-    })
+  created() {
+    window.addEventListener("resize", () => {
+      this.width = window.innerWidth;
+    });
   },
   computed: {
     ...mapGetters([
-      'selectedCount',
-      'isFiles',
-      'isEditor',
-      'isListing',
-      'isLogged',
-      'shares',
-      'currentFolder',
-      'direction'
+      "selectedCount",
+      "isFiles",
+      "isEditor",
+      "isListing",
+      "isLogged",
+      "shares",
+      "currentFolder",
+      "direction"
     ]),
-    ...mapState([
-      'req',
-      'user',
-      'loading',
-      'reload',
-      'multiple',
-      'selected'
-    ]),
+    ...mapState(["req", "user", "loading", "reload", "multiple", "selected"]),
     logoURL: () => logoURL,
-    isMobile () {
-      return this.width <= 736
+    isMobile() {
+      return this.width <= 736;
     },
-    showUpload () {
-      return this.isListing && UploadRole(this.req.role) && this.selectedCount === 0
+    showUpload() {
+      return this.isListing && UploadRole(this.req.role) && this.selectedCount === 0;
     },
-    showSaveButton () {
-      return this.isEditor
+    showSaveButton() {
+      return this.isEditor;
     },
-    showDownloadButton () {
+    showDownloadButton() {
       // Show only if one file selected and the selected file is not a folder.
-      return this.isFiles && this.selectedCount === 1 && ! this.req.items[this.selected[0]].isDir && DownloadRole(this.req.items[this.selected[0]].role);
+      return (
+        this.isFiles &&
+        this.selectedCount === 1 &&
+        !this.req.items[this.selected[0]].isDir &&
+        DownloadRole(this.req.items[this.selected[0]].role)
+      );
     },
-    showDeleteButton () {
+    showDeleteButton() {
       if (this.isFiles) {
         if (this.isListing) {
           if (this.selectedCount === 0) {
@@ -146,13 +174,16 @@ export default {
             if (this.req.permission && this.req.permission.fileID !== this.req.id) {
               return false;
             }
-            
+
             return this.req.id && DeleteRole(this.req.role);
           } else {
             for (let i = 0; i < this.selected.length; i++) {
               // Can't delete a file that is being shared with you directly.
-              if (this.req.items[this.selected[i]].permission &&
-                  this.req.items[this.selected[i]].permission.id !== this.req.items[this.selected[i]].id) {
+              if (
+                this.req.items[this.selected[i]].permission &&
+                this.req.items[this.selected[i]].permission.id !==
+                  this.req.items[this.selected[i]].id
+              ) {
                 return false;
               }
 
@@ -180,7 +211,7 @@ export default {
 
       return false;
     },
-    showRenameButton () {
+    showRenameButton() {
       if (this.isFiles) {
         if (this.isListing) {
           if (this.selectedCount === 0) {
@@ -195,10 +226,10 @@ export default {
 
       return false;
     },
-    showShareButton () {
+    showShareButton() {
       if (this.isFiles) {
         if (this.isListing) {
-         if (this.selectedCount === 0) {
+          if (this.selectedCount === 0) {
             return this.req.id && ShareRole(this.req.role);
           } else {
             return this.selectedCount === 1 && ShareRole(this.req.items[this.selected[0]].role);
@@ -210,10 +241,10 @@ export default {
 
       return false;
     },
-    showMoveButton () {
+    showMoveButton() {
       if (this.isFiles) {
         if (this.isListing) {
-         if (this.selectedCount === 0) {
+          if (this.selectedCount === 0) {
             return this.req.id && MoveRole(this.req.role);
           } else {
             return this.selectedCount > 0 && MoveRole(this.req.items[this.selected[0]].role);
@@ -225,51 +256,50 @@ export default {
 
       return false;
     },
-    showCopyButton () {
-      return this.isFiles && (this.isListing
-        ? (this.selectedCount > 0)
-        : true)
+    showCopyButton() {
+      return this.isFiles && (this.isListing ? this.selectedCount > 0 : true);
     },
-    showMore () {
-      return this.isFiles && this.$store.state.show === 'more'
+    showMore() {
+      return this.isFiles && this.$store.state.show === "more";
     },
-    showOverlay () {
-      return this.showMore
+    showOverlay() {
+      return this.showMore;
     }
   },
   methods: {
-    openSidebar () {
-      this.$store.commit('showHover', 'sidebar')
+    openSidebar() {
+      this.$store.commit("showHover", "sidebar");
     },
-    openMore () {
-      this.$store.commit('showHover', 'more')
+    openMore() {
+      this.$store.commit("showHover", "more");
     },
-    openSearch () {
-      this.$store.commit('showHover', 'search')
+    openSearch() {
+      this.$store.commit("showHover", "search");
     },
-    openSelect () {
-      this.$store.commit('multiple', true)
-      this.resetPrompts()
+    openSelect() {
+      this.$store.commit("multiple", true);
+      this.resetPrompts();
     },
-    resetPrompts () {
-      this.$store.commit('closeHovers')
+    resetPrompts() {
+      this.$store.commit("closeHovers");
     },
     redirectToMain() {
-      this.$router.push({path: '/files'});
-      this.$store.commit('changeFolder', '');
-      this.$store.commit('setReload', true);
+      this.$router.push({ path: "/files" });
+      this.$store.commit("changeFolder", "");
+      this.$store.commit("setShares", false);
+      this.$store.commit("setReload", true);
     }
   }
-}
+};
 </script>
 <style scoped>
-  .search.ltr {
-    margin-left: 13em;
-    width: 75%;
-  }
+.search.ltr {
+  margin-left: 13em;
+  width: 75%;
+}
 
-  .search.rtl {
-    margin-right: 13em;
-    width: 75%;
-  }
+.search.rtl {
+  margin-right: 13em;
+  width: 75%;
+}
 </style>
