@@ -6,10 +6,17 @@
         <br />
         <b style="font-size: 34px;">{{ $t("exShare.dangerAlert.header") }}</b>
       </div>
-      <div class="warning-header">
-        <b>{{ $t("exShare.dangerAlert.message.line1") }}</b> <br>
-        <b>{{ $t("exShare.dangerAlert.message.line2") }}</b> <br>
-        <b>{{ $t("exShare.dangerAlert.message.line3") }}</b> <br>
+      <div>
+        <p class="warning-bold">{{ $t("exShare.dangerAlert.message.beginning1") }}</p>
+        <p class="warning-bold">{{ $t("exShare.dangerAlert.message.beginning2") }}</p>
+        <ol>
+          <li> {{ $t("exShare.dangerAlert.message.line1") }} </li>
+          <li> {{ $t("exShare.dangerAlert.message.line2") }} </li>
+          <li> {{ $t("exShare.dangerAlert.message.line3") }} </li>
+          <li> {{ $t("exShare.dangerAlert.message.line4") }} </li>
+          <li> {{ $t("exShare.dangerAlert.message.line5") }} </li>
+          <li> {{ $t("exShare.dangerAlert.message.line6") }} </li>
+        </ol>
       </div>
     </div>
     <div class="my-checkbox">
@@ -130,6 +137,11 @@ export default {
 
 .warning-message , .my-checkbox {
   color: white;
+}
+
+.warning-bold {
+  font-weight:600;
+  padding-top: .1rem;
 }
 
 </style>
