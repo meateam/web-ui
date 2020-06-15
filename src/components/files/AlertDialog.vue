@@ -64,6 +64,7 @@ export default {
       if (this.numChecked < this.numTocheck) {
         document.getElementById("acceptTermsFinal").disabled = true;
         document.getElementById("acceptTermsFinal").checked = false;
+        this.acceptTerms = false;
       }
     },
     onChecked(event) {
