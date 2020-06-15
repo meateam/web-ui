@@ -10,17 +10,21 @@
         <p class="warning-bold">{{ $t("exShare.dangerAlert.message.beginning1") }}</p>
         <p class="warning-bold">{{ $t("exShare.dangerAlert.message.beginning2") }}</p>
         <ol>
-          <li> {{ $t("exShare.dangerAlert.message.line1") }} </li>
-          <li> {{ $t("exShare.dangerAlert.message.line2") }} </li>
-          <li> {{ $t("exShare.dangerAlert.message.line3") }} </li>
-          <li> {{ $t("exShare.dangerAlert.message.line4") }} </li>
-          <li> {{ $t("exShare.dangerAlert.message.line5") }} </li>
-          <li> {{ $t("exShare.dangerAlert.message.line6") }} </li>
+          <form action="/action_page.php" method="get">
+            <input @click="onCheckedTerm($event)" type="checkbox" id="acceptTerms1" class="actualCheckbox">
+            <label for="vehicle1"> {{ $t("exShare.dangerAlert.message.line1") }}</label><br>
+            <input @click="onCheckedTerm($event)" type="checkbox" id="acceptTerms2" class="actualCheckbox">
+            <label for="vehicle2"> {{ $t("exShare.dangerAlert.message.line2") }} </label><br>
+            <input @click="onCheckedTerm($event)" type="checkbox" id="acceptTerms3" class="actualCheckbox">
+            <label for="vehicle3"> {{ $t("exShare.dangerAlert.message.line3") }} </label><br>
+            <input @click="onCheckedTerm($event)" type="checkbox" id="acceptTerms4" class="actualCheckbox">
+            <label for="vehicle3"> {{ $t("exShare.dangerAlert.message.line4") }} </label><br>
+          </form>
         </ol>
       </div>
     </div>
     <div class="my-checkbox">
-      <input @click="onChecked($event)" type="checkbox" id="acceptTerms" class="actualCheckbox" v-model="acceptTerms">
+      <input @click="onChecked($event)" disabled="true" type="checkbox" id="acceptTermsFinal" class="actualCheckbox" v-model="acceptTerms">
       <b>{{ $t("exShare.dangerAlert.terms") }}</b>
     </div>
     <br />
@@ -40,16 +44,27 @@
 export default {
   data() {
     return {
+      numTocheck: 4,
+      numChecked: 0,
       checked: false,
       acceptTerms: false
     };
   },
   methods: {
     onAgreeClick() {
-        this.$emit("finish-agree", { value: true });
+      this.$emit("finish-agree", { value: true });
     },
     onDisagreeClick() {
         this.$emit("finish-agree", { value: false });
+    },
+    onCheckedTerm(event) {
+      var add = event.target.checked ? 1 : -1;
+      this.numChecked += add;
+      document.getElementById("acceptTermsFinal").disabled = this.numChecked < this.numTocheck;
+      if (this.numChecked < this.numTocheck) {
+        document.getElementById("acceptTermsFinal").disabled = true;
+        document.getElementById("acceptTermsFinal").checked = false;
+      }
     },
     onChecked(event) {
       this.checked = event.target.checked;
