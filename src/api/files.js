@@ -172,8 +172,6 @@ export async function post(base, file, onupload) {
 		if (file.size <= 5 << 20) {
 			url += '?uploadType=multipart';
 		} else {
-					// eslint-disable-next-line
-					console.log(file);
 			const uploadId = await this.uploadInit(file);
 			headers['Content-Range'] = `bytes 0-${file.size - 1}/${file.size}`;
 			url += `?uploadType=resumable&${requestUploadIdHeader}=${uploadId}`;
