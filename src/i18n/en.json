@@ -292,9 +292,12 @@
       "header": "Alert!",
       "terms": "I agree to the terms above",
       "message": {
-        "line1": "You are sharing a file with a low-classification network.",
-        "line2": "Please make sure the contents of the file ",
-        "line3": "are Secret at most."
+        "beginning1": "You are attempting to pass a document that might be classified.",
+        "beginning2": "It is under your responsibility to make sure the following:",
+        "line1": "The document was not originally Samatz/Blue.",
+        "line2": "The document does not contain exact operative information",
+        "line3": "The document does not contain intelligence-based quotes",
+        "line4": "The document does not contain sensitive information collection methods"
       },
       "finish": "By pressing 'Agree' I declare that I have read the above and that my request meets the requirements",
       "agree": "I Agree",
