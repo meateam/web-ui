@@ -135,7 +135,7 @@ export async function upload(url, file, headers, onupload) {
 export async function uploadInit(file) {
 	return new Promise((resolve, reject) => {
 		const fileMetadata = { title: file.name, mimeType: file.type };
-		const url = `${baseURL}/api/upload`;
+		const url = `${baseURL}/api/upload?parent=${file.parent}`;
 		const request = new XMLHttpRequest();
 		const responseUploadIdHeader = 'x-uploadid';
 		request.open('POST', url, true);
@@ -168,7 +168,7 @@ export async function post(base, file, onupload) {
 		let headers = {
 			Authorization: 'Bearer ' + store.state.jwt
 		}
-
+		file.parent = base;
 		if (file.size <= 5 << 20) {
 			url += '?uploadType=multipart';
 		} else {
