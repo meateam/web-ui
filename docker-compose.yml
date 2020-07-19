@@ -8,7 +8,7 @@ services:
     depends_on:
       - api-gateway
   api-gateway:
-    image: 'bluehub.azurecr.io/meateam/api-gateway:develop'
+    image: 'bluehub.azurecr.io/meateam/api-gateway:y-update'
     environment:
       GW_ENABLE_EXTERNAL_SHARE: 'true'
       GW_AUTH_URL: 'http://localhost:8084/auth/login'
@@ -104,7 +104,7 @@ services:
     depends_on:
       - minio
   file-service:
-    image: 'bluehub.azurecr.io/meateam/file-service:develop'
+    image: 'bluehub.azurecr.io/meateam/file-service:y-update'
     environment:
       BIND_ADDRESS: '0.0.0.0:8080'
       ELASTICSEARCH_URL: 'http://localhost:9200'
@@ -144,7 +144,7 @@ services:
       USERS_RPC_ENDPOINT: 'user-service:8080'
       SECRET_KEY: pandora@drive
       CLIENT_ENDPOINT: 'http://localhost'
-      SHRAGA_URL: http://shrugshrug
+      SHRAGA_URL: http://13.79.7.3
       STRATEGY: shraga
       MONGODB_NAME: shraga-proxy
       UNAUTHORIZED_SUPPORT_URL: 'https://open.rocket.chat'

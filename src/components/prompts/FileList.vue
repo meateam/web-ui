@@ -112,10 +112,11 @@ export default {
       }
     },
     next: async function (event) {
+      
       let items = [];
 
       if (this.$store.state.selected.length > 0) {
-        for (let item of this.$store.state.selected) {
+        for (let item of this.$store.nextstate.selected) {
           items.push(this.req.items[item].id)
         }
       } else {
@@ -131,6 +132,7 @@ export default {
           return;
         }
       }
+            
       // Retrieves the URL of the directory the user
       // just clicked in and fill the options with its
       // content.

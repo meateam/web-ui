@@ -120,6 +120,7 @@ export default {
       return `${this.download}&inline=true`;
     },
     iframe() {
+      // YOSEF return api.preview(this.req.id);
       return api.preview(this.req.id);
     },
     isIframe() {

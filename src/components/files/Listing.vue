@@ -534,9 +534,12 @@ export default {
       return checkMimeType(file.type) || checkDocumentPreview(file.type);
     },
     preview: function (file) {
-      this.$store.commit('pushFolder', { id: file.id, name: file.name });
-      this.$store.commit('setReload', true);
-
+        if (api.isDocumentEdit(file.type)) {
+        window.open(api.previewDocs(file.id));
+      } else {
+        this.$store.commit("pushFolder", { id: file.id, name: file.name });
+        this.$store.commit("setReload", true);
+      }
       return;
     }
   }

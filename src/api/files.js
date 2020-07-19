@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { baseURL, folderContentType, Roles } from '@/utils/constants'
+import { baseURL, folderContentType, Roles, checkDocumentEdit } from '@/utils/constants'
 import store from '@/store'
 
 import { fetchURL, removePrefix } from './utils'
@@ -87,6 +87,14 @@ export function download(files) {
 
 export function preview(file) {
 	return `${baseURL}/api/files/${file}?alt=media&preview`;
+}
+
+export function previewDocs(fileId) {
+	return `http://13.79.160.153:3000/api/files/${fileId}`;
+}
+
+export function isDocumentEdit(type) {
+	return checkDocumentEdit(type)
 }
 
 export async function getAncestors(file) {

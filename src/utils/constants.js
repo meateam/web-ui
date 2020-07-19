@@ -1,6 +1,7 @@
 const name = 'KDrive';
 const disableExternal = false;
 const baseURL = '';
+// const baseURL = 'http://localhost:8080';
 const signup = false;
 const version = '2';
 const logoURL = `/img/drive_logo.svg`;
@@ -11,17 +12,24 @@ const loginPage = false;
 const folderContentType = "application/vnd.drive.folder";
 const mediaTypes = ['image', 'video', 'audio', 'blob'];
 const documentTypes = [
-	'application/pdf',
 	'text',
 	"application/msword",
-	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 	'application/vnd.ms-excel',
-	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-	'application/vnd.ms-powerpoint',
-	'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 	'application/rtf',
 	'application/vnd.oasis.opendocument.text',
 	'application/vnd.oasis.opendocument.presentation',
+	'application/pdf',
+	'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+	'application/vnd.ms-powerpoint'
+];
+const documentEditTypes = [
+	'application/pdf',
+	'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+	'application/vnd.ms-powerpoint'
 ];
 const config = {
 	apmServerUrl: '',
@@ -92,7 +100,15 @@ export function checkDocumentPreview(type) {
 			return true;
 		}
 	}
+	return false;
+}
 
+export function checkDocumentEdit(type) {
+	for (let k = 0; k < documentEditTypes.length; k++) {
+		if (type.startsWith(documentEditTypes[k])) {
+			return true;
+		}
+	}
 	return false;
 }
 
