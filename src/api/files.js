@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { baseURL, folderContentType, Roles, checkDocumentEdit } from '@/utils/constants'
+import { baseURL, config, folderContentType, Roles, checkDocumentEdit } from '@/utils/constants'
 import store from '@/store'
 
 import { fetchURL, removePrefix } from './utils'
@@ -90,7 +90,7 @@ export function preview(file) {
 }
 
 export function previewDocs(fileId) {
-	return `http://13.79.160.153:3000/api/files/${fileId}`;
+	return `${config.docsUrl}/${fileId}`;
 }
 
 export function isDocumentEdit(type) {

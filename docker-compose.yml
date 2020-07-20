@@ -12,6 +12,7 @@ services:
     environment:
       GW_ENABLE_EXTERNAL_SHARE: 'true'
       GW_AUTH_URL: 'http://localhost:8084/auth/login'
+      GW_DOCS_URL: 'http://localhost:3000/api/files'
       GW_PORT: 8080
       GW_UPLOAD_SERVICE: 'upload-service:8080'
       GW_DOWNLOAD_SERVICE: 'download-service:8080'

@@ -34,6 +34,7 @@ const documentEditTypes = [
 const config = {
 	apmServerUrl: '',
 	authUrl: '',
+	docsUrl: '',
 	environment: '',
 	supportLink: '',
 	approvalServiceUrl: '',
@@ -117,6 +118,7 @@ export async function fetchConfig() {
 	const conf = await res.json();
 	config.apmServerUrl = conf.apmServerUrl;
 	config.authUrl = conf.authUrl;
+	config.docsUrl = conf.docsUrl;
 	config.environment = conf.environment;
 	config.supportLink = conf.supportLink;
 	config.approvalServiceUrl = conf.approvalServiceUrl || config.supportLink;
