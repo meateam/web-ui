@@ -536,7 +536,7 @@ export default {
     },
     preview: function (file) {
         if (canEditOnline(file.type)) {
-        window.open(api.openEditOnline(file.id));
+        api.openEditOnline(file.id);
       } else {
         this.$store.commit("pushFolder", { id: file.id, name: file.name });
         this.$store.commit("setReload", true);

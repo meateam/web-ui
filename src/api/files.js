@@ -90,7 +90,7 @@ export function preview(file) {
 }
 
 export function openEditOnline(fileId) {
-	return `${config.docsUrl}/${fileId}`;
+	window.open(`${config.docsUrl}/${fileId}`);
 }
 
 export async function getAncestors(file) {

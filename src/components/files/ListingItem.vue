@@ -169,7 +169,7 @@ export default {
     },
     open: function() {
       if (canEditOnline(this.type)) {
-        window.open(api.openEditOnline(this.id));
+        api.openEditOnline(this.id);
       } else {
         this.$store.commit("pushFolder", { id: this.id, name: this.name });
         this.$store.commit("setReload", true);
