@@ -116,7 +116,7 @@ export default {
       let items = [];
 
       if (this.$store.state.selected.length > 0) {
-        for (let item of this.$store.nextstate.selected) {
+        for (let item of this.$store.state.selected) {
           items.push(this.req.items[item].id)
         }
       } else {

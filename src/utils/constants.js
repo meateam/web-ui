@@ -104,7 +104,7 @@ export function checkDocumentPreview(type) {
 	return false;
 }
 
-export function checkDocumentEdit(type) {
+export function canEditOnline(type) {
 	for (let k = 0; k < documentEditTypes.length; k++) {
 		if (type.startsWith(documentEditTypes[k])) {
 			return true;

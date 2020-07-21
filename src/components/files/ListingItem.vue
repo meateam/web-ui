@@ -38,6 +38,7 @@ import { mapMutations, mapGetters, mapState } from "vuex";
 import filesize from "filesize";
 import moment from "moment";
 import { files as api } from "@/api";
+import { canEditOnline } from '@/utils/constants';
 
 export default {
   name: "item",
@@ -167,8 +168,8 @@ export default {
       }
     },
     open: function() {
-      if (api.isDocumentEdit(this.type)) {
-        window.open(api.previewDocs(this.id));
+      if (canEditOnline(this.type)) {
+        window.open(api.openEditOnline(this.id));
       } else {
         this.$store.commit("pushFolder", { id: this.id, name: this.name });
         this.$store.commit("setReload", true);

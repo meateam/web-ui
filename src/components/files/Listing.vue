@@ -140,6 +140,7 @@ import { checkConflict } from '@/utils/files'
 import {
   checkMimeType,
   checkDocumentPreview,
+  canEditOnline,
   DownloadRole,
   DeleteRole,
   RenameRole,
@@ -534,8 +535,8 @@ export default {
       return checkMimeType(file.type) || checkDocumentPreview(file.type);
     },
     preview: function (file) {
-        if (api.isDocumentEdit(file.type)) {
-        window.open(api.previewDocs(file.id));
+        if (canEditOnline(file.type)) {
+        window.open(api.openEditOnline(file.id));
       } else {
         this.$store.commit("pushFolder", { id: file.id, name: file.name });
         this.$store.commit("setReload", true);
