@@ -1,7 +1,6 @@
 const name = 'KDrive';
 const disableExternal = false;
 const baseURL = '';
-// const baseURL = 'http://localhost:8080';
 const signup = false;
 const version = '2';
 const logoURL = `/img/drive_logo.svg`;
@@ -91,17 +90,11 @@ export function checkMimeType(type) {
 			return true;
 		}
 	}
-
 	return false;
 }
 
 export function checkDocumentPreview(type) {
-	for (let k = 0; k < documentTypes.length; k++) {
-		if (type.startsWith(documentTypes[k])) {
-			return true;
-		}
-	}
-	return false;
+	return documentTypes.includes(type);
 }
 
 export function canEditOnline(type) {

@@ -8,7 +8,7 @@ services:
     depends_on:
       - api-gateway
   api-gateway:
-    image: 'bluehub.azurecr.io/meateam/api-gateway:y-update'
+    image: 'bluehub.azurecr.io/meateam/api-gateway:develop'
     environment:
       GW_ENABLE_EXTERNAL_SHARE: 'true'
       GW_AUTH_URL: 'http://localhost:8084/auth/login'
@@ -105,7 +105,7 @@ services:
     depends_on:
       - minio
   file-service:
-    image: 'bluehub.azurecr.io/meateam/file-service:y-update'
+    image: 'bluehub.azurecr.io/meateam/file-service:develop'
     environment:
       BIND_ADDRESS: '0.0.0.0:8080'
       ELASTICSEARCH_URL: 'http://localhost:9200'
