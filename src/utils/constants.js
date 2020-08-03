@@ -65,12 +65,7 @@ export function UploadRole(role) {
 
 export function DeleteRole(role) {
 	return role == Roles.write || role == Roles.owner || role == Roles.read ;
-}
-
-export function ShareRole(role) {
-	return role == Roles.write || role == Roles.owner;
-}
-
+}Array.includes()
 export function RenameRole(role) {
 	return role == Roles.write || role == Roles.owner;
 }
@@ -93,12 +88,7 @@ export function checkDocumentPreview(type) {
 }
 
 export function canEditOnline(type) {
-	for (let k = 0; k < documentEditTypes.length; k++) {
-		if (type.startsWith(documentEditTypes[k])) {
-			return true;
-		}
-	}
-	return false;
+	return documentEditTypes.includes(type);
 }
 
 export async function fetchConfig() {
