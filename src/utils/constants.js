@@ -1,6 +1,6 @@
 const name = 'KDrive';
 const disableExternal = false;
-const baseURL = 'http://localhost:8080';
+const baseURL = '';
 const signup = false;
 const version = '2';
 const logoURL = `/img/drive_logo.svg`;
