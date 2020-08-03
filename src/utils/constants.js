@@ -1,6 +1,6 @@
 const name = 'KDrive';
 const disableExternal = false;
-const baseURL = '';
+const baseURL = 'http://localhost:8080';
 const signup = false;
 const version = '2';
 const logoURL = `/img/drive_logo.svg`;
@@ -18,17 +18,12 @@ const documentTypes = [
 	'application/vnd.oasis.opendocument.text',
 	'application/vnd.oasis.opendocument.presentation',
 	'application/pdf',
-	'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 	'application/vnd.ms-powerpoint'
 ];
 const documentEditTypes = [
-	'application/pdf',
 	'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-	'application/vnd.ms-powerpoint'
+	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 ];
 const config = {
 	apmServerUrl: '',
