@@ -1,6 +1,6 @@
 const name = 'KDrive';
 const disableExternal = false;
-const baseURL = '';
+const baseURL = 'http://localhost:8080';
 const signup = false;
 const version = '2';
 const logoURL = `/img/drive_logo.svg`;
@@ -65,7 +65,12 @@ export function UploadRole(role) {
 
 export function DeleteRole(role) {
 	return role == Roles.write || role == Roles.owner || role == Roles.read ;
-}Array.includes()
+}
+
+export function ShareRole(role) {
+	return role == Roles.write || role == Roles.owner;
+}
+
 export function RenameRole(role) {
 	return role == Roles.write || role == Roles.owner;
 }
