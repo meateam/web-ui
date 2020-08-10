@@ -111,6 +111,7 @@
     "move": "Move",
     "moveMessage": "Choose new house for your file(s)/folder(s):",
     "newDir": "New directory",
+    "newDoc": "New document",
     "newDirMessage": "Write the name of the new directory.",
     "newFile": "New file",
     "newFileMessage": "Write the name of the new file.",

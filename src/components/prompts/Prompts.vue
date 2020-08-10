@@ -4,6 +4,7 @@
     <download v-else-if="showDownload"></download>
     <new-file v-else-if="showNewFile"></new-file>
     <new-dir v-else-if="showNewDir"></new-dir>
+    <new-dir v-else-if="showNewDoc"></new-dir>
     <rename v-else-if="showRename"></rename>
     <delete v-else-if="showDelete"></delete>
     <info v-else-if="showInfo"></info>
@@ -25,6 +26,7 @@ import Move from './Move'
 import Copy from './Copy'
 import NewFile from './NewFile'
 import NewDir from './NewDir'
+import NewDoc from './NewDoc'
 import Replace from './Replace'
 import Share from './Share'
 import { mapState } from 'vuex'
@@ -42,6 +44,7 @@ export default {
     Share,
     NewFile,
     NewDir,
+    NewDoc,
     Help,
     Replace
   },
@@ -70,6 +73,7 @@ export default {
     showCopy: function () { return this.show === 'copy' },
     showNewFile: function () { return this.show === 'newFile' },
     showNewDir: function () { return this.show === 'newDir' },
+    showNewDoc: function () { return this.show === 'newDoc' },
     showDownload: function () { return this.show === 'download' },
     showReplace: function () { return this.show === 'replace' },
     showOverlay: function () {

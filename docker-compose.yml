@@ -8,7 +8,7 @@ services:
     depends_on:
       - api-gateway
   api-gateway:
-    image: 'bluehub.azurecr.io/meateam/api-gateway:develop'
+    image: 'drivehub.azurecr.io/meateam/api-gateway:develop'
     environment:
       GW_ENABLE_EXTERNAL_SHARE: 'true'
       GW_AUTH_URL: 'http://localhost:8084/auth/login'
@@ -21,9 +21,7 @@ services:
       GW_USER_SERVICE: 'user-service:8080'
       GW_SEARCH_SERVICE: 'search-service:8080'
       GW_APPROVAL_URL: 'http://APPROVAL/api/v1/request'
-      GW_GOTENBERG_SERVICE: 'http://gotenberg-service:8080'
-      GW_ALLOW_ORIGINS: 'http://localhost*'
-      GW_SUPPORT_LINK: 'https://open.rocket.chat/home'
+      GW_GOTENBERG_SERVICE: 'http://gotenberg-servicedevelop'
       GW_CHROME_DOWNLOAD_URL: 'https://google.com/chrome/'
       ELASTICSEARCH_URL: 'http://localhost:9200'
       LOG_INDEX: kdrive
@@ -59,7 +57,7 @@ services:
       MINIO_SECRET_KEY: BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR
     command: server /data
   upload-service:
-    image: 'bluehub.azurecr.io/meateam/upload-service:develop'
+    image: 'drivehub.azurecr.io/meateam/upload-service:v1.2'
     environment:
       S3_ACCESS_KEY: F6WUUG27HBUFSIXVZL59
       S3_SECRET_KEY: BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR
@@ -82,7 +80,7 @@ services:
     ports:
       - '8081:8080'
   download-service:
-    image: 'bluehub.azurecr.io/meateam/download-service:develop'
+    image: 'drivehub.azurecr.io/meateam/download-service:v1.2'
     environment:
       S3_ACCESS_KEY: F6WUUG27HBUFSIXVZL59
       S3_SECRET_KEY: BPlIUU6SX0ZxiCMo3tIpCMAUdnmkN9Eo9K42NsRR
@@ -105,7 +103,7 @@ services:
     depends_on:
       - minio
   file-service:
-    image: 'bluehub.azurecr.io/meateam/file-service:develop'
+    image: 'drivehub.azurecr.io/meateam/file-service:develop'
     environment:
       BIND_ADDRESS: '0.0.0.0:8080'
       ELASTICSEARCH_URL: 'http://localhost:9200'
@@ -135,7 +133,7 @@ services:
     depends_on:
       - minio
   authentication-service:
-    image: 'bluehub.azurecr.io/meateam/authentication-service:develop'
+    image: 'drivehub.azurecr.io/meateam/authentication-service:v1.2'
     ports:
       - '8084:8080'
     environment:
@@ -153,7 +151,7 @@ services:
       - saml-idp
       - user-service
   saml-idp:
-    image: 'bluehub.azurecr.io/meateam/test-saml-idp:latest'
+    image: 'drivehub.azurecr.io/meateam/test-saml-idp:latest'
     ports:
       - '8085:8080'
     environment:
@@ -161,7 +159,7 @@ services:
       SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: 'http://localhost:8084/auth/metadata.xml/callback'
       SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE: 'http://localhost:8084/auth/logout'
   user-service:
-    image: 'bluehub.azurecr.io/meateam/user-service:develop'
+    image: 'drivehub.azurecr.io/meateam/user-service:v1.2'
     ports:
       - '8086:8080'
     environment:
@@ -188,7 +186,7 @@ services:
     ports:
       - '6379:6379'
   permission-service:
-    image: 'bluehub.azurecr.io/meateam/permission-service:develop'
+    image: 'drivehub.azurecr.io/meateam/permission-service:v1.2'
     ports:
       - '8087:8080'
     environment:
@@ -207,7 +205,7 @@ services:
     depends_on:
       - mongo
   search-service:
-    image: 'bluehub.azurecr.io/meateam/search-service:develop'
+    image: 'drivehub.azurecr.io/meateam/search-service:v1.2'
     environment:
       SS_PORT: 8080
       SS_HOST_NAME: search-service
@@ -230,7 +228,7 @@ services:
       elasticsearch:
         condition: service_healthy
   gotenberg-service:
-    image: 'bluehub.azurecr.io/meateam/gotenberg:6'
+    image: 'drivehub.azurecr.io/meateam/gotenberg:6'
     environment:
       DEFAULT_LISTEN_PORT: 8080
       DISABLE_GOOGLE_CHROME: 1
@@ -263,7 +261,7 @@ services:
     depends_on:
       - elasticsearch
   spike-service:
-    image: 'bluehub.azurecr.io/meateam/spike-service:develop'
+    image: 'drivehub.azurecr.io/meateam/spike-service:v1.2'
     environment:
       AUDIENCE: 0mBMe5vYJyuFtvHpEWVDPumqaVl~xr
       SPIKE_CLIENT_ID: uMsljFEps0aKfAbZ1o7~iyZGVHHiT_KdRq2gsdtc
@@ -278,7 +276,7 @@ services:
     ports:
       - '8090:8080'
   delegation-service:
-    image: 'bluehub.azurecr.io/meateam/delegation-service:develop'
+    image: 'drivehub.azurecr.io/meateam/delegation-service:v1.2'
     ports:
       - '8091:8080'
     environment:
@@ -289,7 +287,7 @@ services:
       NODE_TLS_REJECT_UNAUTHORIZED: 0
       DEL_HEALTH_CHECK_INTERVAL: '5000'
   permit-service:
-    image: 'bluehub.azurecr.io/meateam/permit-service:develop'
+    image: 'drivehub.azurecr.io/meateam/permit-service:v1.2'
     environment:
       PMTS_PORT: 8080
       HOST_NAME: permit-service
