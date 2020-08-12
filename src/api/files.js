@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { baseURL, folderContentType, Roles } from '@/utils/constants'
+import { baseURL, config, folderContentType, Roles } from '@/utils/constants'
 import store from '@/store'
 
 import { fetchURL, removePrefix } from './utils'
@@ -87,6 +87,10 @@ export function download(files) {
 
 export function preview(file) {
 	return `${baseURL}/api/files/${file}?alt=media&preview`;
+}
+
+export function openEditOnline(fileId) {
+	window.open(`${config.docsUrl}/${fileId}`);
 }
 
 export async function getAncestors(file) {

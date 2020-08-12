@@ -11,21 +11,24 @@ const loginPage = false;
 const folderContentType = "application/vnd.drive.folder";
 const mediaTypes = ['image', 'video', 'audio', 'blob'];
 const documentTypes = [
-	'application/pdf',
 	'text',
 	"application/msword",
-	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 	'application/vnd.ms-excel',
-	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-	'application/vnd.ms-powerpoint',
-	'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 	'application/rtf',
 	'application/vnd.oasis.opendocument.text',
 	'application/vnd.oasis.opendocument.presentation',
+	'application/pdf',
+	'application/vnd.ms-powerpoint'
+];
+const documentEditTypes = [
+	'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 ];
 const config = {
 	apmServerUrl: '',
 	authUrl: '',
+	docsUrl: '',
 	environment: '',
 	supportLink: '',
 	approvalServiceUrl: '',
@@ -82,18 +85,15 @@ export function checkMimeType(type) {
 			return true;
 		}
 	}
-
 	return false;
 }
 
 export function checkDocumentPreview(type) {
-	for (let k = 0; k < documentTypes.length; k++) {
-		if (type.startsWith(documentTypes[k])) {
-			return true;
-		}
-	}
+	return documentTypes.includes(type);
+}
 
-	return false;
+export function canEditOnline(type) {
+	return documentEditTypes.includes(type);
 }
 
 export async function fetchConfig() {
@@ -101,6 +101,7 @@ export async function fetchConfig() {
 	const conf = await res.json();
 	config.apmServerUrl = conf.apmServerUrl;
 	config.authUrl = conf.authUrl;
+	config.docsUrl = conf.docsUrl;
 	config.environment = conf.environment;
 	config.supportLink = conf.supportLink;
 	config.approvalServiceUrl = conf.approvalServiceUrl || config.supportLink;

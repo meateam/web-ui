@@ -112,6 +112,7 @@ export default {
       }
     },
     next: async function (event) {
+      
       let items = [];
 
       if (this.$store.state.selected.length > 0) {
@@ -131,6 +132,7 @@ export default {
           return;
         }
       }
+            
       // Retrieves the URL of the directory the user
       // just clicked in and fill the options with its
       // content.
